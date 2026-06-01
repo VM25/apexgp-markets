@@ -1,0 +1,559 @@
+{
+  "season": 2025,
+  "races": [
+    {
+      "id": "australia",
+      "name": "Australian Grand Prix",
+      "circuit": "Albert Park Circuit",
+      "country": "Australia",
+      "date": "2025-03-16",
+      "laps": 58,
+      "winner": "Lando Norris",
+      "winner_code": "NOR",
+      "podium": [
+        "Lando Norris",
+        "Oscar Piastri",
+        "Max Verstappen"
+      ]
+    },
+    {
+      "id": "china",
+      "name": "Chinese Grand Prix",
+      "circuit": "Shanghai International Circuit",
+      "country": "China",
+      "date": "2025-03-23",
+      "laps": 56,
+      "winner": "Oscar Piastri",
+      "winner_code": "PIA",
+      "podium": [
+        "Oscar Piastri",
+        "Lando Norris",
+        "Max Verstappen"
+      ]
+    },
+    {
+      "id": "japan",
+      "name": "Japanese Grand Prix",
+      "circuit": "Suzuka International Racing Course",
+      "country": "Japan",
+      "date": "2025-04-06",
+      "laps": 53,
+      "winner": "Max Verstappen",
+      "winner_code": "VER",
+      "podium": [
+        "Oscar Piastri",
+        "Lando Norris",
+        "Max Verstappen"
+      ]
+    },
+    {
+      "id": "bahrain",
+      "name": "Bahrain Grand Prix",
+      "circuit": "Bahrain International Circuit",
+      "country": "Bahrain",
+      "date": "2025-04-13",
+      "laps": 57,
+      "winner": "Oscar Piastri",
+      "winner_code": "PIA",
+      "podium": [
+        "Oscar Piastri",
+        "Lando Norris",
+        "Max Verstappen"
+      ]
+    },
+    {
+      "id": "saudi_arabia",
+      "name": "Saudi Arabian Grand Prix",
+      "circuit": "Jeddah Corniche Circuit",
+      "country": "Saudi Arabia",
+      "date": "2025-04-20",
+      "laps": 50,
+      "winner": "Oscar Piastri",
+      "winner_code": "PIA",
+      "podium": [
+        "Oscar Piastri",
+        "Lando Norris",
+        "Max Verstappen"
+      ]
+    },
+    {
+      "id": "miami",
+      "name": "Miami Grand Prix",
+      "circuit": "Miami International Autodrome",
+      "country": "USA",
+      "date": "2025-05-04",
+      "laps": 57,
+      "winner": "Oscar Piastri",
+      "winner_code": "PIA",
+      "podium": [
+        "Oscar Piastri",
+        "Lando Norris",
+        "Max Verstappen"
+      ]
+    },
+    {
+      "id": "imola",
+      "name": "Emilia Romagna Grand Prix",
+      "circuit": "Autodromo Enzo e Dino Ferrari",
+      "country": "Italy",
+      "date": "2025-05-18",
+      "laps": 63,
+      "winner": "Max Verstappen",
+      "winner_code": "VER",
+      "podium": [
+        "Oscar Piastri",
+        "Lando Norris",
+        "Max Verstappen"
+      ]
+    },
+    {
+      "id": "monaco",
+      "name": "Monaco Grand Prix",
+      "circuit": "Circuit de Monaco",
+      "country": "Monaco",
+      "date": "2025-05-25",
+      "laps": 78,
+      "winner": "Lando Norris",
+      "winner_code": "NOR",
+      "podium": [
+        "Lando Norris",
+        "Oscar Piastri",
+        "Max Verstappen"
+      ]
+    },
+    {
+      "id": "spain",
+      "name": "Spanish Grand Prix",
+      "circuit": "Circuit de Barcelona-Catalunya",
+      "country": "Spain",
+      "date": "2025-06-01",
+      "laps": 66,
+      "winner": "Oscar Piastri",
+      "winner_code": "PIA",
+      "podium": [
+        "Oscar Piastri",
+        "Lando Norris",
+        "Max Verstappen"
+      ]
+    },
+    {
+      "id": "canada",
+      "name": "Canadian Grand Prix",
+      "circuit": "Circuit Gilles Villeneuve",
+      "country": "Canada",
+      "date": "2025-06-15",
+      "laps": 70,
+      "winner": "George Russell",
+      "winner_code": "RUS",
+      "podium": [
+        "Oscar Piastri",
+        "Lando Norris",
+        "Max Verstappen"
+      ]
+    },
+    {
+      "id": "austria",
+      "name": "Austrian Grand Prix",
+      "circuit": "Red Bull Ring",
+      "country": "Austria",
+      "date": "2025-06-29",
+      "laps": 71,
+      "winner": "Lando Norris",
+      "winner_code": "NOR",
+      "podium": [
+        "Lando Norris",
+        "Oscar Piastri",
+        "Max Verstappen"
+      ]
+    },
+    {
+      "id": "great_britain",
+      "name": "British Grand Prix",
+      "circuit": "Silverstone Circuit",
+      "country": "UK",
+      "date": "2025-07-06",
+      "laps": 52,
+      "winner": "Lando Norris",
+      "winner_code": "NOR",
+      "podium": [
+        "Lando Norris",
+        "Oscar Piastri",
+        "Max Verstappen"
+      ]
+    },
+    {
+      "id": "belgium",
+      "name": "Belgian Grand Prix",
+      "circuit": "Circuit de Spa-Francorchamps",
+      "country": "Belgium",
+      "date": "2025-07-27",
+      "laps": 44,
+      "winner": "Oscar Piastri",
+      "winner_code": "PIA",
+      "podium": [
+        "Oscar Piastri",
+        "Lando Norris",
+        "Max Verstappen"
+      ]
+    },
+    {
+      "id": "hungary",
+      "name": "Hungarian Grand Prix",
+      "circuit": "Hungaroring",
+      "country": "Hungary",
+      "date": "2025-08-03",
+      "laps": 70,
+      "winner": "Lando Norris",
+      "winner_code": "NOR",
+      "podium": [
+        "Lando Norris",
+        "Oscar Piastri",
+        "Max Verstappen"
+      ]
+    },
+    {
+      "id": "netherlands",
+      "name": "Dutch Grand Prix",
+      "circuit": "Circuit Zandvoort",
+      "country": "Netherlands",
+      "date": "2025-08-31",
+      "laps": 72,
+      "winner": "Oscar Piastri",
+      "winner_code": "PIA",
+      "podium": [
+        "Oscar Piastri",
+        "Lando Norris",
+        "Max Verstappen"
+      ]
+    },
+    {
+      "id": "italy",
+      "name": "Italian Grand Prix",
+      "circuit": "Autodromo Nazionale Monza",
+      "country": "Italy",
+      "date": "2025-09-07",
+      "laps": 53,
+      "winner": "Max Verstappen",
+      "winner_code": "VER",
+      "podium": [
+        "Oscar Piastri",
+        "Lando Norris",
+        "Max Verstappen"
+      ]
+    },
+    {
+      "id": "azerbaijan",
+      "name": "Azerbaijan Grand Prix",
+      "circuit": "Baku City Circuit",
+      "country": "Azerbaijan",
+      "date": "2025-09-21",
+      "laps": 51,
+      "winner": "Max Verstappen",
+      "winner_code": "VER",
+      "podium": [
+        "Oscar Piastri",
+        "Lando Norris",
+        "Max Verstappen"
+      ]
+    },
+    {
+      "id": "singapore",
+      "name": "Singapore Grand Prix",
+      "circuit": "Marina Bay Street Circuit",
+      "country": "Singapore",
+      "date": "2025-10-05",
+      "laps": 62,
+      "winner": "George Russell",
+      "winner_code": "RUS",
+      "podium": [
+        "Oscar Piastri",
+        "Lando Norris",
+        "Max Verstappen"
+      ]
+    },
+    {
+      "id": "united_states",
+      "name": "United States Grand Prix",
+      "circuit": "Circuit of the Americas",
+      "country": "USA",
+      "date": "2025-10-19",
+      "laps": 56,
+      "winner": "Max Verstappen",
+      "winner_code": "VER",
+      "podium": [
+        "Oscar Piastri",
+        "Lando Norris",
+        "Max Verstappen"
+      ]
+    },
+    {
+      "id": "mexico_city",
+      "name": "Mexico City Grand Prix",
+      "circuit": "Aut\u00f3dromo Hermanos Rodr\u00edguez",
+      "country": "Mexico",
+      "date": "2025-10-26",
+      "laps": 71,
+      "winner": "Lando Norris",
+      "winner_code": "NOR",
+      "podium": [
+        "Lando Norris",
+        "Oscar Piastri",
+        "Max Verstappen"
+      ]
+    },
+    {
+      "id": "sao_paulo",
+      "name": "S\u00e3o Paulo Grand Prix",
+      "circuit": "Aut\u00f3dromo Jos\u00e9 Carlos Pace",
+      "country": "Brazil",
+      "date": "2025-11-09",
+      "laps": 71,
+      "winner": "Lando Norris",
+      "winner_code": "NOR",
+      "podium": [
+        "Lando Norris",
+        "Oscar Piastri",
+        "Max Verstappen"
+      ]
+    },
+    {
+      "id": "las_vegas",
+      "name": "Las Vegas Grand Prix",
+      "circuit": "Las Vegas Strip Circuit",
+      "country": "USA",
+      "date": "2025-11-22",
+      "laps": 50,
+      "winner": "Max Verstappen",
+      "winner_code": "VER",
+      "podium": [
+        "Oscar Piastri",
+        "Lando Norris",
+        "Max Verstappen"
+      ]
+    },
+    {
+      "id": "qatar",
+      "name": "Qatar Grand Prix",
+      "circuit": "Lusail International Circuit",
+      "country": "Qatar",
+      "date": "2025-11-30",
+      "laps": 57,
+      "winner": "Max Verstappen",
+      "winner_code": "VER",
+      "podium": [
+        "Oscar Piastri",
+        "Lando Norris",
+        "Max Verstappen"
+      ]
+    },
+    {
+      "id": "abu_dhabi",
+      "name": "Abu Dhabi Grand Prix",
+      "circuit": "Yas Marina Circuit",
+      "country": "UAE",
+      "date": "2025-12-07",
+      "laps": 58,
+      "winner": "Max Verstappen",
+      "winner_code": "VER",
+      "podium": [
+        "Oscar Piastri",
+        "Lando Norris",
+        "Max Verstappen"
+      ]
+    }
+  ],
+  "driver_standings": [
+    {
+      "code": "NOR",
+      "name": "Lando Norris",
+      "team": "McLaren",
+      "points": 423,
+      "wins": 7
+    },
+    {
+      "code": "VER",
+      "name": "Max Verstappen",
+      "team": "Red Bull Racing",
+      "points": 421,
+      "wins": 8
+    },
+    {
+      "code": "PIA",
+      "name": "Oscar Piastri",
+      "team": "McLaren",
+      "points": 410,
+      "wins": 7
+    },
+    {
+      "code": "RUS",
+      "name": "George Russell",
+      "team": "Mercedes",
+      "points": 319,
+      "wins": 2
+    },
+    {
+      "code": "LEC",
+      "name": "Charles Leclerc",
+      "team": "Ferrari",
+      "points": 242,
+      "wins": 0
+    },
+    {
+      "code": "HAM",
+      "name": "Lewis Hamilton",
+      "team": "Ferrari",
+      "points": 156,
+      "wins": 0
+    },
+    {
+      "code": "ANT",
+      "name": "Kimi Antonelli",
+      "team": "Mercedes",
+      "points": 150,
+      "wins": 0
+    },
+    {
+      "code": "SAI",
+      "name": "Carlos Sainz",
+      "team": "Williams",
+      "points": 135,
+      "wins": 0
+    },
+    {
+      "code": "ALO",
+      "name": "Fernando Alonso",
+      "team": "Aston Martin",
+      "points": 90,
+      "wins": 0
+    },
+    {
+      "code": "STR",
+      "name": "Lance Stroll",
+      "team": "Aston Martin",
+      "points": 45,
+      "wins": 0
+    },
+    {
+      "code": "LAW",
+      "name": "Liam Lawson",
+      "team": "Red Bull Racing",
+      "points": 30,
+      "wins": 0
+    },
+    {
+      "code": "TSU",
+      "name": "Yuki Tsunoda",
+      "team": "VCARB",
+      "points": 25,
+      "wins": 0
+    },
+    {
+      "code": "OCO",
+      "name": "Esteban Ocon",
+      "team": "Haas",
+      "points": 22,
+      "wins": 0
+    },
+    {
+      "code": "GAS",
+      "name": "Pierre Gasly",
+      "team": "Alpine",
+      "points": 18,
+      "wins": 0
+    },
+    {
+      "code": "HUL",
+      "name": "Nico Hulkenberg",
+      "team": "Kick Sauber",
+      "points": 15,
+      "wins": 0
+    },
+    {
+      "code": "ALB",
+      "name": "Alex Albon",
+      "team": "Williams",
+      "points": 12,
+      "wins": 0
+    },
+    {
+      "code": "BEA",
+      "name": "Oliver Bearman",
+      "team": "Haas",
+      "points": 8,
+      "wins": 0
+    },
+    {
+      "code": "DOO",
+      "name": "Jack Doohan",
+      "team": "Alpine",
+      "points": 2,
+      "wins": 0
+    },
+    {
+      "code": "BOR",
+      "name": "Gabriel Bortoleto",
+      "team": "Kick Sauber",
+      "points": 0,
+      "wins": 0
+    },
+    {
+      "code": "HAD",
+      "name": "Isack Hadjar",
+      "team": "VCARB",
+      "points": 0,
+      "wins": 0
+    }
+  ],
+  "constructor_standings": [
+    {
+      "team": "MCL",
+      "points": 833,
+      "wins": 14
+    },
+    {
+      "team": "MER",
+      "points": 469,
+      "wins": 2
+    },
+    {
+      "team": "RBR",
+      "points": 451,
+      "wins": 8
+    },
+    {
+      "team": "FER",
+      "points": 398,
+      "wins": 0
+    },
+    {
+      "team": "WIL",
+      "points": 147,
+      "wins": 0
+    },
+    {
+      "team": "AST",
+      "points": 135,
+      "wins": 0
+    },
+    {
+      "team": "HAAS",
+      "points": 30,
+      "wins": 0
+    },
+    {
+      "team": "VCARB",
+      "points": 25,
+      "wins": 0
+    },
+    {
+      "team": "ALP",
+      "points": 20,
+      "wins": 0
+    },
+    {
+      "team": "KICK",
+      "points": 15,
+      "wins": 0
+    }
+  ]
+}

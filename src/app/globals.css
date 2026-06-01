@@ -1,26 +1,171 @@
 @import "tailwindcss";
 
+@theme {
+  --color-carbon-black: #080809;
+  --color-carbon-dark: #0f1012;
+  --color-carbon-light: #181a1e;
+  --color-carbon-surface: #22252a;
+  
+  --color-terminal-blue: #007acc;
+  --color-terminal-blue-light: #33a3ff;
+  --color-terminal-red: #c82333;
+  --color-terminal-green: #218838;
+  --color-terminal-green-light: #28a745;
+  --color-terminal-yellow: #e0a800;
+  --color-terminal-gold: #ffc107;
+  
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #080809;
+  --foreground: #ffffff;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
 }
+
+/* Monospace Numbers Class */
+.font-data {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Custom Scrollbar for dense Bloomberg-style panels */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0d0e10;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2b2e35;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3e434f;
+}
+
+/* Cinematic Blurring & Glassmorphism Utilities */
+.glass-panel {
+  background: rgba(20, 22, 26, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.glass-panel-elevated {
+  background: rgba(30, 34, 42, 0.8);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel-light {
+  background: rgba(15, 17, 20, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+/* Animation triggers */
+@keyframes pulse-border {
+  0%, 100% { border-color: rgba(0, 122, 204, 0.3); }
+  50% { border-color: rgba(0, 122, 204, 1); }
+}
+
+.animate-pulse-border {
+  animation: pulse-border 2s infinite;
+}
+
+@keyframes price-up-flash {
+  0% { background-color: rgba(40, 167, 69, 0.25); }
+  100% { background-color: transparent; }
+}
+
+.flash-up {
+  animation: price-up-flash 0.8s ease-out;
+}
+
+@keyframes price-down-flash {
+  0% { background-color: rgba(200, 35, 51, 0.25); }
+  100% { background-color: transparent; }
+}
+
+.flash-down {
+  animation: price-down-flash 0.8s ease-out;
+}
+
+@keyframes scroll-text {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+
+.animate-marquee {
+  display: inline-block;
+  white-space: nowrap;
+  animation: scroll-text 30s linear infinite;
+}
+
+/* Institutional F1 Telemetry Grid lines */
+.telemetry-grid {
+  background-image: 
+    linear-gradient(to right, rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Dynamic State-Aware Atmosphere */
+.state-transition-container {
+  transition: background-color 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+              filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.state-replay-running {
+  box-shadow: inset 0 0 50px rgba(0, 122, 204, 0.04);
+  background-size: 24px 24px;
+  animation: slow-pan-grid 90s linear infinite;
+}
+
+@keyframes slow-pan-grid {
+  from { background-position: 0 0; }
+  to { background-position: 500px 500px; }
+}
+
+.state-safety-car {
+  box-shadow: inset 0 0 80px rgba(224, 168, 0, 0.06);
+  border: 1px solid rgba(224, 168, 0, 0.12) !important;
+}
+
+.state-market-halt {
+  filter: saturate(0.68) contrast(0.96) brightness(0.95);
+  box-shadow: inset 0 0 40px rgba(200, 35, 51, 0.02);
+}
+
+.state-settlement {
+  box-shadow: inset 0 0 80px rgba(255, 193, 7, 0.06);
+  border: 1px solid rgba(255, 193, 7, 0.15) !important;
+}
+
+.state-drawdown {
+  box-shadow: inset 0 0 90px rgba(200, 35, 51, 0.04);
+}
+
+.state-gain {
+  box-shadow: inset 0 0 90px rgba(40, 167, 69, 0.02);
+  filter: contrast(1.02);
+}
+
