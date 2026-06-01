@@ -396,8 +396,9 @@ export default function PortfolioTab({
                       const contract = contracts[pos.contractId];
                       const symbol = contract ? contract.symbol : pos.contractId;
                       const profit = pos.qty * (pos.currentPrice - pos.entryPrice);
+                      const posKey = pos.side === "LAY" ? `${pos.contractId}_NO` : pos.contractId;
                       return (
-                        <tr key={pos.contractId} className="border-b border-white/5 last:border-0 hover:bg-white/2">
+                        <tr key={posKey} className="border-b border-white/5 last:border-0 hover:bg-white/2">
                           <td className="py-1 pl-1">
                             <span className="text-terminal-blue-light font-mono font-bold block leading-none">{symbol}</span>
                             <span className="text-[7.5px] text-slate-450 truncate block mt-0.5 leading-none">{pos.contractTitle}</span>
@@ -410,7 +411,7 @@ export default function PortfolioTab({
                           </td>
                           <td className="py-1 text-center">
                             <button
-                              onClick={() => closePosition(pos.contractId)}
+                              onClick={() => closePosition(posKey)}
                               className="px-1 py-0.2 bg-terminal-red/10 border border-terminal-red/20 text-terminal-red hover:bg-terminal-red/25 font-bold uppercase rounded cursor-pointer transition-colors text-[7px]"
                             >
                               Exit

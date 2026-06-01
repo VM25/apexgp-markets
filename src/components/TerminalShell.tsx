@@ -539,16 +539,17 @@ export default function TerminalShell({
                           const contract = contracts[pos.contractId];
                           const exitPrice = contract ? (contract.settled ? (contract.settlementValue ?? 0) : (pos.side === "LAY" ? 1.00 - contract.ask : contract.bid)) : pos.entryPrice;
                           const profit = pos.qty * (exitPrice - pos.entryPrice);
+                          const posKey = pos.side === "LAY" ? `${pos.contractId}_NO` : pos.contractId;
                           
                           return (
-                            <div key={pos.contractId} className="bg-carbon-black p-2 border border-white/5 rounded space-y-1.5 font-data text-[9.5px]">
+                            <div key={posKey} className="bg-carbon-black p-2 border border-white/5 rounded space-y-1.5 font-data text-[9.5px]">
                               <div className="flex justify-between items-start">
                                 <div className="truncate max-w-[130px]">
                                   <span className="text-white font-bold block truncate leading-tight uppercase">{pos.contractTitle}</span>
                                   <span className="text-[7.5px] text-slate-500 uppercase block font-semibold mt-0.5">{pos.contractType}</span>
                                 </div>
                                 <button
-                                  onClick={() => closePosition(pos.contractId)}
+                                  onClick={() => closePosition(posKey)}
                                   className="px-1.5 py-0.5 bg-terminal-red/10 border border-terminal-red/20 hover:border-terminal-red/40 text-[8px] text-terminal-red font-bold uppercase rounded cursor-pointer transition-all"
                                 >
                                   Exit
