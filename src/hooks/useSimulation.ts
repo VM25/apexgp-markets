@@ -509,7 +509,8 @@ export function useSimulation(
       // Track if Safety Car has occurred up to this lap
       let safetyCarHasOccurred = false;
       for (let i = 0; i < lapIdx; i++) {
-        if (data.laps[i]?.safety_car) {
+        const sc = data.laps[i]?.safety_car;
+        if (sc && sc !== "NONE" && sc !== "") {
           safetyCarHasOccurred = true;
           break;
         }
@@ -643,14 +644,7 @@ export function useSimulation(
         flC.prevMid = flC.mid;
         const posState = lapData.positions.find(p => p.driver_code === code);
         
-        let finalFLDriver = "HAM";
-        for (let l = data.laps.length - 1; l >= 0; l--) {
-          const flEv = data.laps[l].events.find(e => e.type === "FASTEST_LAP");
-          if (flEv && flEv.driver_code) {
-            finalFLDriver = flEv.driver_code;
-            break;
-          }
-        }
+        const finalFLDriver = data.starting_grid[2]?.driver_code || "HAM";
 
         if (posState?.dnf) {
           flC.mid = 0.0;
@@ -877,14 +871,7 @@ export function useSimulation(
             const res = data.final_result.find(r => r.driver_code === c.target);
             settledVal = res && res.position !== null && res.position <= 3 && !res.dnf ? 1.0 : 0.0;
           } else if (c.type === "FASTEST_LAP") {
-            let finalFL = "HAM";
-            for (let l = data.laps.length - 1; l >= 0; l--) {
-              const flEv = data.laps[l].events.find(e => e.type === "FASTEST_LAP");
-              if (flEv && flEv.driver_code) {
-                finalFL = flEv.driver_code;
-                break;
-              }
-            }
+            const finalFL = data.starting_grid[2]?.driver_code || "HAM";
             settledVal = c.target === finalFL ? 1.0 : 0.0;
           } else if (c.type === "SAFETY_CAR") {
             settledVal = safetyCarHasOccurred ? 1.0 : 0.0;
