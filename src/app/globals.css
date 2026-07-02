@@ -5,7 +5,7 @@
   --color-carbon-dark: #0f1012;
   --color-carbon-light: #181a1e;
   --color-carbon-surface: #22252a;
-  
+
   --color-terminal-blue: #007acc;
   --color-terminal-blue-light: #33a3ff;
   --color-terminal-red: #c82333;
@@ -13,9 +13,19 @@
   --color-terminal-green-light: #28a745;
   --color-terminal-yellow: #e0a800;
   --color-terminal-gold: #ffc107;
-  
-  --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Fonts — wire the Geist families loaded via next/font in layout.tsx */
+  --font-sans: var(--font-geist-sans), 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-geist-mono), 'SFMono-Regular', 'Menlo', 'Courier New', monospace;
+
+  /* Typography scale (S2 calibration) — 11px floor everywhere */
+  --text-micro: 0.6875rem;     /* 11px — smallest allowed */
+  --text-label: 0.75rem;       /* 12px — eyebrow labels */
+  --text-body-sm: 0.8125rem;   /* 13px — dense body / table cells */
+  --text-body: clamp(0.875rem, 0.85rem + 0.1vw, 1rem);   /* 14–16px prose */
+  --text-data: 0.9375rem;      /* 15px — primary panel numbers */
+  --text-data-lg: clamp(1.25rem, 1.05rem + 0.9vw, 1.75rem); /* 20–28px hero numbers */
+  --text-heading: 1.125rem;    /* 18px — headings */
 }
 
 :root {
@@ -23,19 +33,48 @@
   --foreground: #ffffff;
 }
 
+html, body {
+  height: 100%;
+}
+
 body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
+  /* Root cascade default = body-sm (13px) */
+  font-size: var(--text-body-sm);
   overflow-x: hidden;
   margin: 0;
   padding: 0;
 }
 
-/* Monospace Numbers Class */
+/* Typography token utilities */
+.text-micro { font-size: var(--text-micro); line-height: 1.35; }
+.text-label { font-size: var(--text-label); line-height: 1.3; }
+.text-body-sm { font-size: var(--text-body-sm); line-height: 1.45; }
+.text-body { font-size: var(--text-body); line-height: 1.55; }
+.text-data { font-size: var(--text-data); line-height: 1.2; }
+.text-data-lg { font-size: var(--text-data-lg); line-height: 1.05; }
+.text-heading { font-size: var(--text-heading); line-height: 1.25; }
+
+/* Monospace Numbers Class (now Geist Mono, tabular) */
 .font-data {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
+}
+
+/* Panel elevation tiers (institutional restraint — no glows/gradients) */
+.panel-base {
+  background-color: var(--color-carbon-black);
+}
+.panel-raised {
+  background-color: var(--color-carbon-surface);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.panel-elevated {
+  background-color: var(--color-carbon-dark);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
 }
 
 /* Custom Scrollbar for dense Bloomberg-style panels */
@@ -55,6 +94,13 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #3e434f;
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }
 
 /* Cinematic Blurring & Glassmorphism Utilities */
@@ -107,6 +153,24 @@ body {
   animation: price-down-flash 0.8s ease-out;
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-toast-in {
+  animation: toast-in 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 @keyframes scroll-text {
   0% { transform: translate3d(0, 0, 0); }
   100% { transform: translate3d(-50%, 0, 0); }
@@ -120,7 +184,7 @@ body {
 
 /* Institutional F1 Telemetry Grid lines */
 .telemetry-grid {
-  background-image: 
+  background-image:
     linear-gradient(to right, rgba(255,255,255,0.015) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255,255,255,0.015) 1px, transparent 1px);
   background-size: 24px 24px;
@@ -128,9 +192,9 @@ body {
 
 /* Dynamic State-Aware Atmosphere */
 .state-transition-container {
-  transition: background-color 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
-              border-color 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
-              box-shadow 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+  transition: background-color 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.8s cubic-bezier(0.16, 1, 0.3, 1),
               filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -169,3 +233,12 @@ body {
   filter: contrast(1.02);
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee,
+  .animate-pulse-border,
+  .state-replay-running,
+  .animate-toast-in,
+  .animate-fadeIn {
+    animation: none !important;
+  }
+}

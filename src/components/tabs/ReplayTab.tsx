@@ -24,7 +24,7 @@ export default function ReplayTab({ raceData, currentLapIdx, commentary = [] }: 
 
   if (!raceData) {
     return (
-      <div className="h-full flex items-center justify-center text-slate-500 font-mono text-[11px]">
+      <div className="h-full flex items-center justify-center text-slate-500 font-mono text-micro">
         LOADING SYSTEM TELEMETRY INDEX...
       </div>
     );
@@ -242,18 +242,18 @@ export default function ReplayTab({ raceData, currentLapIdx, commentary = [] }: 
   ];
 
   return (
-    <div className="h-full flex flex-col gap-3.5 select-none min-h-[500px] text-slate-450 font-mono text-[10px]">
+    <div className="h-full flex flex-col gap-3.5 min-h-0 text-slate-450 font-mono text-body-sm">
       
       {/* Top Banner */}
       <div className="bg-carbon-surface border border-white/5 rounded p-2.5 flex justify-between items-center shrink-0">
         <div className="flex items-center gap-2">
           <div className={`w-2 h-2 rounded-full ${isReplayActive ? "bg-terminal-blue animate-ping" : "bg-slate-655"}`} />
-          <span className="text-white font-extrabold text-[10.5px] uppercase tracking-wider flex items-center gap-1.5">
+          <span className="text-white font-extrabold text-micro uppercase tracking-wider flex items-center gap-1.5">
             <Radio className="w-3.5 h-3.5 text-terminal-blue" />
             {isReplayActive ? "LIVE QUANT REPLAY TELEMETRY BROADCAST" : "TELEMETRY ENGINE STANDBY"}
           </span>
         </div>
-        <div className="flex gap-4 text-[8px] text-slate-500 font-data select-none items-center">
+        <div className="flex gap-4 text-micro text-slate-500 font-data select-none items-center">
           <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-terminal-blue" /> ENGINE FEED ONLINE</span>
           <span>HISTORICAL SEASON REPLAY</span>
           <span>CALENDAR: 2025 F1</span>
@@ -263,7 +263,7 @@ export default function ReplayTab({ raceData, currentLapIdx, commentary = [] }: 
       {/* EVENT TIMELINE PROGRESS BAR */}
       <div className="bg-carbon-surface border border-white/5 rounded p-3.5 flex flex-col gap-2 shrink-0 select-none">
         <div className="flex justify-between items-center border-b border-white/5 pb-1.5">
-          <span className="text-[8px] text-slate-500 font-bold uppercase tracking-wider block">
+          <span className="text-micro text-slate-500 font-bold uppercase tracking-wider block">
             HISTORICAL REPLAY TIMELINE & EVENT MAP
           </span>
           <span className="text-slate-300 font-bold font-data">
@@ -327,7 +327,7 @@ export default function ReplayTab({ raceData, currentLapIdx, commentary = [] }: 
                             : "bg-carbon-black border-white/10"
                       }`}
                     />
-                    <span className={`text-[7.5px] font-bold mt-4 tracking-wider uppercase whitespace-nowrap block ${isPassed ? "text-slate-200" : "text-slate-550"}`}>
+                    <span className={`text-micro font-bold mt-4 tracking-wider uppercase whitespace-nowrap block ${isPassed ? "text-slate-200" : "text-slate-550"}`}>
                       {m.lap === 0 ? "START" : m.lap === raceData.laps_total ? "FINISH" : `L${m.lap}`}
                     </span>
                   </div>
@@ -368,11 +368,11 @@ export default function ReplayTab({ raceData, currentLapIdx, commentary = [] }: 
               width: `${tooltipWidth}px`,
               zIndex: 99999,
             }}
-            className="pointer-events-none bg-carbon-dark/95 border border-terminal-blue/30 p-2.5 rounded shadow-[0_0_20px_rgba(0,122,204,0.15)] transition-all duration-200 text-[8.5px] space-y-1.5 text-slate-350 select-none normal-case leading-normal font-sans font-light backdrop-blur-md"
+            className="pointer-events-none bg-carbon-dark/95 border border-terminal-blue/30 p-2.5 rounded shadow-[0_0_20px_rgba(0,122,204,0.15)] transition-all duration-200 text-micro space-y-1.5 text-slate-350 select-none normal-case leading-normal font-sans font-light backdrop-blur-md"
           >
-            <div className="flex justify-between items-center border-b border-white/5 pb-1 mb-1.5 uppercase font-mono font-bold text-white text-[7.5px] tracking-wider">
+            <div className="flex justify-between items-center border-b border-white/5 pb-1 mb-1.5 uppercase font-mono font-bold text-white text-micro tracking-wider">
               <span>{hoveredMilestone.label}</span>
-              <span className="px-1 py-0.2 bg-terminal-blue/15 text-terminal-blue-light rounded text-[6.5px]">
+              <span className="px-1 py-0.2 bg-terminal-blue/15 text-terminal-blue-light rounded text-micro">
                 {hoveredMilestone.type}
               </span>
             </div>
@@ -380,70 +380,70 @@ export default function ReplayTab({ raceData, currentLapIdx, commentary = [] }: 
             {hoveredMilestone.type === "START" ? (
               <div className="space-y-1.5">
                 <div>
-                  <span className="text-white font-bold block text-[7px] uppercase tracking-wider">Race Conditions</span>
-                  <span className="text-slate-200 font-sans block text-[8px] mt-0.5">Circuit: {raceData.circuit} ({raceData.country}) | Laps: {raceData.laps_total}</span>
+                  <span className="text-white font-bold block text-micro uppercase tracking-wider">Race Conditions</span>
+                  <span className="text-slate-200 font-sans block text-micro mt-0.5">Circuit: {raceData.circuit} ({raceData.country}) | Laps: {raceData.laps_total}</span>
                 </div>
                 <div className="pt-1 border-t border-white/5">
-                  <span className="text-white font-bold block text-[7px] uppercase tracking-wider">Weather</span>
-                  <span className="text-slate-200 font-sans block text-[8px] mt-0.5">Air Temp: {startWeather?.air_temp || 25}°C / {Math.round((startWeather?.air_temp || 25) * 1.8 + 32)}°F | Humidity: {startWeather?.humidity || "40"}%</span>
+                  <span className="text-white font-bold block text-micro uppercase tracking-wider">Weather</span>
+                  <span className="text-slate-200 font-sans block text-micro mt-0.5">Air Temp: {startWeather?.air_temp || 25}°C / {Math.round((startWeather?.air_temp || 25) * 1.8 + 32)}°F | Humidity: {startWeather?.humidity || "40"}%</span>
                 </div>
                 <div className="pt-1 border-t border-white/5">
-                  <span className="text-white font-bold block text-[7px] uppercase tracking-wider">Track</span>
-                  <span className="text-slate-200 font-sans block text-[8px] mt-0.5">Track Temp: {startWeather?.track_temp || 36}°C / {Math.round((startWeather?.track_temp || 36) * 1.8 + 32)}°F | Surface: DRY / Nominal Grip</span>
+                  <span className="text-white font-bold block text-micro uppercase tracking-wider">Track</span>
+                  <span className="text-slate-200 font-sans block text-micro mt-0.5">Track Temp: {startWeather?.track_temp || 36}°C / {Math.round((startWeather?.track_temp || 36) * 1.8 + 32)}°F | Surface: DRY / Nominal Grip</span>
                 </div>
                 <div className="pt-1 border-t border-white/5">
-                  <span className="text-terminal-blue-light font-bold block text-[7px] uppercase tracking-wider">Opening Market</span>
-                  <span className="text-slate-300 font-mono block text-[7.5px] mt-0.5">WINNER and PODIUM chains open with dynamic Bayesian pricing models.</span>
+                  <span className="text-terminal-blue-light font-bold block text-micro uppercase tracking-wider">Opening Market</span>
+                  <span className="text-slate-300 font-mono block text-micro mt-0.5">WINNER and PODIUM chains open with dynamic Bayesian pricing models.</span>
                 </div>
                 <div className="pt-1 border-t border-white/5">
-                  <span className="text-terminal-blue-light font-bold block text-[7px] uppercase tracking-wider">Pole Position</span>
-                  <span className="text-slate-300 font-mono block text-[7.5px] mt-0.5">Secured by contender [{polePos}] with starting grid P1 priority.</span>
+                  <span className="text-terminal-blue-light font-bold block text-micro uppercase tracking-wider">Pole Position</span>
+                  <span className="text-slate-300 font-mono block text-micro mt-0.5">Secured by contender [{polePos}] with starting grid P1 priority.</span>
                 </div>
                 <div className="pt-1 border-t border-white/5">
-                  <span className="text-terminal-green-light font-bold block text-[7px] uppercase tracking-wider">Opening Favorites</span>
-                  <span className="text-slate-300 font-mono block text-[7.5px] mt-0.5">{startFavs} secure top market backing status.</span>
+                  <span className="text-terminal-green-light font-bold block text-micro uppercase tracking-wider">Opening Favorites</span>
+                  <span className="text-slate-300 font-mono block text-micro mt-0.5">{startFavs} secure top market backing status.</span>
                 </div>
               </div>
             ) : hoveredMilestone.type === "FINISH" ? (
               <div className="space-y-1.5">
                 <div>
-                  <span className="text-white font-bold block text-[7px] uppercase tracking-wider">Official Result</span>
-                  <span className="text-slate-200 font-sans block text-[8px] mt-0.5">Checkered Flag. Race complete and settled.</span>
+                  <span className="text-white font-bold block text-micro uppercase tracking-wider">Official Result</span>
+                  <span className="text-slate-200 font-sans block text-micro mt-0.5">Checkered Flag. Race complete and settled.</span>
                 </div>
                 <div className="pt-1 border-t border-white/5">
-                  <span className="text-white font-bold block text-[7px] uppercase tracking-wider">Winner</span>
-                  <span className="text-terminal-gold font-bold block text-[8px] mt-0.5">{winnerRes?.driver_name || "Unknown"} (P1)</span>
+                  <span className="text-white font-bold block text-micro uppercase tracking-wider">Winner</span>
+                  <span className="text-terminal-gold font-bold block text-micro mt-0.5">{winnerRes?.driver_name || "Unknown"} (P1)</span>
                 </div>
                 <div className="pt-1 border-t border-white/5">
-                  <span className="text-white font-bold block text-[7px] uppercase tracking-wider">Podium</span>
-                  <span className="text-slate-200 font-sans block text-[8px] mt-0.5">{podiumList} (Positions P1 - P3)</span>
+                  <span className="text-white font-bold block text-micro uppercase tracking-wider">Podium</span>
+                  <span className="text-slate-200 font-sans block text-micro mt-0.5">{podiumList} (Positions P1 - P3)</span>
                 </div>
                 <div className="pt-1 border-t border-white/5">
-                  <span className="text-white font-bold block text-[7px] uppercase tracking-wider">Fastest Lap</span>
-                  <span className="text-terminal-blue-light font-bold block text-[8px] mt-0.5">{fastestLapHolder} (FL Bonus point secured)</span>
+                  <span className="text-white font-bold block text-micro uppercase tracking-wider">Fastest Lap</span>
+                  <span className="text-terminal-blue-light font-bold block text-micro mt-0.5">{fastestLapHolder} (FL Bonus point secured)</span>
                 </div>
                 <div className="pt-1 border-t border-white/5">
-                  <span className="text-terminal-green-light font-bold block text-[7px] uppercase tracking-wider">Portfolio Outcome</span>
-                  <span className="text-slate-300 font-mono block text-[7.5px] mt-0.5">Race book positions auto-liquidated. Sandbox account balances credited.</span>
+                  <span className="text-terminal-green-light font-bold block text-micro uppercase tracking-wider">Portfolio Outcome</span>
+                  <span className="text-slate-300 font-mono block text-micro mt-0.5">Race book positions auto-liquidated. Sandbox account balances credited.</span>
                 </div>
                 <div className="pt-1 border-t border-white/5">
-                  <span className="text-terminal-green-light font-bold block text-[7px] uppercase tracking-wider">Settlement Summary</span>
-                  <span className="text-slate-300 font-mono block text-[7.5px] mt-0.5">Race book closed. Season Book futures marked-to-market for standings progression.</span>
+                  <span className="text-terminal-green-light font-bold block text-micro uppercase tracking-wider">Settlement Summary</span>
+                  <span className="text-slate-300 font-mono block text-micro mt-0.5">Race book closed. Season Book futures marked-to-market for standings progression.</span>
                 </div>
               </div>
             ) : (
               <div className="space-y-1.5">
                 <div>
-                  <span className="text-white font-bold block text-[7px] uppercase tracking-wider">{hoveredMilestone.eventLabel}</span>
-                  <span className="text-slate-200 font-sans block text-[8px] leading-snug mt-0.5">{hoveredMilestone.desc}</span>
+                  <span className="text-white font-bold block text-micro uppercase tracking-wider">{hoveredMilestone.eventLabel}</span>
+                  <span className="text-slate-200 font-sans block text-micro leading-snug mt-0.5">{hoveredMilestone.desc}</span>
                 </div>
                 <div className="pt-1 border-t border-white/5">
-                  <span className="text-terminal-blue-light font-bold block text-[7px] uppercase tracking-wider">{hoveredMilestone.marketLabel}</span>
-                  <span className="text-slate-300 font-mono block text-[7.5px] leading-snug mt-0.5">{hoveredMilestone.market}</span>
+                  <span className="text-terminal-blue-light font-bold block text-micro uppercase tracking-wider">{hoveredMilestone.marketLabel}</span>
+                  <span className="text-slate-300 font-mono block text-micro leading-snug mt-0.5">{hoveredMilestone.market}</span>
                 </div>
                 <div className="pt-1 border-t border-white/5">
-                  <span className="text-terminal-green-light font-bold block text-[7px] uppercase tracking-wider">{hoveredMilestone.portfolioLabel}</span>
-                  <span className="text-slate-300 font-mono block text-[7.5px] leading-snug mt-0.5">{hoveredMilestone.portfolio}</span>
+                  <span className="text-terminal-green-light font-bold block text-micro uppercase tracking-wider">{hoveredMilestone.portfolioLabel}</span>
+                  <span className="text-slate-300 font-mono block text-micro leading-snug mt-0.5">{hoveredMilestone.portfolio}</span>
                 </div>
               </div>
             )}
@@ -457,11 +457,11 @@ export default function ReplayTab({ raceData, currentLapIdx, commentary = [] }: 
         
         {/* Timing standings (Left) */}
         <div className="flex-1 bg-carbon-surface border border-white/5 rounded p-3 flex flex-col min-h-0">
-          <span className="text-[8px] text-slate-500 font-bold uppercase tracking-wider block mb-2">Timing Grid Standings</span>
+          <span className="text-micro text-slate-500 font-bold uppercase tracking-wider block mb-2">Timing Grid Standings</span>
           <div className="flex-1 overflow-y-auto pr-1">
-            <table className="w-full text-left font-data text-[9.5px] select-none">
+            <table className="w-full text-left font-data text-micro select-none">
               <thead>
-                <tr className="text-slate-500 uppercase text-[8px] border-b border-white/5 font-bold">
+                <tr className="text-slate-500 uppercase text-micro border-b border-white/5 font-bold">
                   <th className="pb-1.5 pl-2">Pos</th>
                   <th className="pb-1.5">Car</th>
                   <th className="pb-1.5">Driver</th>
@@ -493,17 +493,17 @@ export default function ReplayTab({ raceData, currentLapIdx, commentary = [] }: 
                         <td className={`pl-2 font-bold transition-all duration-150 ${isSelected ? "py-2" : "py-1"} flex items-center gap-1`}>
                           <span>{car.dnf ? "DNF" : car.position}</span>
                           {!car.dnf && posDelta > 0 && (
-                            <span className="text-terminal-green-light text-[7px]">▲{posDelta}</span>
+                            <span className="text-terminal-green-light text-micro">▲{posDelta}</span>
                           )}
                           {!car.dnf && posDelta < 0 && (
-                            <span className="text-terminal-red text-[7px]">▼{Math.abs(posDelta)}</span>
+                            <span className="text-terminal-red text-micro">▼{Math.abs(posDelta)}</span>
                           )}
                         </td>
                         <td className="font-bold text-slate-200">
                           <div className="flex items-center gap-1">
                             <span>{car.driver_code}</span>
                             {hasDRS && (
-                              <span className="px-0.5 py-0.2 bg-terminal-green-light/10 text-terminal-green-light text-[6px] rounded border border-terminal-green-light/20 font-bold uppercase select-none scale-90">DRS</span>
+                              <span className="px-0.5 py-0.2 bg-terminal-green-light/10 text-terminal-green-light text-micro rounded border border-terminal-green-light/20 font-bold uppercase select-none scale-90">DRS</span>
                             )}
                           </div>
                         </td>
@@ -515,7 +515,7 @@ export default function ReplayTab({ raceData, currentLapIdx, commentary = [] }: 
                           {car.dnf ? "--" : (car.position === 1 ? "--" : `+${car.interval_to_car_ahead.toFixed(3)}s`)}
                         </td>
                         <td className="text-center font-mono">
-                          <span className={`text-[8.5px] font-bold ${car.tires === "S" ? "text-terminal-red" : (car.tires === "M" ? "text-terminal-yellow" : "text-slate-350")}`}>
+                          <span className={`text-micro font-bold ${car.tires === "S" ? "text-terminal-red" : (car.tires === "M" ? "text-terminal-yellow" : "text-slate-350")}`}>
                             [{car.tires}]
                           </span>
                         </td>
@@ -523,20 +523,20 @@ export default function ReplayTab({ raceData, currentLapIdx, commentary = [] }: 
                         <td className="text-center text-slate-450">
                           <div className="flex items-center justify-center gap-0.5">
                             <span>{car.pit_stops}</span>
-                            {car.pit_stops > 0 && <span className="text-[7.5px] text-slate-500" title="Pitted">🔧</span>}
+                            {car.pit_stops > 0 && <span className="text-micro text-slate-500" title="Pitted">🔧</span>}
                           </div>
                         </td>
                         <td className="text-right pr-2">
                           {car.dnf ? (
-                            <span className="text-terminal-red bg-terminal-red/10 border border-terminal-red/20 px-1.5 py-0.2 rounded text-[7.5px] font-bold uppercase inline-block truncate max-w-[100px]" title={car.dnf_reason || "Retired"}>
+                            <span className="text-terminal-red bg-terminal-red/10 border border-terminal-red/20 px-1.5 py-0.2 rounded text-micro font-bold uppercase inline-block truncate max-w-[100px]" title={car.dnf_reason || "Retired"}>
                               {car.dnf_reason || "RETIRED"}
                             </span>
                           ) : hasSCInfluence ? (
-                            <span className="text-terminal-yellow bg-terminal-yellow/10 border border-terminal-yellow/20 px-1.5 py-0.2 rounded text-[7.5px] font-bold uppercase">
+                            <span className="text-terminal-yellow bg-terminal-yellow/10 border border-terminal-yellow/20 px-1.5 py-0.2 rounded text-micro font-bold uppercase">
                               SC LIMIT
                             </span>
                           ) : (
-                            <span className="text-terminal-green-light bg-terminal-green/5 border border-terminal-green/20 px-1.5 py-0.2 rounded text-[7.5px] font-bold uppercase">
+                            <span className="text-terminal-green-light bg-terminal-green/5 border border-terminal-green/20 px-1.5 py-0.2 rounded text-micro font-bold uppercase">
                               RUNNING
                             </span>
                           )}
@@ -544,29 +544,29 @@ export default function ReplayTab({ raceData, currentLapIdx, commentary = [] }: 
                       </tr>
                       
                       {isSelected && (
-                        <tr className="bg-carbon-black/35 text-[9px] border-b border-white/5 select-none font-mono">
+                        <tr className="bg-carbon-black/35 text-micro border-b border-white/5 select-none font-mono">
                           <td colSpan={9} className="p-3 pl-4">
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 items-center">
                               <div>
-                                <span className="text-slate-500 block text-[6.5px] uppercase tracking-wider font-bold">Telemetry State</span>
+                                <span className="text-slate-500 block text-micro uppercase tracking-wider font-bold">Telemetry State</span>
                                 <span className={`font-bold uppercase ${car.dnf ? "text-terminal-red" : "text-terminal-green-light"}`}>
                                   {car.dnf ? "DISCONNECTED (DNF)" : "LINK ACTIVE // 921.4 MHz"}
                                 </span>
                               </div>
                               <div>
-                                <span className="text-slate-500 block text-[6.5px] uppercase tracking-wider font-bold">Sector Splits</span>
+                                <span className="text-slate-500 block text-micro uppercase tracking-wider font-bold">Sector Splits</span>
                                 <span className="text-slate-350">
                                   S1: <strong className="text-white">{(28.1 + idx * 0.05).toFixed(3)}s</strong> | S2: <strong className="text-white">{(36.0 + idx * 0.08).toFixed(3)}s</strong> | S3: <strong className="text-white">{(22.4 + idx * 0.04).toFixed(3)}s</strong>
                                 </span>
                               </div>
                               <div>
-                                <span className="text-slate-500 block text-[6.5px] uppercase tracking-wider font-bold">Interval Evolution</span>
+                                <span className="text-slate-500 block text-micro uppercase tracking-wider font-bold">Interval Evolution</span>
                                 <span className="text-slate-300">
                                   {car.position === 1 ? "Leading Field" : `+${car.interval_to_car_ahead.toFixed(3)}s Ahead`}
                                 </span>
                               </div>
                               <div>
-                                <span className="text-slate-500 block text-[6.5px] uppercase tracking-wider font-bold">Tire Summary & Wear</span>
+                                <span className="text-slate-500 block text-micro uppercase tracking-wider font-bold">Tire Summary & Wear</span>
                                 <span className="text-terminal-blue-light">
                                   Compound: {car.tires} | Age: {car.tire_age} Lps | Wear: {Math.min(99, Math.round(car.tire_age * 1.5))}%
                                 </span>
@@ -587,21 +587,22 @@ export default function ReplayTab({ raceData, currentLapIdx, commentary = [] }: 
         <div className="w-full xl:w-[480px] flex flex-col gap-3.5 shrink-0 min-h-0 select-none">
           
           {/* Race State Evolution Chart */}
-          <div className="h-[400px] bg-carbon-surface border border-white/5 rounded p-3.5 flex flex-col min-h-0 shadow-lg">
+          <div className="flex-[2] min-h-[300px] panel-raised rounded p-3.5 flex flex-col">
             <div className="flex justify-between items-center border-b border-white/5 pb-1.5 mb-2 select-none">
-              <span className="text-[8px] text-slate-200 font-extrabold uppercase tracking-wider block">
+              <span className="text-micro text-slate-200 font-extrabold uppercase tracking-wider block">
                 📊 Race State Evolution & Repricing Moments
               </span>
-              <span className="text-[7.5px] text-slate-550 font-bold uppercase">GAP TELEMETRY</span>
+              <span className="text-micro text-slate-550 font-bold uppercase">GAP TELEMETRY</span>
             </div>
             
-            <div className="h-[160px] w-full select-none">
+            <div className="flex-1 min-h-[140px] w-full select-none relative">
               {telemetryData.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-slate-650 text-center space-y-1.5 p-6 border border-dashed border-white/5 rounded">
                   <span className="text-xs uppercase font-bold tracking-wider">No Telemetry Streams Active</span>
-                  <p className="text-[8px] max-w-[180px] leading-snug">Press play on the simulation engine to generate lap-by-lap telemetry tracks.</p>
+                  <p className="text-micro max-w-[180px] leading-snug">Press play on the simulation engine to generate lap-by-lap telemetry tracks.</p>
                 </div>
               ) : (
+                <div className="absolute inset-0">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart
                      data={telemetryData}
@@ -675,12 +676,13 @@ export default function ReplayTab({ raceData, currentLapIdx, commentary = [] }: 
                     ))}
                   </LineChart>
                 </ResponsiveContainer>
+                </div>
               )}
             </div>
 
             {/* Repricing Moments & Incident Log Panel */}
             <div className="border-t border-white/5 pt-2.5 mt-3 min-h-0 flex-1 flex flex-col">
-              <span className="text-[8px] text-slate-500 font-extrabold uppercase tracking-wider block mb-1.5">
+              <span className="text-micro text-slate-500 font-extrabold uppercase tracking-wider block mb-1.5">
                 📋 Repricing Moments & Incident Log
               </span>
               <div className="flex-1 overflow-y-auto pr-1 scrollbar-thin">
@@ -734,16 +736,16 @@ export default function ReplayTab({ raceData, currentLapIdx, commentary = [] }: 
 
                   if (moments.length === 0) {
                     return (
-                      <div className="h-full flex items-center justify-center text-slate-650 text-[8px] uppercase font-bold border border-dashed border-white/5 rounded py-4 select-none">
+                      <div className="h-full flex items-center justify-center text-slate-650 text-micro uppercase font-bold border border-dashed border-white/5 rounded py-4 select-none">
                         Awaiting trigger lap milestone events...
                       </div>
                     );
                   }
 
                   return (
-                    <table className="w-full text-left font-data text-[8.5px] leading-normal select-text">
+                    <table className="w-full text-left font-data text-micro leading-normal select-text">
                       <thead>
-                        <tr className="text-slate-500 uppercase text-[7px] border-b border-white/5 font-bold tracking-wider pb-1">
+                        <tr className="text-slate-500 uppercase text-micro border-b border-white/5 font-bold tracking-wider pb-1">
                           <th className="pb-1 pl-1">Lap</th>
                           <th className="pb-1 w-[32%]">Incident</th>
                           <th className="pb-1 w-[32%]">Pricing Effect</th>
@@ -768,12 +770,12 @@ export default function ReplayTab({ raceData, currentLapIdx, commentary = [] }: 
           </div>
 
           {/* ACTIVE WIRE COMMENTARY FEED */}
-          <div className="flex-1 bg-carbon-surface border border-white/5 rounded p-3.5 flex flex-col min-h-[160px] shadow-lg">
+          <div className="flex-1 panel-raised rounded p-3.5 flex flex-col min-h-[150px]">
             <div className="flex justify-between items-center border-b border-white/5 pb-1.5 mb-2.5 select-none">
-              <span className="text-[8px] text-slate-200 font-extrabold uppercase tracking-wider block flex items-center gap-1">
+              <span className="text-micro text-slate-200 font-extrabold uppercase tracking-wider block flex items-center gap-1">
                 📡 ACTIVE WIRE COMMENTARY & LEDGER ACTION
               </span>
-              <span className="text-[7.5px] text-slate-550 font-bold tracking-wider flex items-center gap-1">
+              <span className="text-micro text-slate-550 font-bold tracking-wider flex items-center gap-1">
                 <Clock className="w-2.5 h-2.5 text-terminal-blue" /> WIRE BROADCAST
               </span>
             </div>
@@ -781,17 +783,17 @@ export default function ReplayTab({ raceData, currentLapIdx, commentary = [] }: 
             <div className="flex-1 overflow-y-auto pr-1 space-y-2 select-text scrollbar-thin">
               {commentary.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-slate-650 text-center p-4">
-                  <span className="text-[8.5px] font-bold uppercase tracking-wider block">Awaiting Replay Commentary Logs...</span>
-                  <p className="text-[8px] leading-snug font-sans font-light mt-1 max-w-[200px]">Wire updates arrive dynamically lap-by-lap, mapping race events to exact option pricing outcomes.</p>
+                  <span className="text-micro font-bold uppercase tracking-wider block">Awaiting Replay Commentary Logs...</span>
+                  <p className="text-micro leading-snug font-sans font-light mt-1 max-w-[200px]">Wire updates arrive dynamically lap-by-lap, mapping race events to exact option pricing outcomes.</p>
                 </div>
               ) : (
                 commentary.map((feedItem, idx) => (
-                  <div key={idx} className="bg-carbon-black/35 border border-white/5 rounded p-2 text-[9px] font-data leading-normal flex items-start gap-2">
-                    <span className="px-1.5 py-0.5 bg-terminal-blue/15 border border-terminal-blue/30 text-terminal-blue-light font-bold rounded text-[7.5px] uppercase shrink-0 mt-0.5 min-w-[50px] text-center">
+                  <div key={idx} className="bg-carbon-black/35 border border-white/5 rounded p-2 text-micro font-data leading-normal flex items-start gap-2">
+                    <span className="px-1.5 py-0.5 bg-terminal-blue/15 border border-terminal-blue/30 text-terminal-blue-light font-bold rounded text-micro uppercase shrink-0 mt-0.5 min-w-[50px] text-center">
                       LAP {feedItem.lap}
                     </span>
                     <div className="flex-1 space-y-0.5">
-                      <span className="text-slate-500 text-[7px] uppercase font-bold tracking-wider block">TYPE: {feedItem.impactType.toUpperCase()} // LOG</span>
+                      <span className="text-slate-500 text-micro uppercase font-bold tracking-wider block">TYPE: {feedItem.impactType.toUpperCase()} // LOG</span>
                       <p className="text-slate-200 font-sans font-light leading-normal">{feedItem.headline}</p>
                     </div>
                   </div>

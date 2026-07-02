@@ -175,25 +175,25 @@ export default function PortfolioTab({
 
 
   return (
-    <div className="h-full flex flex-col gap-3.5 select-none min-h-[500px] font-mono text-[10px] text-slate-450">
+    <div className="flex flex-col gap-3.5 select-none font-mono text-body-sm text-slate-450">
       
       {/* 1. ASYMMETRIC PORTFOLIO HERO LAYOUT */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-3.5 shrink-0 select-none">
         
         {/* HERO: Portfolio Value (NAV) - Spans 5 columns */}
         <div className="md:col-span-5 bg-carbon-surface border border-white/10 rounded p-4 flex flex-col justify-between shadow-xl relative overflow-hidden">
-          <span className="text-[7.5px] text-slate-500 font-bold uppercase tracking-wider block">NAV Net Worth Portfolio Valuation</span>
+          <span className="text-micro text-slate-500 font-bold uppercase tracking-wider block">NAV Net Worth Portfolio Valuation</span>
           <h2 className="text-white text-xl md:text-2xl font-extrabold tracking-tight block font-data leading-none mt-2">
             ${portfolioValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </h2>
           
-          <div className="grid grid-cols-2 gap-2 mt-3 pt-2.5 border-t border-white/5 text-[8px] text-slate-500 font-data">
+          <div className="grid grid-cols-2 gap-2 mt-3 pt-2.5 border-t border-white/5 text-micro text-slate-500 font-data">
             <div>
-              <span className="block text-slate-550 uppercase text-[6.5px]">Open Race Exposure</span>
+              <span className="block text-slate-550 uppercase text-micro">Open Race Exposure</span>
               <span className="text-white font-bold block mt-0.5">${openRaceExposure.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
             </div>
             <div>
-              <span className="block text-slate-550 uppercase text-[6.5px]">Open Season Exposure</span>
+              <span className="block text-slate-550 uppercase text-micro">Open Season Exposure</span>
               <span className="text-white font-bold block mt-0.5">${openSeasonExposure.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
             </div>
           </div>
@@ -201,41 +201,41 @@ export default function PortfolioTab({
 
         {/* PnL Ledger (Medium) - Spans 3 columns */}
         <div className="md:col-span-3 bg-carbon-surface border border-white/5 rounded p-4 flex flex-col justify-between">
-          <span className="text-[7.5px] text-slate-500 font-bold uppercase tracking-wider block">Mark-to-Market PnL</span>
+          <span className="text-micro text-slate-500 font-bold uppercase tracking-wider block">Mark-to-Market PnL</span>
           <div className="mt-1">
             <span className={`text-base md:text-lg font-bold block font-data leading-none ${unrealizedPnL >= 0 ? "text-terminal-green-light" : "text-terminal-red"}`}>
               {unrealizedPnL >= 0 ? "+" : ""}${unrealizedPnL.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>
-            <div className="grid grid-cols-2 gap-1.5 mt-2 pt-1.5 border-t border-white/5 text-[7px] text-slate-500 font-mono">
+            <div className="grid grid-cols-2 gap-1.5 mt-2 pt-1.5 border-t border-white/5 text-micro text-slate-500 font-mono">
               <div>
-                <span className="text-slate-550 uppercase block font-bold text-[6px]">Realized PnL</span>
+                <span className="text-slate-550 uppercase block font-bold text-micro">Realized PnL</span>
                 <span className={`font-bold block mt-0.5 ${realizedPnL >= 0 ? "text-terminal-green-light" : "text-terminal-red"}`}>
                   {realizedPnL >= 0 ? "+" : ""}${realizedPnL.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                 </span>
               </div>
               <div>
-                <span className="text-slate-550 uppercase block font-bold text-[6px]">Unrealized Futures</span>
+                <span className="text-slate-550 uppercase block font-bold text-micro">Unrealized Futures</span>
                 <span className={`font-bold block mt-0.5 ${unrealizedFuturesPnL >= 0 ? "text-terminal-green-light" : "text-terminal-red"}`}>
                   {unrealizedFuturesPnL >= 0 ? "+" : ""}${unrealizedFuturesPnL.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                 </span>
               </div>
             </div>
           </div>
-          <div className="flex justify-between items-center text-[8.5px] text-slate-550 border-t border-white/5 pt-1 mt-2">
+          <div className="flex justify-between items-center text-micro text-slate-550 border-t border-white/5 pt-1 mt-2">
             <span>Cash Reserves</span>
             <span className="text-white font-bold font-data">${cash.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
           </div>
         </div>
 
         {/* Secondary: Exposure Ratio - Spans 2 columns */}
-        <div className="md:col-span-2 bg-carbon-surface border border-white/5 rounded p-3 flex flex-col justify-between text-[9px]">
+        <div className="md:col-span-2 bg-carbon-surface border border-white/5 rounded p-3 flex flex-col justify-between text-micro">
           <div>
-            <span className="text-[7.5px] text-slate-500 font-bold uppercase tracking-wider block">Risk Exposure</span>
+            <span className="text-micro text-slate-500 font-bold uppercase tracking-wider block">Risk Exposure</span>
             <div className="mt-1.5 flex items-baseline gap-1 font-data">
               <span className={`text-sm font-bold ${exposurePercent > 25 ? "text-terminal-yellow" : "text-white"}`}>
                 {exposurePercent.toFixed(1)}%
               </span>
-              <span className="text-[7.5px] text-slate-550">/ 30.0% Limit</span>
+              <span className="text-micro text-slate-550">/ 30.0% Limit</span>
             </div>
           </div>
           <div className="w-full bg-white/5 h-1 rounded overflow-hidden mt-2">
@@ -244,17 +244,17 @@ export default function PortfolioTab({
         </div>
 
         {/* Secondary: Drawdown & Limits - Spans 2 columns */}
-        <div className="md:col-span-2 bg-carbon-surface border border-white/5 rounded p-3 flex flex-col justify-between text-[9px]">
+        <div className="md:col-span-2 bg-carbon-surface border border-white/5 rounded p-3 flex flex-col justify-between text-micro">
           <div>
-            <span className="text-[7.5px] text-slate-500 font-bold uppercase tracking-wider block">Maximum Drawdown</span>
+            <span className="text-micro text-slate-500 font-bold uppercase tracking-wider block">Maximum Drawdown</span>
             <div className="mt-1.5 flex items-baseline gap-1 font-data">
               <span className={`text-sm font-bold ${maxDrawdown > 15 ? "text-terminal-red" : "text-white"}`}>
                 {maxDrawdown.toFixed(1)}%
               </span>
-              <span className="text-[7.5px] text-slate-550">Peak-to-Trough</span>
+              <span className="text-micro text-slate-550">Peak-to-Trough</span>
             </div>
           </div>
-          <div className="text-[7.5px] text-slate-550 flex justify-between items-center border-t border-white/5 pt-1.5 mt-2 font-mono">
+          <div className="text-micro text-slate-550 flex justify-between items-center border-t border-white/5 pt-1.5 mt-2 font-mono">
             <span>RISK LEVEL</span>
             <span className="text-slate-400 font-bold">20% MAX</span>
           </div>
@@ -266,7 +266,7 @@ export default function PortfolioTab({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 shrink-0 select-none">
         <div className="bg-carbon-surface border border-white/5 rounded p-2.5 flex items-center justify-between">
           <div>
-            <span className="text-[7.5px] text-slate-550 font-bold uppercase tracking-wider block">Portfolio Delta (Δ_P)</span>
+            <span className="text-micro text-slate-550 font-bold uppercase tracking-wider block">Portfolio Delta (Δ_P)</span>
             <span className={`text-xs font-bold font-data block mt-0.5 ${netDelta > 0 ? "text-terminal-blue-light" : (netDelta < 0 ? "text-terminal-red" : "text-white")}`}>
               {netDelta > 0 ? "+" : ""}{netDelta.toFixed(2)}
             </span>
@@ -276,9 +276,9 @@ export default function PortfolioTab({
 
         <div className="bg-carbon-surface border border-white/5 rounded p-2.5 flex items-center justify-between">
           <div>
-            <span className="text-[7.5px] text-slate-550 font-bold uppercase tracking-wider block">Portfolio Theta (Θ_P)</span>
+            <span className="text-micro text-slate-550 font-bold uppercase tracking-wider block">Portfolio Theta (Θ_P)</span>
             <span className={`text-xs font-bold font-data block mt-0.5 ${netTheta >= 0 ? "text-terminal-green-light" : "text-slate-400"}`}>
-              {netTheta > 0 ? "+" : ""}{netTheta.toFixed(4)} <span className="text-[7.5px] text-slate-550 font-normal">/ lap</span>
+              {netTheta > 0 ? "+" : ""}{netTheta.toFixed(4)} <span className="text-micro text-slate-550 font-normal">/ lap</span>
             </span>
           </div>
           <Activity className="w-4 h-4 text-terminal-green/35" />
@@ -286,7 +286,7 @@ export default function PortfolioTab({
 
         <div className="bg-carbon-surface border border-white/5 rounded p-2.5 flex items-center justify-between">
           <div>
-            <span className="text-[7.5px] text-slate-550 font-bold uppercase tracking-wider block">Average Implied Volatility (IV)</span>
+            <span className="text-micro text-slate-550 font-bold uppercase tracking-wider block">Average Implied Volatility (IV)</span>
             <span className="text-white text-xs font-bold font-data block mt-0.5">
               {avgIv}%
             </span>
@@ -301,18 +301,19 @@ export default function PortfolioTab({
           <div className="flex justify-between items-center border-b border-white/5 pb-2 mb-3 shrink-0 select-none">
             <div className="flex items-center gap-1.5">
               <TrendingUp className="w-4 h-4 text-terminal-blue" />
-              <span className="text-[8px] text-slate-500 font-bold uppercase tracking-wider">Equity Curve Telemetry History</span>
+              <span className="text-micro text-slate-500 font-bold uppercase tracking-wider">Equity Curve Telemetry History</span>
             </div>
-            <span className="text-[7.5px] text-slate-550 font-mono uppercase font-bold tracking-wider">MARK-TO-MARKET PORTFOLIO NET ASSETS VALUE</span>
+            <span className="text-micro text-slate-550 font-mono uppercase font-bold tracking-wider">MARK-TO-MARKET PORTFOLIO NET ASSETS VALUE</span>
           </div>
 
-          <div className="flex-1 min-h-[100px]">
+          <div className="flex-1 min-h-[100px] relative">
             {equityCurve.length < 2 ? (
               <div className="h-full flex flex-col items-center justify-center text-slate-650 text-center space-y-1 p-6 border border-dashed border-white/5 rounded select-none">
-                <span className="text-[9px] uppercase font-bold tracking-wider">No Performance History recorded</span>
-                <p className="text-[8px] font-sans font-light">Run the simulation to record and chart portfolio NAV telemetry.</p>
+                <span className="text-micro uppercase font-bold tracking-wider">No Performance History recorded</span>
+                <p className="text-micro font-sans font-light">Run the simulation to record and chart portfolio NAV telemetry.</p>
               </div>
             ) : (
+              <div className="absolute inset-0">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart
                   data={equityCurve}
@@ -351,6 +352,7 @@ export default function PortfolioTab({
                   />
                 </AreaChart>
               </ResponsiveContainer>
+              </div>
             )}
           </div>
         </div>
@@ -362,27 +364,27 @@ export default function PortfolioTab({
         <div className="lg:col-span-2 bg-carbon-surface border border-white/5 rounded p-3.5 flex flex-col min-h-0">
           
           <div className="flex justify-between items-center mb-2 border-b border-white/5 pb-1.5 shrink-0 select-none">
-            <span className="text-[8.5px] text-white font-extrabold uppercase tracking-wider block flex items-center gap-1.5">
+            <span className="text-micro text-white font-extrabold uppercase tracking-wider block flex items-center gap-1.5">
               💼 ACTIVE PORTFOLIO OPEN POSITIONS LEDGER
             </span>
-            <span className="text-[7.5px] text-slate-550 font-bold uppercase font-mono">Race vs. Season Segregation</span>
+            <span className="text-micro text-slate-550 font-bold uppercase font-mono">Race vs. Season Segregation</span>
           </div>
 
           <div className="flex-1 overflow-y-auto pr-1 space-y-4">
             
             {/* SUBSECTION 1: ACTIVE RACE CONTRACTS (RACE BOOK) */}
             <div className="space-y-1.5">
-              <span className="text-[7.5px] text-terminal-blue font-bold uppercase tracking-wider block">
+              <span className="text-micro text-terminal-blue font-bold uppercase tracking-wider block">
                 ⚡ Active Race Contracts (Short-Term Positions)
               </span>
               {racePositions.length === 0 ? (
-                <div className="bg-carbon-black/20 border border-dashed border-white/5 rounded p-2 text-center text-slate-550 text-[8.5px]">
+                <div className="bg-carbon-black/20 border border-dashed border-white/5 rounded p-2 text-center text-slate-550 text-micro">
                   No active short-term race contracts held.
                 </div>
               ) : (
-                <table className="w-full text-left font-data text-[9px]">
+                <table className="w-full text-left font-data text-micro">
                   <thead>
-                    <tr className="text-slate-500 uppercase text-[7px] border-b border-white/5 font-bold tracking-wider">
+                    <tr className="text-slate-500 uppercase text-micro border-b border-white/5 font-bold tracking-wider">
                       <th className="pb-1 pl-1 w-[40%]">Option Ticker</th>
                       <th className="pb-1 text-right">Size</th>
                       <th className="pb-1 text-right">Avg Cost</th>
@@ -401,7 +403,7 @@ export default function PortfolioTab({
                         <tr key={posKey} className="border-b border-white/5 last:border-0 hover:bg-white/2">
                           <td className="py-1 pl-1">
                             <span className="text-terminal-blue-light font-mono font-bold block leading-none">{symbol}</span>
-                            <span className="text-[7.5px] text-slate-450 truncate block mt-0.5 leading-none">{pos.contractTitle}</span>
+                            <span className="text-micro text-slate-450 truncate block mt-0.5 leading-none">{pos.contractTitle}</span>
                           </td>
                           <td className="py-1 text-right font-bold text-slate-200">{pos.qty}</td>
                           <td className="py-1 text-right">${pos.entryPrice.toFixed(2)}</td>
@@ -412,7 +414,7 @@ export default function PortfolioTab({
                           <td className="py-1 text-center">
                             <button
                               onClick={() => closePosition(posKey)}
-                              className="px-1 py-0.2 bg-terminal-red/10 border border-terminal-red/20 text-terminal-red hover:bg-terminal-red/25 font-bold uppercase rounded cursor-pointer transition-colors text-[7px]"
+                              className="px-1 py-0.2 bg-terminal-red/10 border border-terminal-red/20 text-terminal-red hover:bg-terminal-red/25 font-bold uppercase rounded cursor-pointer transition-colors text-micro"
                             >
                               Exit
                             </button>
@@ -427,17 +429,17 @@ export default function PortfolioTab({
 
             {/* SUBSECTION 2: SEASON FUTURES HOLDINGS (SEASON BOOK) */}
             <div className="space-y-1.5 border-t border-white/5 pt-3">
-              <span className="text-[7.5px] text-terminal-gold font-bold uppercase tracking-wider block">
+              <span className="text-micro text-terminal-gold font-bold uppercase tracking-wider block">
                 🏆 Season Championship Futures (Long-Term Holdings)
               </span>
               {seasonPositions.length === 0 ? (
-                <div className="bg-carbon-black/20 border border-dashed border-white/5 rounded p-2 text-center text-slate-550 text-[8.5px]">
+                <div className="bg-carbon-black/20 border border-dashed border-white/5 rounded p-2 text-center text-slate-550 text-micro">
                   No active long-term season futures positions held.
                 </div>
               ) : (
-                <table className="w-full text-left font-data text-[9px]">
+                <table className="w-full text-left font-data text-micro">
                   <thead>
-                    <tr className="text-slate-500 uppercase text-[7px] border-b border-white/5 font-bold tracking-wider">
+                    <tr className="text-slate-500 uppercase text-micro border-b border-white/5 font-bold tracking-wider">
                       <th className="pb-1 pl-1 w-[45%]">Season Future Asset</th>
                       <th className="pb-1 text-right w-[15%]">Position Size</th>
                       <th className="pb-1 text-right w-[12%]">Entry Price</th>
@@ -455,7 +457,7 @@ export default function PortfolioTab({
                         <tr key={pos.contractId} className="border-b border-white/5 last:border-0 hover:bg-white/2">
                           <td className="py-1 pl-1">
                             <span className="text-terminal-gold font-mono font-bold block leading-none">{symbol}</span>
-                            <span className="text-[7.5px] text-slate-450 truncate block mt-0.5 leading-none">{pos.contractTitle}</span>
+                            <span className="text-micro text-slate-450 truncate block mt-0.5 leading-none">{pos.contractTitle}</span>
                           </td>
                           <td className="py-1 text-right text-slate-300">{pos.qty} units</td>
                           <td className="py-1 text-right text-slate-400">${pos.entryPrice.toFixed(2)}</td>
@@ -476,17 +478,17 @@ export default function PortfolioTab({
 
         {/* Quant Team Risk Attribution Matrix */}
         <div className="bg-carbon-surface border border-white/5 rounded p-3 flex flex-col min-h-0">
-          <span className="text-[8px] text-slate-500 font-bold uppercase tracking-wider block mb-2">Team Concentration Matrix</span>
+          <span className="text-micro text-slate-500 font-bold uppercase tracking-wider block mb-2">Team Concentration Matrix</span>
 
           <div className="flex-1 overflow-y-auto pr-1">
             {activeHoldingsCount === 0 ? (
-              <div className="h-full flex items-center justify-center text-slate-650 text-[8px] uppercase font-bold select-none border border-dashed border-white/5 rounded">
+              <div className="h-full flex items-center justify-center text-slate-650 text-micro uppercase font-bold select-none border border-dashed border-white/5 rounded">
                 NO ASSETS VALUED
               </div>
             ) : (
-              <table className="w-full text-left font-data text-[9px]">
+              <table className="w-full text-left font-data text-micro">
                 <thead>
-                  <tr className="text-slate-500 uppercase text-[7px] border-b border-white/5 font-bold tracking-wider">
+                  <tr className="text-slate-500 uppercase text-micro border-b border-white/5 font-bold tracking-wider">
                     <th className="pb-1 pl-1">Risk Dimension</th>
                     <th className="pb-1 text-right">Exposure</th>
                     <th className="pb-1 text-right">Weight</th>
@@ -499,7 +501,7 @@ export default function PortfolioTab({
                       <td className="py-1 text-right text-slate-350">${attr.val.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
                       <td className="py-1 text-right">
                         <div className="flex items-center justify-end gap-1">
-                          <span className="font-bold text-white text-[8px]">{attr.pct.toFixed(0)}%</span>
+                          <span className="font-bold text-white text-micro">{attr.pct.toFixed(0)}%</span>
                         </div>
                       </td>
                     </tr>
@@ -513,21 +515,21 @@ export default function PortfolioTab({
         {/* Delta-Hedging Advisor Widget */}
         <div className="bg-carbon-surface border border-white/5 rounded p-3 flex flex-col min-h-0">
           <div className="flex justify-between items-center mb-2 shrink-0 select-none">
-            <span className="text-[8px] text-slate-500 font-bold uppercase tracking-wider block">Hedging Advisor</span>
+            <span className="text-micro text-slate-500 font-bold uppercase tracking-wider block">Hedging Advisor</span>
             <Layers className="w-3.5 h-3.5 text-terminal-blue" />
           </div>
 
           <div className="flex-1 flex flex-col justify-between space-y-2 min-h-0 select-none">
-            <div className={`p-2 rounded border text-[8.5px] leading-snug font-sans font-light flex-1 overflow-y-auto ${hedgeAdvice.style}`}>
-              <span className="font-bold block uppercase font-mono text-[8px] tracking-wider mb-1 flex items-center gap-1">
+            <div className={`p-2 rounded border text-micro leading-snug font-sans font-light flex-1 overflow-y-auto ${hedgeAdvice.style}`}>
+              <span className="font-bold block uppercase font-mono text-micro tracking-wider mb-1 flex items-center gap-1">
                 {netDelta > 0 ? <TrendingUp className="w-3 h-3 text-terminal-blue" /> : (netDelta < 0 ? <TrendingDown className="w-3 h-3 text-terminal-red" /> : <Sigma className="w-3 h-3 text-slate-400" />)}
                 {hedgeAdvice.bias}
               </span>
               {hedgeAdvice.text}
             </div>
 
-            <div className="p-2 bg-carbon-black border border-white/5 rounded text-[8px] text-slate-400 leading-snug font-mono select-none">
-              <span className="text-terminal-gold font-bold block uppercase tracking-wider text-[7.5px] mb-0.5">HEADING RECOMMENDATION</span>
+            <div className="p-2 bg-carbon-black border border-white/5 rounded text-micro text-slate-400 leading-snug font-mono select-none">
+              <span className="text-terminal-gold font-bold block uppercase tracking-wider text-micro mb-0.5">HEADING RECOMMENDATION</span>
               {hedgeAdvice.action}
             </div>
           </div>
@@ -537,34 +539,34 @@ export default function PortfolioTab({
 
       {/* 5. PORTFOLIO SETTLEMENT PROJECTIONS & RISK BOUNDS */}
       <div className="bg-carbon-surface border border-white/5 rounded p-3.5 flex flex-col shrink-0 select-none">
-        <span className="text-[8px] text-slate-500 font-bold uppercase tracking-wider block mb-2">Institutional Settlement Range & Risk Bounds</span>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-3.5 text-center font-data text-[9.5px]">
+        <span className="text-micro text-slate-500 font-bold uppercase tracking-wider block mb-2">Institutional Settlement Range & Risk Bounds</span>
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3.5 text-center font-data text-micro">
           <div className="bg-carbon-black/30 p-2 rounded border border-white/5">
-            <span className="text-slate-500 block text-[7px] uppercase">Worst Outcome (Liquidated)</span>
+            <span className="text-slate-500 block text-micro uppercase">Worst Outcome (Liquidated)</span>
             <span className="text-white font-bold block mt-0.5">
               ${outcomes.worst.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>
           </div>
           <div className="bg-carbon-black/30 p-2 rounded border border-white/5">
-            <span className="text-slate-500 block text-[7px] uppercase">Best Outcome (Perfect Settlement)</span>
+            <span className="text-slate-500 block text-micro uppercase">Best Outcome (Perfect Settlement)</span>
             <span className="text-white font-bold block mt-0.5">
               ${outcomes.best.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>
           </div>
           <div className="bg-carbon-black/30 p-2 rounded border border-white/5">
-            <span className="text-slate-500 block text-[7px] uppercase">Current Risk Ratio</span>
+            <span className="text-slate-500 block text-micro uppercase">Current Risk Ratio</span>
             <span className="text-white font-bold block mt-0.5">
               {exposurePercent.toFixed(2)}%
             </span>
           </div>
           <div className="bg-carbon-black/30 p-2 rounded border border-white/5">
-            <span className="text-slate-500 block text-[7px] uppercase">Projected Net Settlement Range</span>
+            <span className="text-slate-500 block text-micro uppercase">Projected Net Settlement Range</span>
             <span className={`font-bold block mt-0.5 ${outcomes.worst - portfolioValue >= 0 ? "text-terminal-green-light" : "text-terminal-red"}`}>
               {outcomes.worst - portfolioValue >= 0 ? "+" : ""}${(outcomes.worst - portfolioValue).toFixed(0)} / +${(outcomes.best - portfolioValue).toFixed(0)}
             </span>
           </div>
           <div className="bg-carbon-black/30 p-2 rounded border border-white/5 col-span-2 md:col-span-1 flex flex-col justify-center">
-            <span className="text-slate-500 block text-[7px] uppercase">Institutional Risk Status</span>
+            <span className="text-slate-500 block text-micro uppercase">Institutional Risk Status</span>
             <span className={`block mt-0.5 font-bold ${riskStatus.style}`}>
               {riskStatus.label}
             </span>
@@ -574,16 +576,16 @@ export default function PortfolioTab({
 
       {/* 6. CLOSED TRANSACTION LOGS AUDIT TRAIL */}
       <div className="bg-carbon-surface border border-white/5 rounded p-3 flex flex-col h-[140px] shrink-0 min-h-0 font-mono">
-        <span className="text-[8px] text-slate-500 font-bold uppercase tracking-wider block mb-2">Audit Ledger Log Archive</span>
+        <span className="text-micro text-slate-500 font-bold uppercase tracking-wider block mb-2">Audit Ledger Log Archive</span>
         <div className="flex-1 overflow-y-auto pr-1">
           {tradeHistory.length === 0 ? (
-            <div className="h-full flex items-center justify-center text-slate-650 text-[9px] uppercase font-bold select-none border border-dashed border-white/5 rounded">
+            <div className="h-full flex items-center justify-center text-slate-650 text-micro uppercase font-bold select-none border border-dashed border-white/5 rounded">
               LEDGER STANDBY - NO AUDIT TRAIL RECORDED
             </div>
           ) : (
-            <table className="w-full text-left font-data text-[9.5px]">
+            <table className="w-full text-left font-data text-micro">
               <thead>
-                <tr className="text-slate-500 uppercase text-[7px] border-b border-white/5 font-bold tracking-wider">
+                <tr className="text-slate-500 uppercase text-micro border-b border-white/5 font-bold tracking-wider">
                   <th className="pb-1 pl-1.5">Time</th>
                   <th className="pb-1 w-[35%]">Option Symbol</th>
                   <th className="pb-1 text-center">Type</th>
@@ -601,7 +603,7 @@ export default function PortfolioTab({
                       <span className="text-terminal-blue-light font-bold font-mono block leading-tight">{t.contractTitle}</span>
                     </td>
                     <td className="py-1 text-center">
-                      <span className={`px-1 rounded text-[7.5px] font-bold ${t.type === "BUY" ? "bg-terminal-blue/10 text-terminal-blue-light" : (t.type === "SELL" ? "bg-terminal-red/10 text-terminal-red" : "bg-white/5 text-slate-300")}`}>
+                      <span className={`px-1 rounded text-micro font-bold ${t.type === "BUY" ? "bg-terminal-blue/10 text-terminal-blue-light" : (t.type === "SELL" ? "bg-terminal-red/10 text-terminal-red" : "bg-white/5 text-slate-300")}`}>
                         {t.type}
                       </span>
                     </td>

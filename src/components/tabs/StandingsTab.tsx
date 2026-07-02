@@ -213,17 +213,17 @@ export default function StandingsTab({
   const progressionData = getProgressionData();
 
   return (
-    <div className="h-full flex flex-col gap-3.5 select-none min-h-[500px] text-slate-450 font-mono text-[10px]">
+    <div className="h-full flex flex-col gap-3.5 select-none min-h-0 text-slate-450 font-mono text-body-sm">
       
       {/* Top Banner */}
       <div className="bg-carbon-surface border border-white/5 rounded p-3 flex justify-between items-center shrink-0">
         <div className="flex items-center gap-2">
           <Trophy className="w-4 h-4 text-terminal-gold animate-pulse" />
-          <span className="text-white font-extrabold text-[10.5px] uppercase tracking-wider">
+          <span className="text-white font-extrabold text-micro uppercase tracking-wider">
             OFFICIAL 2025 FIA CHAMPIONSHIP STANDINGS REPLAY
           </span>
         </div>
-        <div className="text-[8px] text-slate-550 font-bold uppercase flex gap-4 select-none">
+        <div className="text-micro text-slate-550 font-bold uppercase flex gap-4 select-none">
           <span>PROGRESS: {completedRaces.length} / 24 ROUNDS COMPLETED</span>
           <span>SEASON: 2025</span>
         </div>
@@ -235,16 +235,16 @@ export default function StandingsTab({
         {/* Drivers Standings Panel (Col-span-7) */}
         <div className="lg:col-span-7 bg-carbon-surface border border-white/5 rounded p-3.5 flex flex-col min-h-0">
           <div className="flex justify-between items-center border-b border-white/5 pb-2 mb-3 shrink-0">
-            <span className="text-[8.5px] text-slate-200 font-extrabold uppercase tracking-wider flex items-center gap-1">
+            <span className="text-micro text-slate-200 font-extrabold uppercase tracking-wider flex items-center gap-1">
               🏆 DRIVERS WORLD CHAMPIONSHIP
             </span>
-            <span className="text-[8px] text-slate-555 uppercase tracking-wider font-bold">LIVE STANDINGS EVOLUTION</span>
+            <span className="text-micro text-slate-555 uppercase tracking-wider font-bold">LIVE STANDINGS EVOLUTION</span>
           </div>
 
           <div className="flex-1 overflow-y-auto pr-1">
-            <table className="w-full text-left font-data text-[9.5px]">
+            <table className="w-full text-left font-data text-micro">
               <thead>
-                <tr className="text-slate-500 uppercase text-[7.5px] border-b border-white/5 font-bold tracking-wider">
+                <tr className="text-slate-500 uppercase text-micro border-b border-white/5 font-bold tracking-wider">
                   <th className="pb-1.5 pl-2 w-[10%]">Rank</th>
                   <th className="pb-1.5 w-[30%]">Driver</th>
                   <th className="pb-1.5 w-[20%]">Constructor</th>
@@ -272,11 +272,11 @@ export default function StandingsTab({
                           )}
                           {completedRaces.length > 0 && (
                             drv.change > 0 ? (
-                              <span className="text-terminal-green-light flex items-center text-[7.5px] font-extrabold" title="Ranks gained"><ChevronUp className="w-2.5 h-2.5 shrink-0" />{drv.change}</span>
+                              <span className="text-terminal-green-light flex items-center text-micro font-extrabold" title="Ranks gained"><ChevronUp className="w-2.5 h-2.5 shrink-0" />{drv.change}</span>
                             ) : drv.change < 0 ? (
-                              <span className="text-terminal-red flex items-center text-[7.5px] font-extrabold" title="Ranks lost"><ChevronDown className="w-2.5 h-2.5 shrink-0" />{Math.abs(drv.change)}</span>
+                              <span className="text-terminal-red flex items-center text-micro font-extrabold" title="Ranks lost"><ChevronDown className="w-2.5 h-2.5 shrink-0" />{Math.abs(drv.change)}</span>
                             ) : (
-                              <span className="text-slate-600 flex items-center text-[7.5px]"><Minus className="w-2 h-2 shrink-0" /></span>
+                              <span className="text-slate-600 flex items-center text-micro"><Minus className="w-2 h-2 shrink-0" /></span>
                             )
                           )}
                         </div>
@@ -286,8 +286,8 @@ export default function StandingsTab({
                           className="w-1 h-3 rounded-sm inline-block shrink-0" 
                           style={{ backgroundColor: drv.color }}
                         />
-                        <span className="font-mono text-[9px] text-slate-400">[{drv.code}]</span>
-                        <span className="font-sans font-light text-[9.5px] truncate max-w-[120px]">{drv.name}</span>
+                        <span className="font-mono text-micro text-slate-400">[{drv.code}]</span>
+                        <span className="font-sans font-light text-micro truncate max-w-[120px]">{drv.name}</span>
                       </td>
                       <td className="py-1.5 font-sans font-light text-slate-400">{drv.team}</td>
                       <td className="py-1.5 text-right text-slate-200">
@@ -297,7 +297,7 @@ export default function StandingsTab({
                           <span className="text-slate-600">0</span>
                         )}
                       </td>
-                      <td className="py-1.5 text-right font-mono text-[8.5px] text-slate-500">{gap}</td>
+                      <td className="py-1.5 text-right font-mono text-micro text-slate-500">{gap}</td>
                       <td className="py-1.5 text-right font-bold text-white font-data pr-2">{drv.points}</td>
                     </tr>
                   );
@@ -310,16 +310,16 @@ export default function StandingsTab({
         {/* Constructors Standings Panel (Col-span-5) */}
         <div className="lg:col-span-5 bg-carbon-surface border border-white/5 rounded p-3.5 flex flex-col min-h-0">
           <div className="flex justify-between items-center border-b border-white/5 pb-2 mb-3 shrink-0">
-            <span className="text-[8.5px] text-slate-200 font-extrabold uppercase tracking-wider flex items-center gap-1">
+            <span className="text-micro text-slate-200 font-extrabold uppercase tracking-wider flex items-center gap-1">
               🔧 CONSTRUCTORS WORLD CHAMPIONSHIP
             </span>
-            <span className="text-[8px] text-slate-555 uppercase tracking-wider font-bold">CONSTRUCTORS TITLE</span>
+            <span className="text-micro text-slate-555 uppercase tracking-wider font-bold">CONSTRUCTORS TITLE</span>
           </div>
 
           <div className="flex-1 overflow-y-auto pr-1">
-            <table className="w-full text-left font-data text-[9.5px]">
+            <table className="w-full text-left font-data text-micro">
               <thead>
-                <tr className="text-slate-500 uppercase text-[7.5px] border-b border-white/5 font-bold tracking-wider">
+                <tr className="text-slate-500 uppercase text-micro border-b border-white/5 font-bold tracking-wider">
                   <th className="pb-1.5 pl-2 w-[15%]">Rank</th>
                   <th className="pb-1.5 w-[45%]">Constructor</th>
                   <th className="pb-1.5 text-right w-[15%]">Gained</th>
@@ -340,11 +340,11 @@ export default function StandingsTab({
                           <span>P{rank}</span>
                           {completedRaces.length > 0 && (
                             team.change > 0 ? (
-                              <span className="text-terminal-green-light flex items-center text-[7.5px] font-extrabold" title="Ranks gained"><ChevronUp className="w-2.5 h-2.5 shrink-0" />{team.change}</span>
+                              <span className="text-terminal-green-light flex items-center text-micro font-extrabold" title="Ranks gained"><ChevronUp className="w-2.5 h-2.5 shrink-0" />{team.change}</span>
                             ) : team.change < 0 ? (
-                              <span className="text-terminal-red flex items-center text-[7.5px] font-extrabold" title="Ranks lost"><ChevronDown className="w-2.5 h-2.5 shrink-0" />{Math.abs(team.change)}</span>
+                              <span className="text-terminal-red flex items-center text-micro font-extrabold" title="Ranks lost"><ChevronDown className="w-2.5 h-2.5 shrink-0" />{Math.abs(team.change)}</span>
                             ) : (
-                              <span className="text-slate-600 flex items-center text-[7.5px]"><Minus className="w-2 h-2 shrink-0" /></span>
+                              <span className="text-slate-600 flex items-center text-micro"><Minus className="w-2 h-2 shrink-0" /></span>
                             )
                           )}
                         </div>
@@ -354,8 +354,8 @@ export default function StandingsTab({
                           className="w-1.5 h-3 rounded-sm inline-block shrink-0" 
                           style={{ backgroundColor: team.color }}
                         />
-                        <span className="font-mono text-[9px] text-slate-400">[{team.code}]</span>
-                        <span className="font-sans font-light text-[9.5px] truncate max-w-[130px]">{team.name}</span>
+                        <span className="font-mono text-micro text-slate-400">[{team.code}]</span>
+                        <span className="font-sans font-light text-micro truncate max-w-[130px]">{team.name}</span>
                       </td>
                       <td className="py-1.5 text-right text-slate-200">
                         {team.gainedThisRound > 0 ? (
@@ -364,7 +364,7 @@ export default function StandingsTab({
                           <span className="text-slate-600">0</span>
                         )}
                       </td>
-                      <td className="py-1.5 text-right font-mono text-[8.5px] text-slate-500">{gap}</td>
+                      <td className="py-1.5 text-right font-mono text-micro text-slate-500">{gap}</td>
                       <td className="py-1.5 text-right font-bold text-white font-data pr-2">{team.points}</td>
                     </tr>
                   );
@@ -381,19 +381,20 @@ export default function StandingsTab({
         <div className="flex justify-between items-center border-b border-white/5 pb-2 mb-2 shrink-0 select-none">
           <div className="flex items-center gap-1.5">
             <TrendingUp className="w-4 h-4 text-terminal-gold" />
-            <span className="text-[8px] text-slate-200 font-bold uppercase tracking-wider">Norris vs Verstappen vs Piastri: 2025 Title Battle Evolution</span>
+            <span className="text-micro text-slate-200 font-bold uppercase tracking-wider">Norris vs Verstappen vs Piastri: 2025 Title Battle Evolution</span>
           </div>
-          <span className="text-[7.5px] text-slate-550 font-mono uppercase font-bold tracking-wider">CUMULATIVE POINTS ROUND-BY-ROUND PROGRESSION</span>
+          <span className="text-micro text-slate-550 font-mono uppercase font-bold tracking-wider">CUMULATIVE POINTS ROUND-BY-ROUND PROGRESSION</span>
         </div>
 
-        <div className="flex-1 min-h-[100px]">
+        <div className="flex-1 min-h-[100px] relative">
           {completedRaces.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-slate-650 text-center space-y-1 p-4 border border-dashed border-white/5 rounded select-none">
               <Calendar className="w-6 h-6 text-slate-700 mb-1" />
-              <span className="text-[9px] uppercase font-bold tracking-wider">Standings History Standby</span>
-              <p className="text-[8px] font-sans font-light">Complete the first Grand Prix replay to begin plotting the Drivers Title battle evolution.</p>
+              <span className="text-micro uppercase font-bold tracking-wider">Standings History Standby</span>
+              <p className="text-micro font-sans font-light">Complete the first Grand Prix replay to begin plotting the Drivers Title battle evolution.</p>
             </div>
           ) : (
+            <div className="absolute inset-0">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
                 data={progressionData}
@@ -445,6 +446,7 @@ export default function StandingsTab({
                 />
               </LineChart>
             </ResponsiveContainer>
+            </div>
           )}
         </div>
       </div>
