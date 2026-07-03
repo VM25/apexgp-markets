@@ -45,12 +45,12 @@ export default function WorkspaceNav({
         className={`h-8 bg-carbon-dark border-b border-white/5 flex items-center justify-between px-3 z-10 transition-all duration-700 delay-75 ease-out ${isAssembled ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}
       >
         {/* Workspace tabs */}
-        <div className="flex gap-1 h-full items-end">
+        <div className="flex gap-1 h-full items-end min-w-0 overflow-x-auto scrollbar-none">
           {TABS.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`h-[26px] px-3 font-bold border-t-2 flex items-center gap-1.5 transition-colors text-micro cursor-pointer rounded-t outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue-light/60 ${activeTab === tab.id ? "bg-carbon-light border-terminal-blue text-white" : "border-transparent text-slate-500 hover:text-slate-300"}`}
+              className={`h-[26px] px-3 font-bold border-t-2 flex items-center gap-1.5 transition-colors text-micro cursor-pointer rounded-t shrink-0 whitespace-nowrap outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue-light/60 ${activeTab === tab.id ? "bg-carbon-light border-terminal-blue text-white" : "border-transparent text-slate-500 hover:text-slate-300"}`}
             >
               {tab.icon}
               {tab.label}
@@ -59,8 +59,9 @@ export default function WorkspaceNav({
         </div>
 
         {/* Density + tutorial */}
-        <div className="flex items-center gap-2">
-          <div className="flex items-center bg-carbon-surface rounded border border-white/5 overflow-hidden text-micro font-bold">
+        <div className="flex items-center gap-2 shrink-0 pl-2">
+          {/* Density/Focus toggle hidden <1280 (rails are drawers there anyway). */}
+          <div className="hidden xl:flex items-center bg-carbon-surface rounded border border-white/5 overflow-hidden text-micro font-bold">
             <button
               type="button"
               onClick={() => setDensityMode("default")}
@@ -77,7 +78,7 @@ export default function WorkspaceNav({
             </button>
           </div>
 
-          <div className="h-3 w-px bg-white/10" />
+          <div className="hidden xl:block h-3 w-px bg-white/10" />
 
           <button
             type="button"

@@ -171,6 +171,30 @@ body {
   animation: toast-in 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+@keyframes drawer-in-left {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+.animate-drawer-in-left {
+  animation: drawer-in-left 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes drawer-in-right {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+.animate-drawer-in-right {
+  animation: drawer-in-right 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes sheet-in {
+  from { transform: translateY(100%); opacity: 0.6; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.animate-sheet-in {
+  animation: sheet-in 0.26s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 @keyframes scroll-text {
   0% { transform: translate3d(0, 0, 0); }
   100% { transform: translate3d(-50%, 0, 0); }
@@ -238,7 +262,10 @@ body {
   .animate-pulse-border,
   .state-replay-running,
   .animate-toast-in,
-  .animate-fadeIn {
+  .animate-fadeIn,
+  .animate-drawer-in-left,
+  .animate-drawer-in-right,
+  .animate-sheet-in {
     animation: none !important;
   }
 }

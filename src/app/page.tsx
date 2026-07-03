@@ -26,6 +26,18 @@ export default function Home() {
   const [showLedgerInSettlement, setShowLedgerInSettlement] = useState<boolean>(false);
   const [densityMode, setDensityMode] = useState<"default" | "focus">("default");
 
+  // Persist density preference. Read post-mount to avoid hydration mismatch.
+  useEffect(() => {
+    const stored = localStorage.getItem("apexgp_density_mode");
+    if (stored === "default" || stored === "focus") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional one-time hydration-safe read
+      setDensityMode(stored);
+    }
+  }, []);
+  useEffect(() => {
+    localStorage.setItem("apexgp_density_mode", densityMode);
+  }, [densityMode]);
+
   // 1. Season State Machine Points Standings state
   const [completedRaces, setCompletedRaces] = useState<string[]>([]);
   const [driverPoints, setDriverPoints] = useState<{ [code: string]: number }>({

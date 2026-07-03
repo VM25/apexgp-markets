@@ -11,6 +11,8 @@ interface LeftRailProps {
   contracts: { [id: string]: Contract };
   commentary: CommentaryHeadline[];
   isAssembled: boolean;
+  /** When hosted inside the mobile/tablet Drawer, drop the inline slide-in + border. */
+  inDrawer?: boolean;
 }
 
 /**
@@ -24,6 +26,7 @@ export default function LeftRail({
   contracts,
   commentary,
   isAssembled,
+  inDrawer = false,
 }: LeftRailProps) {
   const currentRaceIdx = raceData?.round_number ? raceData.round_number : 1;
   const roundNumLabel = String(currentRaceIdx).padStart(2, "0");
@@ -46,7 +49,11 @@ export default function LeftRail({
 
   return (
     <aside
-      className={`w-56 bg-carbon-dark border-r border-white/5 flex flex-col overflow-y-auto scrollbar-none p-3 space-y-3 transition-all duration-700 delay-100 ease-out transform ${isAssembled ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"}`}
+      className={
+        inDrawer
+          ? "w-full bg-carbon-dark flex flex-col overflow-y-auto scrollbar-none p-3 space-y-3"
+          : `w-full bg-carbon-dark border-r border-white/5 flex flex-col overflow-y-auto scrollbar-none p-3 space-y-3 transition-all duration-700 delay-100 ease-out transform ${isAssembled ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"}`
+      }
     >
       <div className="flex-1 flex flex-col space-y-3 font-mono">
         {/* Header */}

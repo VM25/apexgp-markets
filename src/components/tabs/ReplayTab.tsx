@@ -459,7 +459,48 @@ export default function ReplayTab({ raceData, currentLapIdx, commentary = [] }: 
         <div className="flex-1 bg-carbon-surface border border-white/5 rounded p-3 flex flex-col min-h-0">
           <span className="text-micro text-slate-500 font-bold uppercase tracking-wider block mb-2">Timing Grid Standings</span>
           <div className="flex-1 overflow-y-auto pr-1">
-            <table className="w-full text-left font-data text-micro select-none">
+            {/* Mobile 2-line card rows (<768) */}
+            <div className="md:hidden space-y-1.5">
+              {sortedStandings.map((car) => {
+                const startGridPos = raceData.starting_grid.find(g => g.driver_code === car.driver_code)?.position;
+                const posDelta = startGridPos ? startGridPos - car.position : 0;
+                const hasSCInfluence = currentLapData?.safety_car && currentLapData.safety_car !== "NONE" && !car.dnf;
+                return (
+                  <div
+                    key={car.driver_code}
+                    className={`panel-base border rounded p-2.5 ${car.dnf ? "border-terminal-red/20 opacity-80" : "border-white/5"}`}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className="font-bold text-white font-data w-8 shrink-0 flex items-center gap-0.5">
+                          {car.dnf ? "DNF" : car.position}
+                          {!car.dnf && posDelta > 0 && <span className="text-terminal-green-light text-micro">▲{posDelta}</span>}
+                          {!car.dnf && posDelta < 0 && <span className="text-terminal-red text-micro">▼{Math.abs(posDelta)}</span>}
+                        </span>
+                        <span className="font-bold text-slate-200 font-data">{car.driver_code}</span>
+                        <span className="text-slate-400 font-sans font-light truncate">{car.driver_name}</span>
+                      </div>
+                      {car.dnf ? (
+                        <span className="text-terminal-red bg-terminal-red/10 border border-terminal-red/20 px-1.5 py-0.5 rounded text-micro font-bold uppercase shrink-0">
+                          {car.dnf_reason || "RETIRED"}
+                        </span>
+                      ) : hasSCInfluence ? (
+                        <span className="text-terminal-yellow bg-terminal-yellow/10 border border-terminal-yellow/20 px-1.5 py-0.5 rounded text-micro font-bold uppercase shrink-0">SC</span>
+                      ) : (
+                        <span className="text-terminal-green-light bg-terminal-green/5 border border-terminal-green/20 px-1.5 py-0.5 rounded text-micro font-bold uppercase shrink-0">RUN</span>
+                      )}
+                    </div>
+                    <div className="flex items-center justify-between gap-2 mt-1.5 pt-1.5 border-t border-white/5 font-data text-micro text-slate-400">
+                      <span>Gap: <strong className="text-slate-200">{car.dnf ? "--" : (car.position === 1 ? "LEADER" : `+${car.gap_to_leader.toFixed(3)}s`)}</strong></span>
+                      <span>Tire: <strong className={car.tires === "S" ? "text-terminal-red" : car.tires === "M" ? "text-terminal-yellow" : "text-slate-200"}>[{car.tires}] {car.dnf ? "--" : car.tire_age}</strong></span>
+                      <span>Pits: <strong className="text-slate-200">{car.pit_stops}</strong></span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <table className="hidden md:table w-full text-left font-data text-micro select-none">
               <thead>
                 <tr className="text-slate-500 uppercase text-micro border-b border-white/5 font-bold">
                   <th className="pb-1.5 pl-2">Pos</th>

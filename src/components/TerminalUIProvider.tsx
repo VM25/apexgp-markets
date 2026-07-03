@@ -13,6 +13,15 @@ export interface Toast {
 
 export type BackingSide = "YES" | "NO";
 
+/**
+ * Mobile bottom-sheet channels (<768). One sheet is open at a time.
+ * - ticket: OrderTicket for the selected contract
+ * - nav: portfolio snapshot + open positions (opened from the NAV chip)
+ * - more: secondary workspace menu (opened from the MobileTabBar "More")
+ * - commentary: recent wire commentary (opened from the ticker chip)
+ */
+export type MobileSheetKind = null | "ticket" | "nav" | "more" | "commentary";
+
 interface TerminalUIState {
   // Contextual contract selection (lifted out of MarketTab / ChampionshipTab)
   selectedContractId: string;
@@ -26,13 +35,19 @@ interface TerminalUIState {
   pushToast: (t: Omit<Toast, "id">) => void;
   dismissToast: (id: number) => void;
 
-  // Drawer booleans (defined now; used in Wave B)
+  // Rail drawers (Wave B): LeftRail (race story) <1280, DeskPanel (desk) 768-1023
   leftDrawerOpen: boolean;
   setLeftDrawerOpen: (v: boolean) => void;
   rightDrawerOpen: boolean;
   setRightDrawerOpen: (v: boolean) => void;
+
+  // Legacy boolean kept for API compatibility; mobile sheets use activeSheet.
   sheetOpen: boolean;
   setSheetOpen: (v: boolean) => void;
+
+  // Mobile bottom sheet channel (<768)
+  activeSheet: MobileSheetKind;
+  setActiveSheet: (s: MobileSheetKind) => void;
 }
 
 const TerminalUIContext = createContext<TerminalUIState | null>(null);
@@ -47,6 +62,7 @@ export function TerminalUIProvider({ children }: { children: React.ReactNode }) 
   const [leftDrawerOpen, setLeftDrawerOpen] = useState<boolean>(false);
   const [rightDrawerOpen, setRightDrawerOpen] = useState<boolean>(false);
   const [sheetOpen, setSheetOpen] = useState<boolean>(false);
+  const [activeSheet, setActiveSheet] = useState<MobileSheetKind>(null);
 
   const nextId = useRef<number>(1);
 
@@ -77,6 +93,8 @@ export function TerminalUIProvider({ children }: { children: React.ReactNode }) 
     setRightDrawerOpen,
     sheetOpen,
     setSheetOpen,
+    activeSheet,
+    setActiveSheet,
   };
 
   return <TerminalUIContext.Provider value={value}>{children}</TerminalUIContext.Provider>;

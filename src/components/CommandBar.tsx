@@ -1,8 +1,18 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Play, Pause, RotateCcw, ShieldAlert, ChevronDown } from "lucide-react";
+import {
+  Play,
+  Pause,
+  RotateCcw,
+  ShieldAlert,
+  ChevronDown,
+  MoreVertical,
+  PanelLeft,
+  PanelRight,
+} from "lucide-react";
 import ConfirmDialog from "./ConfirmDialog";
+import { useTerminalUI } from "./TerminalUIProvider";
 
 interface RaceMeta {
   id: string;
@@ -27,9 +37,13 @@ interface CommandBarProps {
   handleSpeedChange: (speed: number) => void;
   onResetSeason: () => void;
   isAssembled: boolean;
+  /** Whether the DeskPanel is a right Drawer at the current width (768-1023). */
+  showDeskTrigger?: boolean;
 }
 
-const SPEEDS = [0.5, 1, 2, 4, 10];
+// Primary speeds always visible >=1280; the rest collapse into the overflow menu.
+const PRIMARY_SPEEDS = [1, 2];
+const SECONDARY_SPEEDS = [0.5, 4, 10];
 
 export default function CommandBar({
   isPlaying,
@@ -48,10 +62,14 @@ export default function CommandBar({
   handleSpeedChange,
   onResetSeason,
   isAssembled,
+  showDeskTrigger = false,
 }: CommandBarProps) {
+  const { setLeftDrawerOpen, setRightDrawerOpen, setActiveSheet } = useTerminalUI();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [overflowOpen, setOverflowOpen] = useState(false);
   const [confirm, setConfirm] = useState<null | "race" | "season">(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const overflowRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -71,132 +89,76 @@ export default function CommandBar({
     };
   }, [menuOpen]);
 
-  return (
+  useEffect(() => {
+    if (!overflowOpen) return;
+    const handleClick = (e: MouseEvent) => {
+      if (overflowRef.current && !overflowRef.current.contains(e.target as Node)) {
+        setOverflowOpen(false);
+      }
+    };
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOverflowOpen(false);
+    };
+    document.addEventListener("mousedown", handleClick);
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("keydown", handleKey);
+    };
+  }, [overflowOpen]);
+
+  const sessionMenu = (
     <div
-      className={`h-11 bg-carbon-dark border-b border-white/5 flex items-center justify-between px-3 z-20 transition-all duration-700 ease-out ${isAssembled ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}
+      role="menu"
+      className="absolute left-0 top-full mt-1.5 w-52 panel-elevated rounded-md p-1 z-50 animate-fadeIn"
     >
-      {/* Brand + session menu + race selector */}
-      <div className="flex items-center gap-3">
-        <div className="relative" ref={menuRef}>
-          <button
-            type="button"
-            onClick={() => setMenuOpen((v) => !v)}
-            aria-haspopup="menu"
-            aria-expanded={menuOpen}
-            className="flex items-center gap-1.5 cursor-pointer rounded px-1 py-0.5 hover:bg-white/5 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue-light/60"
-          >
-            <span className={`w-2 h-2 rounded ${isPlaying ? "bg-terminal-blue animate-ping" : "bg-slate-500"}`} />
-            <h1 className="text-white font-extrabold tracking-wider text-micro uppercase">
-              APEXGP <span className="text-terminal-blue-light font-light">{"// INSTITUTIONAL DESK"}</span>
-            </h1>
-            <ChevronDown className="w-3 h-3 text-slate-500" />
-          </button>
+      <button
+        type="button"
+        role="menuitem"
+        onClick={() => {
+          setMenuOpen(false);
+          setConfirm("race");
+        }}
+        className="w-full text-left px-2.5 py-2 rounded text-body-sm text-slate-300 hover:bg-white/5 hover:text-white cursor-pointer transition-colors flex items-center gap-2 outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue-light/60"
+      >
+        <RotateCcw className="w-3.5 h-3.5" /> Reset race
+      </button>
+      <button
+        type="button"
+        role="menuitem"
+        onClick={() => {
+          setMenuOpen(false);
+          setConfirm("season");
+        }}
+        className="w-full text-left px-2.5 py-2 rounded text-body-sm text-slate-300 hover:bg-terminal-red/10 hover:text-terminal-red cursor-pointer transition-colors flex items-center gap-2 outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue-light/60"
+      >
+        <ShieldAlert className="w-3.5 h-3.5" /> Reset season
+      </button>
+    </div>
+  );
 
-          {menuOpen && (
-            <div
-              role="menu"
-              className="absolute left-0 top-full mt-1.5 w-52 panel-elevated rounded-md p-1 z-50 animate-fadeIn"
-            >
-              <button
-                type="button"
-                role="menuitem"
-                onClick={() => {
-                  setMenuOpen(false);
-                  setConfirm("race");
-                }}
-                className="w-full text-left px-2.5 py-2 rounded text-body-sm text-slate-300 hover:bg-white/5 hover:text-white cursor-pointer transition-colors flex items-center gap-2 outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue-light/60"
-              >
-                <RotateCcw className="w-3.5 h-3.5" /> Reset race
-              </button>
-              <button
-                type="button"
-                role="menuitem"
-                onClick={() => {
-                  setMenuOpen(false);
-                  setConfirm("season");
-                }}
-                className="w-full text-left px-2.5 py-2 rounded text-body-sm text-slate-300 hover:bg-terminal-red/10 hover:text-terminal-red cursor-pointer transition-colors flex items-center gap-2 outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue-light/60"
-              >
-                <ShieldAlert className="w-3.5 h-3.5" /> Reset season
-              </button>
-            </div>
-          )}
-        </div>
-
-        <div className="h-3 w-px bg-white/10" />
-
-        <select
-          value={selectedRaceId}
-          onChange={(e) => setSelectedRaceId(e.target.value)}
-          aria-label="Select race"
-          className="bg-carbon-surface hover:bg-white/5 text-slate-300 border border-white/5 rounded px-2 py-1 cursor-pointer text-micro font-bold transition-colors max-w-[220px] outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue-light/60"
-        >
-          {allRaces.map((r, idx) => (
-            <option key={r.id} value={r.id}>
-              ROUND {String(r.round_number || idx + 1).padStart(2, "0")} · {r.name.replace("Grand Prix", "GP")}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Playback + speed + lap + status */}
-      <div className="flex items-center gap-3">
-        <div className="flex items-center bg-carbon-surface rounded border border-white/5 overflow-hidden">
-          <button
-            onClick={handlePlayPause}
-            title={isPlaying ? "Pause Simulation" : "Start Simulation"}
-            className={`p-1.5 hover:bg-white/5 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue-light/60 ${isPlaying ? "text-terminal-yellow" : "text-terminal-green-light"}`}
-          >
-            {isPlaying ? <Pause className="w-3 h-3 fill-current" /> : <Play className="w-3 h-3 fill-current" />}
-          </button>
-          <button
-            onClick={handleReset}
-            title="Reset Simulation"
-            className="p-1.5 hover:bg-white/5 text-slate-400 cursor-pointer border-l border-white/5 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue-light/60"
-          >
-            <RotateCcw className="w-3 h-3" />
-          </button>
-        </div>
-
-        <div className="flex items-center bg-carbon-surface rounded border border-white/5 overflow-hidden text-micro font-bold">
-          {SPEEDS.map((s) => (
-            <button
-              key={s}
-              onClick={() => handleSpeedChange(s)}
-              className={`px-1.5 py-1.5 cursor-pointer transition-colors border-r border-white/5 last:border-0 outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue-light/60 ${speed === s && isPlaying ? "bg-terminal-blue/20 text-white" : "hover:bg-white/5 text-slate-500"}`}
-            >
-              {s}x
-            </button>
-          ))}
-          <button
-            onClick={handleInstantReplay}
-            title="Settle Race Instantly"
-            className="px-1.5 py-1.5 hover:bg-white/5 text-terminal-gold cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue-light/60"
-          >
-            INST
-          </button>
-        </div>
-
-        <div className="flex items-center gap-1.5 bg-carbon-surface rounded border border-white/5 px-2 py-1 text-white font-bold">
-          <span className="text-slate-400 text-micro">LAP</span>
-          <span className="text-terminal-blue-light font-data text-body-sm font-extrabold">{currentLapIdx}</span>
-          <span className="text-slate-600">/</span>
-          <span className="text-slate-300 font-data text-body-sm">{totalLaps}</span>
-        </div>
-
-        {isHalted ? (
-          <div className="bg-terminal-red/10 border border-terminal-red/35 px-2 py-1 rounded flex items-center gap-1 text-terminal-red text-micro font-extrabold animate-pulse-border uppercase tracking-wider">
-            <ShieldAlert className="w-3 h-3 text-terminal-red" /> HALTED
-          </div>
-        ) : (
-          <div className="bg-terminal-green/5 border border-terminal-green/20 px-2 py-1 rounded flex items-center gap-1 text-terminal-green-light text-micro font-extrabold tracking-wider uppercase">
-            <span className="w-1.5 h-1.5 rounded-full bg-terminal-green-light animate-pulse" /> BROADCASTING
-          </div>
+  const brandButton = (compact = false) => (
+    <button
+      type="button"
+      onClick={() => setMenuOpen((v) => !v)}
+      aria-haspopup="menu"
+      aria-expanded={menuOpen}
+      className="flex items-center gap-1.5 cursor-pointer rounded px-1 py-1 hover:bg-white/5 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue-light/60"
+    >
+      <span className={`w-2 h-2 rounded ${isPlaying ? "bg-terminal-blue animate-ping" : "bg-slate-500"}`} />
+      <h1 className="text-white font-extrabold tracking-wider text-micro uppercase">
+        APEXGP
+        {!compact && (
+          <span className="text-terminal-blue-light font-light">{" // INSTITUTIONAL DESK"}</span>
         )}
-      </div>
+      </h1>
+      <ChevronDown className="w-3 h-3 text-slate-500" />
+    </button>
+  );
 
-      {/* NAV + unrealized PnL */}
-      <div className="flex items-center gap-3 bg-carbon-surface rounded border border-white/5 px-3 py-1">
+  const navChip = (onTap?: () => void) => {
+    const inner = (
+      <>
         <div className="text-right">
           <span className="text-micro text-slate-450 block uppercase font-bold tracking-wider leading-none">
             NAV Net Worth
@@ -215,8 +177,39 @@ export default function CommandBar({
             {unrealizedPnL >= 0 ? "+" : ""}${unrealizedPnL.toLocaleString(undefined, { maximumFractionDigits: 0 })}
           </span>
         </div>
+      </>
+    );
+    if (onTap) {
+      return (
+        <button
+          type="button"
+          onClick={onTap}
+          aria-label="Open portfolio summary"
+          className="flex items-center gap-3 bg-carbon-surface rounded border border-white/5 px-3 py-1.5 cursor-pointer hover:bg-white/5 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue-light/60 shrink-0"
+        >
+          {inner}
+        </button>
+      );
+    }
+    return (
+      <div className="flex items-center gap-3 bg-carbon-surface rounded border border-white/5 px-3 py-1">
+        {inner}
       </div>
+    );
+  };
 
+  const statusPill = isHalted ? (
+    <div className="bg-terminal-red/10 border border-terminal-red/35 px-2 py-1 rounded flex items-center gap-1 text-terminal-red text-micro font-extrabold animate-pulse-border uppercase tracking-wider">
+      <ShieldAlert className="w-3 h-3 text-terminal-red" /> HALTED
+    </div>
+  ) : (
+    <div className="bg-terminal-green/5 border border-terminal-green/20 px-2 py-1 rounded flex items-center gap-1 text-terminal-green-light text-micro font-extrabold tracking-wider uppercase">
+      <span className="w-1.5 h-1.5 rounded-full bg-terminal-green-light animate-pulse" /> BROADCASTING
+    </div>
+  );
+
+  const dialogs = (
+    <>
       <ConfirmDialog
         open={confirm === "race"}
         title="Reset Race"
@@ -242,6 +235,211 @@ export default function CommandBar({
           onResetSeason();
         }}
       />
-    </div>
+    </>
+  );
+
+  return (
+    <>
+      {/* ================= DESKTOP / TABLET (>=768) ================= */}
+      <div
+        className={`hidden md:flex h-11 bg-carbon-dark border-b border-white/5 items-center justify-between gap-3 px-3 z-20 transition-all duration-700 ease-out ${isAssembled ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}
+      >
+        {/* Brand + session menu + race selector + rail triggers */}
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="relative" ref={menuRef}>
+            {brandButton()}
+            {menuOpen && sessionMenu}
+          </div>
+
+          <div className="h-3 w-px bg-white/10" />
+
+          {/* Race Story trigger — visible where LeftRail is a drawer (<1280). */}
+          <button
+            type="button"
+            onClick={() => setLeftDrawerOpen(true)}
+            aria-label="Open race story"
+            className="xl:hidden w-9 h-9 flex items-center justify-center rounded text-slate-400 hover:text-white hover:bg-white/5 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue-light/60"
+            title="Race Story"
+          >
+            <PanelLeft className="w-4 h-4" />
+          </button>
+
+          <select
+            value={selectedRaceId}
+            onChange={(e) => setSelectedRaceId(e.target.value)}
+            aria-label="Select race"
+            className="bg-carbon-surface hover:bg-white/5 text-slate-300 border border-white/5 rounded px-2 py-1 cursor-pointer text-micro font-bold transition-colors max-w-[160px] xl:max-w-[220px] min-w-0 outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue-light/60"
+          >
+            {allRaces.map((r, idx) => (
+              <option key={r.id} value={r.id}>
+                ROUND {String(r.round_number || idx + 1).padStart(2, "0")} · {r.name.replace("Grand Prix", "GP")}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Playback + speed + lap + status */}
+        <div className="flex items-center gap-2">
+          <div className="flex items-center bg-carbon-surface rounded border border-white/5 overflow-hidden">
+            <button
+              onClick={handlePlayPause}
+              title={isPlaying ? "Pause Simulation" : "Start Simulation"}
+              className={`p-2 hover:bg-white/5 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue-light/60 ${isPlaying ? "text-terminal-yellow" : "text-terminal-green-light"}`}
+            >
+              {isPlaying ? <Pause className="w-3 h-3 fill-current" /> : <Play className="w-3 h-3 fill-current" />}
+            </button>
+            <button
+              onClick={handleReset}
+              title="Reset Simulation"
+              className="p-2 hover:bg-white/5 text-slate-400 cursor-pointer border-l border-white/5 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue-light/60"
+            >
+              <RotateCcw className="w-3 h-3" />
+            </button>
+          </div>
+
+          {/* Speed cluster: primary (1x/2x) always; secondary shown >=1280. */}
+          <div className="flex items-center bg-carbon-surface rounded border border-white/5 overflow-hidden text-micro font-bold">
+            {PRIMARY_SPEEDS.map((s) => (
+              <button
+                key={s}
+                onClick={() => handleSpeedChange(s)}
+                className={`px-2 py-2 cursor-pointer transition-colors border-r border-white/5 outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue-light/60 ${speed === s && isPlaying ? "bg-terminal-blue/20 text-white" : "hover:bg-white/5 text-slate-500"}`}
+              >
+                {s}x
+              </button>
+            ))}
+            {SECONDARY_SPEEDS.map((s) => (
+              <button
+                key={s}
+                onClick={() => handleSpeedChange(s)}
+                className={`hidden xl:block px-2 py-2 cursor-pointer transition-colors border-r border-white/5 outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue-light/60 ${speed === s && isPlaying ? "bg-terminal-blue/20 text-white" : "hover:bg-white/5 text-slate-500"}`}
+              >
+                {s}x
+              </button>
+            ))}
+            <button
+              onClick={handleInstantReplay}
+              title="Settle Race Instantly"
+              className="px-2 py-2 hover:bg-white/5 text-terminal-gold cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue-light/60"
+            >
+              INST
+            </button>
+          </div>
+
+          <div className="flex items-center gap-1.5 bg-carbon-surface rounded border border-white/5 px-2 py-1 text-white font-bold">
+            <span className="text-slate-400 text-micro">LAP</span>
+            <span className="text-terminal-blue-light font-data text-body-sm font-extrabold">{currentLapIdx}</span>
+            <span className="text-slate-600">/</span>
+            <span className="text-slate-300 font-data text-body-sm">{totalLaps}</span>
+          </div>
+
+          <div className="hidden lg:block">{statusPill}</div>
+
+          {/* Overflow menu for secondary controls <1280 (extra speeds live here too). */}
+          <div className="relative xl:hidden" ref={overflowRef}>
+            <button
+              type="button"
+              onClick={() => setOverflowOpen((v) => !v)}
+              aria-haspopup="menu"
+              aria-expanded={overflowOpen}
+              aria-label="More controls"
+              className="w-9 h-9 flex items-center justify-center rounded bg-carbon-surface border border-white/5 text-slate-400 hover:text-white hover:bg-white/5 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue-light/60"
+            >
+              <MoreVertical className="w-4 h-4" />
+            </button>
+            {overflowOpen && (
+              <div role="menu" className="absolute right-0 top-full mt-1.5 w-44 panel-elevated rounded-md p-2 z-50 animate-fadeIn space-y-2">
+                <div>
+                  <span className="text-micro text-slate-500 uppercase font-bold tracking-wider block mb-1">
+                    Replay Speed
+                  </span>
+                  <div className="grid grid-cols-3 gap-1 text-micro font-bold">
+                    {SECONDARY_SPEEDS.map((s) => (
+                      <button
+                        key={s}
+                        onClick={() => {
+                          handleSpeedChange(s);
+                          setOverflowOpen(false);
+                        }}
+                        className={`py-1.5 rounded border border-white/5 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue-light/60 ${speed === s && isPlaying ? "bg-terminal-blue/20 text-white" : "bg-white/3 hover:bg-white/5 text-slate-400"}`}
+                      >
+                        {s}x
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="lg:hidden pt-1 border-t border-white/5">{statusPill}</div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* NAV + PnL + Desk trigger */}
+        <div className="flex items-center gap-2 shrink-0">
+          {showDeskTrigger && (
+            <button
+              type="button"
+              onClick={() => setRightDrawerOpen(true)}
+              aria-label="Open order desk"
+              className="lg:hidden w-9 h-9 flex items-center justify-center rounded bg-carbon-surface border border-white/5 text-slate-400 hover:text-white hover:bg-white/5 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue-light/60"
+              title="Desk"
+            >
+              <PanelRight className="w-4 h-4" />
+            </button>
+          )}
+          {navChip()}
+        </div>
+      </div>
+
+      {/* ================= MOBILE (<768) ================= */}
+      <div className="md:hidden h-12 bg-carbon-dark border-b border-white/5 flex items-center justify-between gap-2 px-2.5 z-20">
+        <div className="flex items-center gap-1.5 min-w-0">
+          <div className="relative" ref={menuRef}>
+            {brandButton(true)}
+            {menuOpen && sessionMenu}
+          </div>
+          <button
+            type="button"
+            onClick={() => setLeftDrawerOpen(true)}
+            aria-label="Open race story"
+            className="w-9 h-9 flex items-center justify-center rounded text-slate-400 hover:text-white hover:bg-white/5 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue-light/60 shrink-0"
+          >
+            <PanelLeft className="w-4 h-4" />
+          </button>
+        </div>
+
+        <select
+          value={selectedRaceId}
+          onChange={(e) => setSelectedRaceId(e.target.value)}
+          aria-label="Select race"
+          className="bg-carbon-surface text-slate-300 border border-white/5 rounded px-2 py-1.5 cursor-pointer text-micro font-bold max-w-[110px] min-w-0 flex-1 outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue-light/60"
+        >
+          {allRaces.map((r, idx) => (
+            <option key={r.id} value={r.id}>
+              R{String(r.round_number || idx + 1).padStart(2, "0")} · {r.name.replace("Grand Prix", "GP")}
+            </option>
+          ))}
+        </select>
+
+        <button
+          type="button"
+          onClick={() => setActiveSheet("nav")}
+          aria-label="Open portfolio summary"
+          className="flex flex-col items-end bg-carbon-surface rounded border border-white/5 px-2.5 py-1 cursor-pointer hover:bg-white/5 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue-light/60 shrink-0"
+        >
+          <span className="text-micro text-slate-450 uppercase font-bold tracking-wide leading-none">NAV</span>
+          <span className="text-white text-body-sm font-extrabold font-data leading-tight">
+            ${portfolioValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+          </span>
+          <span
+            className={`text-micro font-bold font-data leading-none ${unrealizedPnL >= 0 ? "text-terminal-green-light" : "text-terminal-red"}`}
+          >
+            {unrealizedPnL >= 0 ? "+" : ""}${unrealizedPnL.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+          </span>
+        </button>
+      </div>
+
+      {dialogs}
+    </>
   );
 }

@@ -359,7 +359,7 @@ export default function PortfolioTab({
       )}
 
       {/* 4. MIDDLE ROW: ACTIVE HOLDINGS, RISK ATTRIBUTION, AND DELTA NEUTRAL HEDGING ADVISOR */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-3.5 shrink-0 h-[220px] min-h-0">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-3.5 shrink-0 lg:h-[220px] min-h-0">
                {/* Open Positions Ledger: Race Book & Season Book (Col-span-2) */}
         <div className="lg:col-span-2 bg-carbon-surface border border-white/5 rounded p-3.5 flex flex-col min-h-0">
           
@@ -382,7 +382,39 @@ export default function PortfolioTab({
                   No active short-term race contracts held.
                 </div>
               ) : (
-                <table className="w-full text-left font-data text-micro">
+                <>
+                {/* Mobile cards (<768) */}
+                <div className="md:hidden space-y-1.5">
+                  {racePositions.map((pos) => {
+                    const contract = contracts[pos.contractId];
+                    const symbol = contract ? contract.symbol : pos.contractId;
+                    const profit = pos.qty * (pos.currentPrice - pos.entryPrice);
+                    const posKey = pos.side === "LAY" ? `${pos.contractId}_NO` : pos.contractId;
+                    return (
+                      <div key={posKey} className="panel-base border border-white/5 rounded p-2.5 font-data text-micro">
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="min-w-0">
+                            <span className="text-terminal-blue-light font-mono font-bold block">{symbol}</span>
+                            <span className="text-slate-450 truncate block">{pos.contractTitle}</span>
+                          </div>
+                          <button
+                            onClick={() => closePosition(posKey)}
+                            className="px-2 py-1 bg-terminal-red/10 border border-terminal-red/20 text-terminal-red hover:bg-terminal-red/25 font-bold uppercase rounded cursor-pointer transition-colors text-micro shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue-light/60"
+                          >
+                            Exit
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-4 gap-1 mt-1.5 pt-1.5 border-t border-white/5 text-slate-400">
+                          <span>Size <strong className="text-slate-200 block">{pos.qty}</strong></span>
+                          <span>Cost <strong className="text-slate-200 block">${pos.entryPrice.toFixed(2)}</strong></span>
+                          <span>Val <strong className="text-slate-200 block">${pos.currentPrice.toFixed(2)}</strong></span>
+                          <span>PnL <strong className={`block ${profit >= 0 ? "text-terminal-green-light" : "text-terminal-red"}`}>{profit >= 0 ? "+" : ""}${profit.toFixed(0)}</strong></span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <table className="hidden md:table w-full text-left font-data text-micro">
                   <thead>
                     <tr className="text-slate-500 uppercase text-micro border-b border-white/5 font-bold tracking-wider">
                       <th className="pb-1 pl-1 w-[40%]">Option Ticker</th>
@@ -424,6 +456,7 @@ export default function PortfolioTab({
                     })}
                   </tbody>
                 </table>
+                </>
               )}
             </div>
 
@@ -437,7 +470,31 @@ export default function PortfolioTab({
                   No active long-term season futures positions held.
                 </div>
               ) : (
-                <table className="w-full text-left font-data text-micro">
+                <>
+                {/* Mobile cards (<768) */}
+                <div className="md:hidden space-y-1.5">
+                  {seasonPositions.map((pos) => {
+                    const contract = contracts[pos.contractId];
+                    const symbol = contract ? contract.symbol : pos.contractId;
+                    const profit = pos.qty * (pos.currentPrice - pos.entryPrice);
+                    const mtmValue = pos.qty * pos.currentPrice;
+                    return (
+                      <div key={pos.contractId} className="panel-base border border-white/5 rounded p-2.5 font-data text-micro">
+                        <div className="min-w-0">
+                          <span className="text-terminal-gold font-mono font-bold block">{symbol}</span>
+                          <span className="text-slate-450 truncate block">{pos.contractTitle}</span>
+                        </div>
+                        <div className="grid grid-cols-4 gap-1 mt-1.5 pt-1.5 border-t border-white/5 text-slate-400">
+                          <span>Size <strong className="text-slate-200 block">{pos.qty}</strong></span>
+                          <span>Entry <strong className="text-slate-200 block">${pos.entryPrice.toFixed(2)}</strong></span>
+                          <span>MTM <strong className="text-white block">${mtmValue.toFixed(0)}</strong></span>
+                          <span>PnL <strong className={`block ${profit >= 0 ? "text-terminal-green-light" : "text-terminal-red"}`}>{profit >= 0 ? "+" : ""}${profit.toFixed(0)}</strong></span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <table className="hidden md:table w-full text-left font-data text-micro">
                   <thead>
                     <tr className="text-slate-500 uppercase text-micro border-b border-white/5 font-bold tracking-wider">
                       <th className="pb-1 pl-1 w-[45%]">Season Future Asset</th>
@@ -470,6 +527,7 @@ export default function PortfolioTab({
                     })}
                   </tbody>
                 </table>
+                </>
               )}
             </div>
 
@@ -575,7 +633,7 @@ export default function PortfolioTab({
       </div>
 
       {/* 6. CLOSED TRANSACTION LOGS AUDIT TRAIL */}
-      <div className="bg-carbon-surface border border-white/5 rounded p-3 flex flex-col h-[140px] shrink-0 min-h-0 font-mono">
+      <div className="bg-carbon-surface border border-white/5 rounded p-3 flex flex-col h-[240px] md:h-[140px] shrink-0 min-h-0 font-mono">
         <span className="text-micro text-slate-500 font-bold uppercase tracking-wider block mb-2">Audit Ledger Log Archive</span>
         <div className="flex-1 overflow-y-auto pr-1">
           {tradeHistory.length === 0 ? (
@@ -583,7 +641,29 @@ export default function PortfolioTab({
               LEDGER STANDBY - NO AUDIT TRAIL RECORDED
             </div>
           ) : (
-            <table className="w-full text-left font-data text-micro">
+            <>
+            {/* Mobile cards (<768) */}
+            <div className="md:hidden space-y-1.5">
+              {tradeHistory.slice().reverse().map((t, idx) => (
+                <div key={idx} className="panel-base border border-white/5 rounded p-2.5 font-data text-micro">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-terminal-blue-light font-bold font-mono truncate">{t.contractTitle}</span>
+                    <span className={`px-1.5 py-0.5 rounded text-micro font-bold shrink-0 ${t.type === "BUY" ? "bg-terminal-blue/10 text-terminal-blue-light" : (t.type === "SELL" ? "bg-terminal-red/10 text-terminal-red" : "bg-white/5 text-slate-300")}`}>
+                      {t.type}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between gap-2 mt-1.5 pt-1.5 border-t border-white/5 text-slate-400">
+                    <span className="text-slate-500">{t.timestamp}</span>
+                    <span>Qty <strong className="text-slate-200">{t.qty}</strong></span>
+                    <span>@ <strong className="text-slate-200">${t.price.toFixed(2)}</strong></span>
+                    <span className={`font-bold ${t.pnl === undefined ? "text-slate-400" : (t.pnl >= 0 ? "text-terminal-green-light" : "text-terminal-red")}`}>
+                      {t.pnl === undefined ? "--" : `${t.pnl >= 0 ? "+" : ""}$${t.pnl.toFixed(0)}`}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <table className="hidden md:table w-full text-left font-data text-micro">
               <thead>
                 <tr className="text-slate-500 uppercase text-micro border-b border-white/5 font-bold tracking-wider">
                   <th className="pb-1 pl-1.5">Time</th>
@@ -617,6 +697,7 @@ export default function PortfolioTab({
                 ))}
               </tbody>
             </table>
+            </>
           )}
         </div>
       </div>
