@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Activity, Briefcase, Landmark, FileText, Globe, Trophy, BookOpen } from "lucide-react";
+import { Activity, Briefcase, Landmark, FileText, Globe, Trophy, BookOpen, Compass } from "lucide-react";
 
 interface WorkspaceNavProps {
   activeTab: string;
@@ -9,6 +9,7 @@ interface WorkspaceNavProps {
   densityMode: "default" | "focus";
   setDensityMode: (mode: "default" | "focus") => void;
   onOpenTutorial: () => void;
+  onOpenOrientation: () => void;
   progressPercent: number;
   isAssembled: boolean;
 }
@@ -28,6 +29,7 @@ export default function WorkspaceNav({
   densityMode,
   setDensityMode,
   onOpenTutorial,
+  onOpenOrientation,
   progressPercent,
   isAssembled,
 }: WorkspaceNavProps) {
@@ -79,6 +81,15 @@ export default function WorkspaceNav({
           </div>
 
           <div className="hidden xl:block h-3 w-px bg-white/10" />
+
+          <button
+            type="button"
+            onClick={onOpenOrientation}
+            className="px-2 py-1 rounded font-bold border text-micro flex items-center gap-1 cursor-pointer bg-white/3 border-white/5 text-slate-500 hover:text-slate-300 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue-light/60"
+          >
+            <Compass className="w-3 h-3" />
+            Orientation
+          </button>
 
           <button
             type="button"

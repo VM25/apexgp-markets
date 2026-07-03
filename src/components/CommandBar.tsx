@@ -39,6 +39,8 @@ interface CommandBarProps {
   isAssembled: boolean;
   /** Whether the DeskPanel is a right Drawer at the current width (768-1023). */
   showDeskTrigger?: boolean;
+  /** Reason for the halt (e.g. "SAFETY CAR", "INCIDENT"), surfaced on the pill. */
+  haltReason?: string | null;
 }
 
 // Primary speeds always visible >=1280; the rest collapse into the overflow menu.
@@ -63,6 +65,7 @@ export default function CommandBar({
   onResetSeason,
   isAssembled,
   showDeskTrigger = false,
+  haltReason = null,
 }: CommandBarProps) {
   const { setLeftDrawerOpen, setRightDrawerOpen, setActiveSheet } = useTerminalUI();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -199,8 +202,14 @@ export default function CommandBar({
   };
 
   const statusPill = isHalted ? (
-    <div className="bg-terminal-red/10 border border-terminal-red/35 px-2 py-1 rounded flex items-center gap-1 text-terminal-red text-micro font-extrabold animate-pulse-border uppercase tracking-wider">
-      <ShieldAlert className="w-3 h-3 text-terminal-red" /> HALTED
+    <div className="bg-terminal-red/10 border border-terminal-red/35 px-2 py-1 rounded flex items-center gap-1 text-terminal-red text-micro font-extrabold animate-pulse-border uppercase tracking-wider whitespace-nowrap">
+      <ShieldAlert className="w-3 h-3 text-terminal-red shrink-0" /> HALTED
+      {haltReason && (
+        <>
+          <span className="text-terminal-red/50 font-normal">·</span>
+          <span className="text-terminal-red/90">{haltReason}</span>
+        </>
+      )}
     </div>
   ) : (
     <div className="bg-terminal-green/5 border border-terminal-green/20 px-2 py-1 rounded flex items-center gap-1 text-terminal-green-light text-micro font-extrabold tracking-wider uppercase">
@@ -279,7 +288,7 @@ export default function CommandBar({
         </div>
 
         {/* Playback + speed + lap + status */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2" data-orient-target="playback">
           <div className="flex items-center bg-carbon-surface rounded border border-white/5 overflow-hidden">
             <button
               onClick={handlePlayPause}

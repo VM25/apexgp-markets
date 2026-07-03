@@ -55,7 +55,7 @@ export default function AppShell({
       <nav className="shrink-0 min-w-0 hidden md:block">{workspaceNav}</nav>
 
       {/* Mobile-only playback strip. */}
-      <div className="shrink-0 min-w-0 md:hidden">{mobilePlayback}</div>
+      <div className="shrink-0 min-w-0 md:hidden" data-orient-target="playback">{mobilePlayback}</div>
 
       <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] min-h-0 min-w-0 overflow-hidden">
         {/* LeftRail: inline only >=1280. */}
@@ -68,12 +68,15 @@ export default function AppShell({
         </main>
 
         {/* DeskPanel: inline only >=1024. */}
-        <aside className="min-h-0 overflow-hidden hidden lg:flex lg:w-[288px] xl:w-[300px] min-[1440px]:w-[336px] bg-carbon-dark border-l border-white/5 p-3">
+        <aside
+          data-orient-target="desk"
+          className="min-h-0 overflow-hidden hidden lg:flex lg:w-[288px] xl:w-[300px] min-[1440px]:w-[336px] bg-carbon-dark border-l border-white/5 p-3"
+        >
           {deskPanel}
         </aside>
       </div>
 
-      <footer className="shrink-0 min-w-0">{ticker}</footer>
+      <footer className="shrink-0 min-w-0" data-orient-target="commentary">{ticker}</footer>
 
       {mobileTabBar}
 

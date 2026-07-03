@@ -13,6 +13,8 @@ interface LeftRailProps {
   isAssembled: boolean;
   /** When hosted inside the mobile/tablet Drawer, drop the inline slide-in + border. */
   inDrawer?: boolean;
+  /** Optional docked footer (e.g. the Desk Orientation checklist at >=1280). */
+  footer?: React.ReactNode;
 }
 
 /**
@@ -27,6 +29,7 @@ export default function LeftRail({
   commentary,
   isAssembled,
   inDrawer = false,
+  footer,
 }: LeftRailProps) {
   const currentRaceIdx = raceData?.round_number ? raceData.round_number : 1;
   const roundNumLabel = String(currentRaceIdx).padStart(2, "0");
@@ -49,6 +52,7 @@ export default function LeftRail({
 
   return (
     <aside
+      data-orient-target="left-rail"
       className={
         inDrawer
           ? "w-full bg-carbon-dark flex flex-col overflow-y-auto scrollbar-none p-3 space-y-3"
@@ -209,6 +213,7 @@ export default function LeftRail({
           </div>
         )}
       </div>
+      {footer}
     </aside>
   );
 }

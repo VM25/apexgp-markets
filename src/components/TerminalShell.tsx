@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { RaceData, Contract, CommentaryHeadline } from "../hooks/useSimulation";
 import { Position } from "../hooks/usePortfolio";
 import { Receipt } from "lucide-react";
@@ -23,6 +23,7 @@ import MobileTabBar from "./MobileTabBar";
 import Drawer from "./Drawer";
 import MobileSheet from "./MobileSheet";
 import OrderTicket from "./OrderTicket";
+import StartHereChecklist from "./StartHereChecklist";
 import { useTerminalUI } from "./TerminalUIProvider";
 
 interface TerminalShellProps {
@@ -59,6 +60,10 @@ interface TerminalShellProps {
   children: React.ReactNode;
   densityMode: "default" | "focus";
   setDensityMode: (mode: "default" | "focus") => void;
+
+  /** Orientation checklist live signals (VAT-16). */
+  tradeHistoryLen: number;
+  showSettlement: boolean;
 }
 
 export default function TerminalShell({
@@ -92,6 +97,8 @@ export default function TerminalShell({
   children,
   densityMode,
   setDensityMode,
+  tradeHistoryLen,
+  showSettlement,
 }: TerminalShellProps) {
   const [beginnerMode, setBeginnerMode] = useState<boolean>(false);
   const [isAssembled, setIsAssembled] = useState<boolean>(false);
@@ -104,18 +111,42 @@ export default function TerminalShell({
     activeSheet,
     setActiveSheet,
     selectedContractId,
+    orientHighlight,
+    checklistDismissed,
+    setChecklistDismissed,
+    setChecklistExpanded,
+    pushToast,
   } = useTerminalUI();
 
-  // Auto-launch tutorial on first session load + entrance animation.
+  // Surface the otherwise-silent auto-settlement that usePortfolio performs
+  // when the race changes while race-book positions are open (VAT-15 1b).
+  // This child effect runs before the parent's settle effect commits, so
+  // `positions` still reflects the pre-switch book.
+  const prevRaceIdRef = useRef(selectedRaceId);
   useEffect(() => {
-    const sessionShown = sessionStorage.getItem("apexgp_session_tutorial_shown");
-    const localCompleted = localStorage.getItem("apexgp_tutorial_completed");
-
-    if (sessionShown !== "true" && localCompleted !== "true") {
-      setBeginnerMode(true);
-      sessionStorage.setItem("apexgp_session_tutorial_shown", "true");
+    if (prevRaceIdRef.current !== selectedRaceId) {
+      const raceBookCount = Object.values(positions).filter(
+        (p) => !p.contractType?.startsWith("FUTURE_")
+      ).length;
+      if (raceBookCount > 0) {
+        pushToast({
+          variant: "info",
+          title: "Race Switched",
+          message: `${raceBookCount} open race position${raceBookCount === 1 ? "" : "s"} settled at last mark. Season futures carry over.`,
+        });
+      }
+      prevRaceIdRef.current = selectedRaceId;
     }
+  }, [selectedRaceId, positions, pushToast]);
 
+  const handleOpenOrientation = () => {
+    setChecklistDismissed(false);
+    setChecklistExpanded(true);
+  };
+
+  // Entrance animation only. The tutorial (BeginnerOnboarding) is now demoted to
+  // on-demand (Tutorial button / More sheet) — no auto-launch effect (VAT-16 2b).
+  useEffect(() => {
     const timer = setTimeout(() => setIsAssembled(true), 50);
     return () => clearTimeout(timer);
   }, []);
@@ -123,7 +154,19 @@ export default function TerminalShell({
   const totalLaps = raceData?.laps_total || 0;
   const progressPercent = totalLaps > 0 ? (currentLapIdx / totalLaps) * 100 : 0;
   const activeSafetyCar = raceData?.laps[currentLapIdx > 0 ? currentLapIdx - 1 : 0]?.safety_car;
+  const scActive = !!activeSafetyCar && activeSafetyCar !== "NONE" && activeSafetyCar !== "";
   const returnPct = getReturnPercent();
+
+  // Halt reason derivation (VAT-15 1c): prefer the active safety-car label, else
+  // infer from the most recent halt-type commentary entry.
+  const latestHaltEntry = commentary.find((c) => c.impactType === "halt");
+  const haltReason: string | null = scActive
+    ? "SAFETY CAR"
+    : latestHaltEntry
+      ? latestHaltEntry.headline.toUpperCase().includes("SAFETY CAR")
+        ? "SAFETY CAR"
+        : "INCIDENT"
+      : null;
 
   const isTradingTab = activeTab === "market" || activeTab === "championship";
   const selectedContract = contracts[selectedContractId];
@@ -134,21 +177,50 @@ export default function TerminalShell({
       ? selectedContract.type.startsWith("FUTURE_")
       : !selectedContract.type.startsWith("FUTURE_"));
 
-  // Dynamic State-Aware Atmosphere class (else-if chain preserved for Wave C)
-  let stateAtmosphereClass = "state-transition-container";
-  if (isHalted) {
-    stateAtmosphereClass += " state-market-halt";
-  } else if (activeSafetyCar && activeSafetyCar !== "NONE" && activeSafetyCar !== "") {
-    stateAtmosphereClass += " state-safety-car";
-  } else if (currentLapIdx > 0 && currentLapIdx === totalLaps) {
-    stateAtmosphereClass += " state-settlement";
-  } else if (isPlaying) {
-    stateAtmosphereClass += " state-replay-running";
-  } else if (unrealizedPnL < -200) {
-    stateAtmosphereClass += " state-drawdown";
-  } else if (unrealizedPnL > 200) {
-    stateAtmosphereClass += " state-gain";
-  }
+  // Dynamic State-Aware Atmosphere (VAT-15 1d): two independent, composable
+  // layers rather than one else-if chain. Layer 1 = market state (background /
+  // inset shadow / tint). Layer 2 = risk state (top edge accent). Both can
+  // apply at once — e.g. a safety-car halt while sitting on a drawdown.
+  const marketStateClass = isHalted
+    ? "state-market-halt"
+    : scActive
+      ? "state-safety-car"
+      : currentLapIdx > 0 && currentLapIdx === totalLaps
+        ? "state-settlement"
+        : isPlaying
+          ? "state-replay-running"
+          : "";
+
+  const riskStateClass = unrealizedPnL < -200 ? "state-drawdown" : unrealizedPnL > 200 ? "state-gain" : "";
+
+  const stateAtmosphereClass = ["state-transition-container", marketStateClass, riskStateClass]
+    .filter(Boolean)
+    .join(" ");
+
+  // Coachmark: flash a subtle ring on the region a checklist "Show me" targets.
+  useEffect(() => {
+    if (!orientHighlight) return;
+    const el = document.querySelector<HTMLElement>(`[data-orient-target="${orientHighlight}"]`);
+    if (!el) return;
+    el.classList.add("orient-flash");
+    const t = setTimeout(() => el.classList.remove("orient-flash"), 2600);
+    return () => {
+      clearTimeout(t);
+      el.classList.remove("orient-flash");
+    };
+  }, [orientHighlight]);
+
+  // Shared orientation checklist, rendered at the breakpoint-appropriate surface.
+  const orientationChecklist = (variant: "docked" | "banner" | "sheet") => (
+    <StartHereChecklist
+      variant={variant}
+      selectedContractId={selectedContractId}
+      tradeHistoryLen={tradeHistoryLen}
+      isPlaying={isPlaying}
+      commentaryLen={commentary.length}
+      showSettlement={showSettlement}
+    />
+  );
 
   const deskPanel = (
     <DeskPanel
@@ -191,6 +263,7 @@ export default function TerminalShell({
             onResetSeason={resetPortfolio}
             isAssembled={isAssembled}
             showDeskTrigger
+            haltReason={haltReason}
           />
         }
         workspaceNav={
@@ -200,6 +273,7 @@ export default function TerminalShell({
             densityMode={densityMode}
             setDensityMode={setDensityMode}
             onOpenTutorial={() => setBeginnerMode(true)}
+            onOpenOrientation={handleOpenOrientation}
             progressPercent={progressPercent}
             isAssembled={isAssembled}
           />
@@ -225,13 +299,21 @@ export default function TerminalShell({
             contracts={contracts}
             commentary={commentary}
             isAssembled={isAssembled}
+            footer={<div className="mt-3">{orientationChecklist("docked")}</div>}
           />
         }
         main={
           <div
-            className={`h-full min-h-0 transition-all duration-700 delay-150 ease-out ${isAssembled ? "opacity-100 scale-100" : "opacity-0 scale-[0.98]"}`}
+            className={`h-full min-h-0 flex flex-col gap-3 transition-all duration-700 delay-150 ease-out ${isAssembled ? "opacity-100 scale-100" : "opacity-0 scale-[0.98]"}`}
           >
-            {children}
+            {/* First-run orientation banner: mobile/tablet only (docked variant
+                covers >=1280). Hidden once dismissed. */}
+            {!checklistDismissed && (
+              <div className="xl:hidden shrink-0">{orientationChecklist("banner")}</div>
+            )}
+            <div data-orient-target="chain" className="flex-1 min-h-0">
+              {children}
+            </div>
           </div>
         }
         deskPanel={deskPanel}
@@ -329,11 +411,14 @@ export default function TerminalShell({
               onClose={() => setActiveSheet(null)}
               title="More Workspaces"
             >
-              <MoreMenu
-                setActiveTab={setActiveTab}
-                onOpenTutorial={() => setBeginnerMode(true)}
-                onClose={() => setActiveSheet(null)}
-              />
+              <div className="space-y-3">
+                {!checklistDismissed && orientationChecklist("sheet")}
+                <MoreMenu
+                  setActiveTab={setActiveTab}
+                  onOpenTutorial={() => setBeginnerMode(true)}
+                  onClose={() => setActiveSheet(null)}
+                />
+              </div>
             </MobileSheet>
 
             <MobileSheet

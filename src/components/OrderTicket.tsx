@@ -44,6 +44,7 @@ export default function OrderTicket({
   const [tradeAction, setTradeAction] = useState<"BUY" | "SELL">("BUY");
   const [quantity, setQuantity] = useState<number>(0);
   const [tradeResult, setTradeResult] = useState<{ success: boolean; message: string } | null>(null);
+  const [justFilled, setJustFilled] = useState<boolean>(false);
   const [showPayoutCalc, setShowPayoutCalc] = useState<boolean>(false);
   const [showSettlementInfoModal, setShowSettlementInfoModal] = useState<boolean>(false);
   // NOTE: DeskPanel keys this component on the contract id, so switching the
@@ -102,7 +103,7 @@ export default function OrderTicket({
 
   const handleOrderSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!canExecute) return;
+    if (!canExecute || justFilled) return;
 
     const res =
       tradeAction === "BUY"
@@ -120,7 +121,11 @@ export default function OrderTicket({
       message: res.message,
     });
     if (res.success) {
-      setTimeout(() => setTradeResult(null), 3000);
+      // Immediate feedback on the button itself, then a slower-fading inline
+      // confirmation the reader can dismiss early.
+      setJustFilled(true);
+      window.setTimeout(() => setJustFilled(false), 900);
+      window.setTimeout(() => setTradeResult((prev) => (prev === res ? null : prev)), 8000);
     }
   };
 
@@ -284,6 +289,20 @@ export default function OrderTicket({
             </button>
           ))}
         </div>
+
+        {/* Risk-limit feedback renders adjacent to its cause — the size input. */}
+        {isExposureViolated && (
+          <RiskBanner title="Exposure Violated" message="Exposure cannot exceed 30% of total portfolio capital." />
+        )}
+        {isSingleViolated && (
+          <RiskBanner title="Single-Market Violated" message="Exposure in this contract cannot exceed the 15% limit." />
+        )}
+        {isCashViolated && (
+          <RiskBanner title="Liquidity Shortage" message="Insufficient cash balance to fund this order." />
+        )}
+        {isSellViolated && (
+          <RiskBanner title="Position Shortage" message="You do not hold enough contracts to exit this size." />
+        )}
       </div>
 
       {/* Payout board */}
@@ -385,19 +404,6 @@ export default function OrderTicket({
           </div>
         )}
 
-        {isExposureViolated && (
-          <RiskBanner title="Exposure Violated" message="Exposure cannot exceed 30% of total portfolio capital." />
-        )}
-        {isSingleViolated && (
-          <RiskBanner title="Single-Market Violated" message="Exposure in this contract cannot exceed the 15% limit." />
-        )}
-        {isCashViolated && (
-          <RiskBanner title="Liquidity Shortage" message="Insufficient cash balance to fund this order." />
-        )}
-        {isSellViolated && (
-          <RiskBanner title="Position Shortage" message="You do not hold enough contracts to exit this size." />
-        )}
-
         {tradeResult && (
           <div
             className={`p-2 rounded text-body-sm flex items-start gap-1.5 font-sans font-light leading-normal ${tradeResult.success ? "bg-terminal-green/10 border border-terminal-green/20 text-terminal-green-light" : "bg-terminal-red/10 border border-terminal-red/20 text-terminal-red"}`}
@@ -407,27 +413,45 @@ export default function OrderTicket({
             ) : (
               <ShieldAlert className="w-3.5 h-3.5 shrink-0 text-terminal-red mt-0.5" />
             )}
-            <div>
+            <div className="flex-1">
               <span className="font-bold block uppercase font-mono text-micro">
                 {tradeResult.success ? "Trade Settled" : "Execution Error"}
               </span>
               {tradeResult.message}
             </div>
+            <button
+              type="button"
+              onClick={() => setTradeResult(null)}
+              aria-label="Dismiss trade result"
+              className="shrink-0 text-current/60 hover:text-current font-bold px-1 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue-light/60 rounded"
+            >
+              ✕
+            </button>
           </div>
         )}
 
         <button
           type="submit"
-          disabled={!canExecute}
+          disabled={!canExecute && !justFilled}
           className={`w-full py-2.5 font-mono font-bold tracking-wider text-body-sm uppercase rounded transition-colors flex items-center justify-center gap-1.5 outline-none focus-visible:ring-2 focus-visible:ring-terminal-blue-light/60 focus-visible:ring-offset-1 focus-visible:ring-offset-carbon-black ${
-            canExecute
-              ? tradeAction === "BUY"
-                ? "bg-terminal-blue hover:bg-terminal-blue-light text-white cursor-pointer active:scale-[0.98]"
-                : "bg-terminal-red hover:bg-terminal-red/85 text-white cursor-pointer active:scale-[0.98]"
-              : "bg-white/3 border border-white/5 text-slate-500 opacity-40 cursor-not-allowed"
+            justFilled
+              ? "bg-terminal-green text-white cursor-default"
+              : canExecute
+                ? tradeAction === "BUY"
+                  ? "bg-terminal-blue hover:bg-terminal-blue-light text-white cursor-pointer active:scale-[0.98]"
+                  : "bg-terminal-red hover:bg-terminal-red/85 text-white cursor-pointer active:scale-[0.98]"
+                : "bg-white/3 border border-white/5 text-slate-500 opacity-40 cursor-not-allowed"
           }`}
         >
-          {tradeAction === "BUY" ? "OPEN POSITION" : "SELL / EXIT"}
+          {justFilled ? (
+            <>
+              <CheckCircle2 className="w-4 h-4" /> ORDER FILLED
+            </>
+          ) : tradeAction === "BUY" ? (
+            "OPEN POSITION"
+          ) : (
+            "SELL / EXIT"
+          )}
         </button>
       </div>
 

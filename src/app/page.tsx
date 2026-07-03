@@ -291,7 +291,20 @@ export default function Home() {
   };
 
   if (!hasEnteredTerminal) {
-    return <LandingView onEnterTerminal={() => setHasEnteredTerminal(true)} />;
+    return (
+      <LandingView
+        onEnterTerminal={(withOrientation) => {
+          // Persist the choice before the terminal (and TerminalUIProvider)
+          // mounts, so the checklist hydrates into the right state.
+          try {
+            localStorage.setItem("apexgp_orientation_dismissed", withOrientation ? "false" : "true");
+          } catch {
+            /* ignore */
+          }
+          setHasEnteredTerminal(true);
+        }}
+      />
+    );
   }
 
   // Find round index
@@ -331,6 +344,8 @@ export default function Home() {
         sellContracts={sellContracts}
         densityMode={densityMode}
         setDensityMode={setDensityMode}
+        tradeHistoryLen={tradeHistory.length}
+        showSettlement={showSettlement}
       >
         {renderTabContent()}
       </TerminalShell>

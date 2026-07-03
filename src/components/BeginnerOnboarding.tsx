@@ -310,7 +310,7 @@ export default function BeginnerOnboarding({ onClose }: BeginnerOnboardingProps)
 
   return (
     <div className="fixed inset-0 bg-carbon-black/95 backdrop-blur-md z-50 flex items-center justify-center p-4 select-none font-mono">
-      <div className="relative max-w-4xl w-full bg-carbon-dark border border-terminal-blue/20 rounded-lg p-6 shadow-[0_0_40px_rgba(0,122,204,0.15)] flex flex-col justify-between h-[510px] min-h-[510px] max-h-[510px] overflow-hidden">
+      <div className="relative max-w-[min(896px,94vw)] w-full bg-carbon-dark border border-terminal-blue/20 rounded-lg p-4 sm:p-6 shadow-[0_0_40px_rgba(0,122,204,0.15)] flex flex-col justify-between h-[min(510px,85dvh)] overflow-hidden">
         
         {/* Header */}
         <div className="flex justify-between items-center border-b border-white/5 pb-2.5 shrink-0">
