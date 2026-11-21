@@ -6,7 +6,7 @@ Formula 1 supplies the events. A forecasting model turns each lap into probabili
 
 Fictional capital only. There is no real-money trading, wagering or account connection anywhere in this project.
 
-- Live build: <https://apexgp-markets.netlify.app> (deploys from `main`; the v3 rebuild lives on `overhaul/v3` until merged)
+- Live build: <https://apexgp-markets.netlify.app> (Netlify deploys every push to `main`)
 - The June 2026 version is preserved at the tag `legacy-v2-june-2026` and the branch `legacy/v2`
 
 ---

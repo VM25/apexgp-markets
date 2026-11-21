@@ -1,6 +1,6 @@
 # Testing and evidence
 
-Everything in this document was executed on the `overhaul/v3` branch on 21 November 2026. Raw outputs are in `docs/evidence/`; screenshots in `docs/evidence/screens/`.
+Everything in this document was executed on 21 November 2026 on the commit that was released to `main`. Raw outputs are in `docs/evidence/`; screenshots in `docs/evidence/screens/`.
 
 ## Results of the last run
 
@@ -74,7 +74,7 @@ These were opened and inspected, not just generated.
 
 - **Browsers other than Chromium.** Playwright's Firefox and WebKit engines were not installed; the code uses no engine-specific features (native `<dialog>`, `ResizeObserver`, CSS cascade layers and `dvh` units are supported by current Safari and Firefox), but this is unverified.
 - **Real devices and screen readers.** Phone sizes are emulated; assistive-technology behaviour is inferred from axe and the accessibility tree, not from VoiceOver or NVDA sessions.
-- **The Netlify deployment itself.** The static export was built and served locally exactly as Netlify will publish it; no deploy was made from this branch (see `docs/REPORT.md`).
+- **The full suite against Netlify.** The suites above ran against the production export served locally. After release the live site was checked with one real-browser pass (load, trade, run to the flag, settle, open every view; no console errors or failed requests) — not with all 35 tests.
 - **Long sessions.** A full 24-round season was exercised by the engine tests in pieces (rounds 1–2, 23–24, and settlement of all 24) but not played start to finish in a browser.
 
 ## Known issues

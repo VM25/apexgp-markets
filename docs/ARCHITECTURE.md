@@ -67,7 +67,7 @@ Persistence: the session's JSON is written to `localStorage` (`apexgp.v3.session
 
 `next.config.ts` sets `output: "export"`: `npm run build` writes plain HTML, JS, CSS and JSON to `./out` (about 4 MB including data). `netlify.toml` publishes that directory with long-lived caching for hashed assets. No functions, no environment variables, no build-time secrets, no paid services. Fonts (Archivo, IBM Plex Mono, Newsreader; SIL Open Font Licence) are fetched and self-hosted at build time by `next/font`.
 
-The production site deploys from `main`. The rebuild is on `overhaul/v3`; merging it is the deployment step (see `docs/REPORT.md`).
+Netlify deploys every push to `main` (see `docs/REPORT.md` §9).
 
 ## Adding things
 

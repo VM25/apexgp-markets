@@ -1,6 +1,6 @@
 # ApexGP Markets v3 — implementation report
 
-21 November 2026 · branch `overhaul/v3` · baseline preserved at tag `legacy-v2-june-2026` and branch `legacy/v2`
+21 November 2026 · released on `main` · baseline preserved at tag `legacy-v2-june-2026` and branch `legacy/v2`
 
 ## 1. Summary
 
@@ -88,22 +88,16 @@ Rendered output was inspected in screenshots at 320, 390, 768, 1,440 and 2,560 p
 | Other market participants | None. One dealer, one account. |
 | Browsers | Tested on Chromium only. |
 | Devices and assistive technology | Emulated sizes and automated checks; no physical-device or screen-reader sessions. |
-| Netlify deploy | Not performed from this branch (below). |
+| Netlify deploy | Done and checked with one real-browser pass on the live site; the full browser suite was run against the local production build, not against Netlify. |
 | Full-season browser run | Rounds are exercised individually and in pairs; a 24-round session was not played through in a browser. |
 
 ## 9. Deployment
 
-Production (<https://apexgp-markets.netlify.app>) still serves the June 2026 build from `main`. **Nothing has been pushed or deployed.** The work is committed locally on `overhaul/v3`.
+Released on 21 November 2026. `main` was fast-forwarded from the June 2026 build (`880edd2`) to the rebuild and pushed; Netlify's continuous deployment built the static export and published it to <https://apexgp-markets.netlify.app> within about a minute. `netlify.toml` sets the build command (`npm run build`), the publish directory (`out`) and Node 22; no functions or environment variables are involved.
 
-To release:
+Checked on the live site after release: all five routes and the data files return 200, and one real-browser pass (load, buy 300 YES, run to the flag, settle on the official classification, open every view) completed with no console errors and no failed requests.
 
-1. `git push -u origin overhaul/v3` and open a pull request against `main`.
-2. Check the Netlify deploy preview for the pull request. `netlify.toml` now sets the build command (`npm run build`), the publish directory (`out`) and Node 22; the site previously relied on auto-detection of the Next.js runtime, so this is the step most worth checking. If the site has the Next.js runtime plugin pinned in the Netlify UI, remove it — the app is a plain static site now.
-3. Walk the five views on the preview on a phone and a desktop.
-4. Merge. Netlify deploys `main`.
-5. Optionally `git push origin legacy-v2-june-2026 legacy/v2` so the baseline is recoverable from GitHub as well as locally.
-
-Rollback is a revert of the merge commit; the old build needs no data migration because session state from v2 was never persisted and v3's storage key is new.
+The June 2026 build is recoverable from GitHub at the tag `legacy-v2-june-2026` and the branch `legacy/v2`. Rollback is a revert of the rebuild commits on `main`; no data migration is involved because v2 never persisted session state and v3 uses a new storage key.
 
 ## 10. Decisions worth knowing about
 
