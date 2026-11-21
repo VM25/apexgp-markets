@@ -1,33 +1,27 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Archivo, IBM_Plex_Mono, Newsreader } from "next/font/google";
+import { AppShell } from "@/features/shell/AppShell";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const archivo = Archivo({ variable: "--font-archivo", subsets: ["latin"], axes: ["wdth"], display: "swap" });
+const plexMono = IBM_Plex_Mono({ variable: "--font-plex-mono", subsets: ["latin"], weight: ["400", "500", "600"], display: "swap" });
+const newsreader = Newsreader({ variable: "--font-newsreader", subsets: ["latin"], style: ["normal", "italic"], display: "swap" });
 
 export const metadata: Metadata = {
-  title: "ApexGP Markets | Quantitative F1 Event Markets & Portfolio Simulation",
-  description: "Study market microstructure, Bayesian pricing recalibration, and quantitative portfolio risk by replaying historical Formula One races as probability event contract books.",
+  title: { default: "ApexGP Markets — a Formula 1 prediction-market simulation", template: "%s · ApexGP Markets" },
+  description:
+    "Trade simulated event contracts on real, lap-by-lap replays of the 2025 Formula 1 season. Model-estimated probabilities, a simulated dealer market, and portfolio risk — with fictional capital only.",
+  applicationName: "ApexGP Markets",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#f3efe6" };
+
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="h-full overflow-hidden overscroll-none">{children}</body>
+    <html lang="en" className={`${archivo.variable} ${plexMono.variable} ${newsreader.variable} antialiased`}>
+      <body>
+        <AppShell>{children}</AppShell>
+      </body>
     </html>
   );
 }
