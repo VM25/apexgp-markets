@@ -48,7 +48,7 @@ The not-classified model has almost no skill beyond a base rate; that is reporte
 
 ## Running it
 
-Requires Node 22+.
+Requires Node 20.9 or newer (developed on 24; Netlify builds on 22).
 
 ```bash
 npm install

@@ -44,7 +44,7 @@ Nothing from the old interface, hooks, data or documents is in the new applicati
 
 ## 5. Problems corrected
 
-**Data.** All fabricated observations removed. For every 2025 round: official race time reproduced from summed lap times; lap chart re-derived exactly (26,657 driver-laps); lap times agree across two sources within 5 ms for 97–99% of laps; pit stops and classifications identical across sources; standings recomputed and matched in all 24 rounds.
+**Data.** All fabricated observations removed. For every 2025 round: official race time reproduced from summed lap times; lap chart re-derived exactly (26,657 driver-laps); lap times agree across two sources within 5 ms for 96.6–98.6% of laps; pit stops and classifications identical across sources; standings recomputed and matched in all 24 rounds.
 
 **Look-ahead.** Forecasting inputs and settlement labels are separate files and separate code paths. Frames are strictly as-of. Three independent tests: truncation in the pipeline, scrambling the future in the engine, and label-free observation files. Entrant order no longer encodes results.
 
