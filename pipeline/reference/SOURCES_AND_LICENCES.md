@@ -67,7 +67,7 @@ Suggested credit line (my wording, not prescribed by any source):
 | Intended use | "educational purposes, personal learning projects, research, and non-commercial fan engagement" | <https://openf1.org/> (FAQ) |
 | Data statement | "intended solely for non-commercial analysis and fan engagement" | <https://openf1.org/> (footer) |
 | Credit | "No, credits are not required in your project." (a link back is appreciated) | <https://openf1.org/> (FAQ) |
-| Unofficial disclaimer | "OpenF1 is an unofficial project and is not associated in any way with the Formula 1 companies." | <https://openf1.org/docs/> (Introduction) |
+| Unofficial disclaimer | "unofficial project and is not associated in any way with the Formula 1 companies" | <https://openf1.org/docs/> (Introduction) |
 | Trademark disclaimer | "All F1-related trademarks are owned by Formula One Licensing B.V." | <https://github.com/br-g/openf1/blob/main/README.md> (Disclaimer) |
 
 Other checks made:
@@ -125,7 +125,7 @@ Ergast terms (upstream). The live page `https://ergast.com/mrd/terms/` returned
 |------|------------------------|
 | Purpose | "a historical record of motor racing data for non-commercial purposes" |
 | Permitted use | "personal, non-commercial applications and services including educational and research purposes" |
-| No charging | "you must not charge for any application or service which makes use of this API" |
+| No charging | "you must not charge for any application or service" that uses the API or its data |
 | Ad-supported sites | "Use by websites and applications supported by advertising is permitted." |
 | Attribution | "You are not required to attribute this site" (a link to `http://ergast.com/mrd` is described as ideal) |
 | Rate limit (historic) | no more than "four times per second or more than 200 times per hour" |
@@ -168,7 +168,7 @@ repo. OpenF1 (2023+) is the remaining free route for lap and stint data.
 | Fact | Evidence (short quote) | URL |
 |------|------------------------|-----|
 | Licence | "GNU LESSER GENERAL PUBLIC LICENSE, Version 3" (GitHub API `spdx_id: LGPL-3.0`); no separate data licence | <https://github.com/TUMFTM/racetrack-database/blob/master/LICENSE> |
-| Content | "center lines (x- and y-coordinates), track widths and race lines for over 20 race tracks" | <https://github.com/TUMFTM/racetrack-database/blob/master/README.md> |
+| Content | "center lines (x- and y-coordinates), track widths and race lines" for over 20 tracks | <https://github.com/TUMFTM/racetrack-database/blob/master/README.md> |
 | File format | `tracks/*.csv` columns: `x_m, y_m, w_tr_right_m, w_tr_left_m` | same (Content and Data Format) |
 | Upstream source | "fetched as GPS points from the OpenStreetMap project" | same (Data Source and Processing) |
 | Quality warning | source quality "varies greatly depending on the location" | same |

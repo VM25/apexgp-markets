@@ -1,0 +1,39 @@
+{
+ "started_utc": "2026-11-21T17:59:45.807Z",
+ "user_agent": "research-script/1.0",
+ "min_interval_s": 1.1,
+ "venues": {
+  "kalshi": {
+   "status": "ok",
+   "series": 40,
+   "markets": 250,
+   "started_utc": "2026-11-21T17:59:45.807Z",
+   "finished_utc": "2026-11-21T18:00:37.947Z"
+  },
+  "polymarket": {
+   "status": "ok",
+   "events": 50,
+   "markets": 637,
+   "started_utc": "2026-11-21T18:00:37.947Z",
+   "finished_utc": "2026-11-21T18:13:39.383Z"
+  }
+ },
+ "finished_utc": "2026-11-21T18:13:39.384Z",
+ "http_status_counts": {
+  "kalshi_series": {
+   "200": 1
+  },
+  "kalshi_markets": {
+   "200": 40
+  },
+  "kalshi_orderbooks": {
+   "200": 5
+  },
+  "polymarket_events": {
+   "200": 3
+  },
+  "polymarket_books": {
+   "200": 637
+  }
+ }
+}

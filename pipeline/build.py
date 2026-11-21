@@ -542,6 +542,23 @@ def export() -> None:
         },
         "quality": quality_summary,
     })
+    # ---- real-venue reference used to calibrate the simulated dealer (optional input) ----------
+    ref_path = config.PIPELINE_DIR / "reference" / "market_reference.json"
+    if ref_path.exists():
+        ref = json.loads(ref_path.read_text())
+        snap = ref["snapshot"]
+        write_json(out_root / "market_reference.json", {
+            "schema": 3, "accessedUtc": ref["accessed_utc"],
+            "kalshiFee": {k: ref["kalshi_fee"].get(k) for k in ("taker_formula", "coefficient", "maker_coefficient", "maker_fee_applies_to", "rounding")},
+            "polymarketFee": {k: ref["polymarket_fee"].get(k) for k in ("taker_formula", "coefficient", "maker_coefficient", "coefficient_scope")},
+            "snapshot": {"context": snap["context"], "firstBookUtc": snap["first_book_utc"], "lastBookUtc": snap["last_book_utc"],
+                         "nMarkets": snap["n_markets"], "nQuoted": snap["n_quoted"], "nTraded24h": snap["n_traded_24h"],
+                         "perVenue": {v: {k: d.get(k) for k in ("n_markets", "n_quoted", "n_traded_24h", "median_spread_cents_quoted")}
+                                      for v, d in snap["per_venue"].items()},
+                         "basis": snap["bucket_basis"],
+                         "buckets": [{k: b.get(k) for k in ("lo", "hi", "n", "median_spread_cents", "p25_spread_cents", "p75_spread_cents",
+                                                             "median_top_size", "median_depth_2c")} for b in snap["buckets"]]},
+        })
     fixtures = config.REPO_ROOT / "src" / "engine" / "__tests__" / "fixtures"
     write_json(fixtures / "golden.json", {"cases": golden_cases})
     log(f"wrote {len(golden_cases)} golden vectors; export complete")

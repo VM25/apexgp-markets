@@ -1,0 +1,1093 @@
+{
+ "accessed_utc": "2026-11-21T18:13:39Z",
+ "accessed_note": "Documentation and filings read on 2026-11-21 between about 17:45 and 18:30 UTC; accessed_utc is the end of the order-book snapshot.",
+ "kalshi_fee": {
+  "taker_formula": "fee_usd = round_up(0.07 * C * P * (1 - P))",
+  "variables": {
+   "C": "number of contracts",
+   "P": "contract price in dollars (0.50 = 50 cents)"
+  },
+  "coefficient": 0.07,
+  "maker_coefficient": 0.0175,
+  "maker_multiplier_of_general_fee": 0.25,
+  "maker_fee_applies_to": "only series whose fee_type is quadratic_with_maker_fees; 0 on plain quadratic series",
+  "maker_coefficient_verification": "Derived. Official API docs state a 0.25 maker multiplier for quadratic_with_maker_fees (0.5 for combo maker fees). The literal 0.0175 formula sits in the fee-schedule PDF, which returned HTTP 429 and was seen only as a search-engine excerpt.",
+  "combo_maker_multiplier": 0.5,
+  "rounding": "Round up. Fee schedule: total trade fee rounded up to the next cent. Current API mechanics: model fee rounded up to $0.000001, then a rounding fee aligns the balance to $0.01 (non-direct / FCM-cleared members) or $0.0001 (direct members); rounding over-collection is carried per order and rebated across fills.",
+  "rounding_detail": {
+   "trade_fee_granularity_usd": 1e-06,
+   "balance_precision_non_direct_usd": 0.01,
+   "balance_precision_direct_usd": 0.0001,
+   "accumulator_scope": "per order, across maker and taker fills",
+   "net_fee_floor_usd": 0
+  },
+  "fee_multiplier_field": "series.fee_multiplier scales the fee; an event can override its series' fee_type and multiplier",
+  "fee_types": [
+   "quadratic",
+   "quadratic_with_maker_fees",
+   "quadratic_with_combo_maker_fees",
+   "flat"
+  ],
+  "per_series_exceptions": [
+   {
+    "scope": "S&P 500 (INX*) and Nasdaq-100 (NASDAQ100*) markets",
+    "coefficient": 0.035,
+    "status": "from the 2022 CFTC-filed schedule; not re-confirmed against the current PDF"
+   },
+   {
+    "scope": "19 pro-baseball (KXMLB*) series",
+    "fee_multiplier": 0.5,
+    "status": "observed in live /series on 2026-11-21"
+   },
+   {
+    "scope": "107 scheduled or historical series fee changes",
+    "includes": "14 to multiplier 0, 18 to 0.5, 63 to maker fees, 4 to combo maker fees",
+    "status": "observed in live /series/fee_changes on 2026-11-21; none for F1 series"
+   },
+   {
+    "scope": "RFQ trades in KXMVE (combos)",
+    "rule": "taker-equivalent fee for the trader, maker-equivalent fee for the accepted quoter",
+    "status": "CFTC filing dated 2026-07-12"
+   },
+   {
+    "scope": "Event Contracts Taker Rebate Program (self-clearing members only)",
+    "rule": "15% / 30% / 50% of taker fees rebated at monthly effective volume 2M / 20M / 100M, effective volume = sum p(1-p)c",
+    "status": "CFTC filing dated 2026-10-14"
+   }
+  ],
+  "f1_series": {
+   "observed_utc": "2026-11-21T17:59:45.986Z",
+   "n_series": 38,
+   "fee_multiplier_all": [
+    1
+   ],
+   "with_maker_fees": [
+    "KXF1RACE",
+    "KXF1RACEPODIUM"
+   ],
+   "taker_only": [
+    "KXF1",
+    "KXF1ACTION",
+    "KXF1BIGGESTMOVER",
+    "KXF1CHAMPCLINCH",
+    "KXF1CHINA",
+    "KXF1CONSTRUCTORS",
+    "KXF1DELAY",
+    "KXF1EXACTFINISH",
+    "KXF1FASTESTLAP",
+    "KXF1FASTLAP",
+    "KXF1FASTPIT",
+    "KXF1FP1FASTLAP",
+    "KXF1FP2FASTLAP",
+    "KXF1FP3FASTLAP",
+    "KXF1FPFASTLAP",
+    "KXF1H2H",
+    "KXF1H2HLOTP",
+    "KXF1NEXTTEAM",
+    "KXF1OCCUR",
+    "KXF1POLE",
+    "KXF1POLEPOSITION",
+    "KXF1QUALIFY",
+    "KXF1RACESPRINT",
+    "KXF1RACETOP10",
+    "KXF1RACETOP5",
+    "KXF1RACETOPX",
+    "KXF1RETIRE",
+    "KXF1SPRINTFASTLAP",
+    "KXF1SPRINTPOLE",
+    "KXF1SPRINTTOP10",
+    "KXF1SPRINTTOP5",
+    "KXF1SPRINTTOPCONSTRUCTOR",
+    "KXF1TOP10",
+    "KXF1TOP5",
+    "KXF1TOPCONSTRUCTOR",
+    "KXF1WINMARGIN"
+   ],
+   "price_level_structure_open_markets": "linear_cent (1c tick) on all 250 open markets"
+  },
+  "examples_usd": {
+   "taker_100_contracts_at_0.50": 1.75,
+   "taker_100_contracts_at_0.10": 0.63,
+   "taker_1_contract_at_0.50_cent_rounded": 0.02,
+   "maker_100_contracts_at_0.50": 0.44
+  },
+  "source_url": "https://www.cftc.gov/filings/orgrules/rule091222kexdcm003.pdf",
+  "source_urls": [
+   "https://www.cftc.gov/filings/orgrules/rule091222kexdcm003.pdf",
+   "https://www.cftc.gov/filings/orgrules/rules10142633445.pdf",
+   "https://www.cftc.gov/filings/orgrules/rules0712269458.pdf",
+   "https://docs.kalshi.com/getting_started/fee_rounding.md",
+   "https://docs.kalshi.com/api-reference/market/get-series.md",
+   "https://docs.kalshi.com/getting_started/fixed_point_migration.md",
+   "https://help.kalshi.com/en/articles/13823805-fees",
+   "https://external-api.kalshi.com/trade-api/v2/series?category=Sports&tags=Motorsport"
+  ],
+  "canonical_document": {
+   "url": "https://kalshi.com/docs/kalshi-fee-schedule.pdf",
+   "retrieved": false,
+   "http_status": 429,
+   "note": "Vercel Security Checkpoint bot challenge; not bypassed",
+   "effective_date": null
+  },
+  "not_verified": [
+   "current fee-schedule PDF text and effective date",
+   "exact wording of the PDF's Maker Fees section",
+   "definition of the flat fee type",
+   "whether the 0.035 index-market rate still applies"
+  ]
+ },
+ "polymarket_fee": {
+  "taker_formula": "fee_usdc = C * feeRate * p * (1 - p)",
+  "variables": {
+   "C": "number of shares traded",
+   "p": "share price in dollars",
+   "feeRate": "category coefficient"
+  },
+  "coefficient": 0.05,
+  "coefficient_scope": "Sports (the rate carried by 636 of 637 open F1-tagged markets)",
+  "maker_coefficient": 0,
+  "category_rates": {
+   "0.05": [
+    "Crypto BTC 5-minute and 15-minute up/down",
+    "Sports",
+    "Finance",
+    "Tech",
+    "Politics - elections",
+    "Combos",
+    "Other / General"
+   ],
+   "0.01": [
+    "Crypto - all other",
+    "Politics - other",
+    "Economics",
+    "Culture",
+    "Weather",
+    "Mentions"
+   ],
+   "0": [
+    "Geopolitics"
+   ]
+  },
+  "rounding": "Fees rounded to 5 decimal places; smallest fee 0.00001 USDC; anything smaller is zero. Applied at match time, not carried in the order.",
+  "effective_utc": "2026-11-20T23:59:00Z",
+  "previous_sports_coefficient": {
+   "value": 0.03,
+   "until": "2026-07-10"
+  },
+  "maker_rebate_tiers": [
+   {
+    "min_30d_maker_weighted_volume_usd": 0,
+    "rebate_share_of_taker_fee": 0.0
+   },
+   {
+    "min_30d_maker_weighted_volume_usd": 200000,
+    "rebate_share_of_taker_fee": 0.03
+   },
+   {
+    "min_30d_maker_weighted_volume_usd": 1000000,
+    "rebate_share_of_taker_fee": 0.07
+   },
+   {
+    "min_30d_maker_weighted_volume_usd": 4000000,
+    "rebate_share_of_taker_fee": 0.1
+   },
+   {
+    "min_30d_maker_weighted_volume_usd": 10000000,
+    "rebate_share_of_taker_fee": 0.15
+   }
+  ],
+  "taker_rebate_tiers": [
+   {
+    "tier": "Gold",
+    "min_30d_weighted_volume_usd": 200000,
+    "rebate": 0.1
+   },
+   {
+    "tier": "Platinum",
+    "min_30d_weighted_volume_usd": 1000000,
+    "rebate": 0.25
+   },
+   {
+    "tier": "Diamond",
+    "min_30d_weighted_volume_usd": 4000000,
+    "rebate": 0.4
+   },
+   {
+    "tier": "Obsidian",
+    "min_30d_weighted_volume_usd": 10000000,
+    "rebate": 0.5
+   },
+   {
+    "tier": "Onyx",
+    "min_30d_weighted_volume_usd": 75000000,
+    "rebate": 0.6
+   }
+  ],
+  "observed_f1_market_config": {
+   "feesEnabled": true,
+   "feeSchedule": {
+    "rate": 0.05,
+    "exponent": 1,
+    "takerOnly": true,
+    "rebateRate": 0.15
+   },
+   "n_markets": 636,
+   "exceptions": [
+    {
+     "n_markets": 1,
+     "rate": 0.01,
+     "rebateRate": 0.25
+    }
+   ],
+   "order_min_size_shares": 5
+  },
+  "tick_size": {
+   "allowed_increments": [
+    0.1,
+    0.01,
+    0.005,
+    0.0025,
+    0.001,
+    0.0001
+   ],
+   "per_market": true,
+   "rule_in_current_docs": null,
+   "rule_in_archived_docs": "tick changes when the book's price reaches the limits: price > 0.96 or price < 0.04",
+   "archived_url": "http://web.archive.org/web/20250919142641/https://docs.polymarket.com/developers/CLOB/websocket/market-channel",
+   "observed_f1_markets": {
+    "tick_0.01": 519,
+    "tick_0.001": 118,
+    "quoted_books_mid_outside_4_96c": {
+     "n": 50,
+     "tick_0.001": 50,
+     "tick_0.01": 0
+    },
+    "quoted_books_mid_within_4_96c": {
+     "n": 45,
+     "tick_0.001": 10,
+     "tick_0.01": 35
+    }
+   }
+  },
+  "examples_usd": {
+   "taker_100_shares_at_0.50": 1.25,
+   "taker_100_shares_at_0.10": 0.45,
+   "taker_1_share_at_0.50": 0.0125
+  },
+  "source_url": "https://docs.polymarket.com/trading/fees.md",
+  "source_urls": [
+   "https://docs.polymarket.com/trading/fees.md",
+   "https://docs.polymarket.com/programs/maker-rebates.md",
+   "https://docs.polymarket.com/programs/taker-rebates.md",
+   "https://docs.polymarket.com/changelog/predictions.md",
+   "https://docs.polymarket.com/market-data/market-details.md",
+   "https://docs.polymarket.com/trading/place-orders.md",
+   "https://docs.polymarket.com/api-reference/rate-limits.md"
+  ],
+  "not_verified": [
+   "the 0.96 / 0.04 tick trigger in current documentation (archived page only)",
+   "unit of Gamma volume24hr (taken as USD)"
+  ]
+ },
+ "snapshot": {
+  "venues": [
+   "kalshi",
+   "polymarket"
+  ],
+  "script": "snapshot_books.py",
+  "raw_dir": "raw/20261121T175945Z",
+  "first_book_utc": "2026-11-21T18:00:33.244Z",
+  "last_book_utc": "2026-11-21T18:13:39.379Z",
+  "context": "Las Vegas GP weekend: about 14 h after qualifying start (2026-11-21T04:00Z) and 10 h before race start (2026-11-22T04:00Z)",
+  "http": {
+   "kalshi_series": {
+    "200": 1
+   },
+   "kalshi_markets": {
+    "200": 40
+   },
+   "kalshi_orderbooks": {
+    "200": 5
+   },
+   "polymarket_events": {
+    "200": 3
+   },
+   "polymarket_books": {
+    "200": 637
+   }
+  },
+  "n_markets": 887,
+  "n_two_sided": 395,
+  "n_quoted": 234,
+  "n_traded_24h": 138,
+  "per_venue": {
+   "kalshi": {
+    "n_markets": 250,
+    "book_states": {
+     "two_sided": 139,
+     "ask_only": 111
+    },
+    "n_two_sided": 139,
+    "n_stub_two_sided": 0,
+    "n_quoted": 139,
+    "n_traded_24h": 98,
+    "median_spread_cents_quoted": 4.0,
+    "median_spread_cents_traded_24h": 4.0,
+    "n_no_bid_ask_le_5c": 103,
+    "no_bid_median_best_ask": 0.02,
+    "no_bid_median_ask_size": 1091.33,
+    "volume_24h_total": 366662.04,
+    "volume_24h_unit": "contracts",
+    "tick_sizes": {
+     "0.01": 250
+    }
+   },
+   "polymarket": {
+    "n_markets": 637,
+    "book_states": {
+     "two_sided": 256,
+     "empty": 1,
+     "ask_only": 380
+    },
+    "n_two_sided": 256,
+    "n_stub_two_sided": 161,
+    "n_quoted": 95,
+    "n_traded_24h": 40,
+    "median_spread_cents_quoted": 2.1,
+    "median_spread_cents_traded_24h": 2.0,
+    "n_no_bid_ask_le_5c": 40,
+    "no_bid_median_best_ask": 0.01,
+    "no_bid_median_ask_size": 11.46,
+    "volume_24h_total": 96481.37,
+    "volume_24h_unit": "usd",
+    "tick_sizes": {
+     "0.001": 118,
+     "0.01": 519
+    }
+   }
+  },
+  "definitions": {
+   "mid": "(best_bid + best_ask) / 2 of the YES / first-outcome token, 0-1 dollars",
+   "spread_cents": "(best_ask - best_bid) * 100",
+   "top_size": "(best_bid_size + best_ask_size) / 2, contracts ($1 max payout each)",
+   "depth_Nc": "contracts resting at bid >= mid - N cents plus ask <= mid + N cents",
+   "usd": "sum(price * size) over the same levels, YES-price terms",
+   "two_sided": "at least one bid and one ask",
+   "quoted": "two_sided and spread < 50 cents",
+   "traded_24h": "quoted and reported 24h volume > 0",
+   "buckets": "lo <= mid < hi"
+  },
+  "bucket_basis": "quoted books (two-sided, spread < 50 cents), both venues pooled; mid = lo <= mid < hi in dollars; sizes in contracts ($1 payout)",
+  "buckets": [
+   {
+    "lo": 0.0,
+    "hi": 0.05,
+    "n": 76,
+    "median_spread_cents": 1.0,
+    "p25_spread_cents": 0.5,
+    "p75_spread_cents": 2.775,
+    "median_top_size": 243.798,
+    "median_best_bid_size": 150.0,
+    "median_best_ask_size": 142.89,
+    "median_depth_1c": 743.5,
+    "median_depth_2c": 1897.41,
+    "median_depth_5c": 2949.63,
+    "median_depth_2c_usd": 17.02,
+    "median_levels_per_side": 16.25
+   },
+   {
+    "lo": 0.05,
+    "hi": 0.15,
+    "n": 36,
+    "median_spread_cents": 4.0,
+    "p25_spread_cents": 3.0,
+    "p75_spread_cents": 7.0,
+    "median_top_size": 213.803,
+    "median_best_bid_size": 23.0,
+    "median_best_ask_size": 225.0,
+    "median_depth_1c": 0.0,
+    "median_depth_2c": 36.475,
+    "median_depth_5c": 1450.395,
+    "median_depth_2c_usd": 3.32,
+    "median_levels_per_side": 17.5
+   },
+   {
+    "lo": 0.15,
+    "hi": 0.35,
+    "n": 55,
+    "median_spread_cents": 5.0,
+    "p25_spread_cents": 3.5,
+    "p75_spread_cents": 10.5,
+    "median_top_size": 135.275,
+    "median_best_bid_size": 30.0,
+    "median_best_ask_size": 59.43,
+    "median_depth_1c": 0,
+    "median_depth_2c": 0,
+    "median_depth_5c": 361.0,
+    "median_depth_2c_usd": 0,
+    "median_levels_per_side": 15.5
+   },
+   {
+    "lo": 0.35,
+    "hi": 0.65,
+    "n": 33,
+    "median_spread_cents": 9.0,
+    "p25_spread_cents": 3.0,
+    "p75_spread_cents": 10.0,
+    "median_top_size": 200.0,
+    "median_best_bid_size": 187.71,
+    "median_best_ask_size": 200.0,
+    "median_depth_1c": 0,
+    "median_depth_2c": 0,
+    "median_depth_5c": 400.0,
+    "median_depth_2c_usd": 0,
+    "median_levels_per_side": 10.0
+   },
+   {
+    "lo": 0.65,
+    "hi": 0.85,
+    "n": 23,
+    "median_spread_cents": 5.0,
+    "p25_spread_cents": 3.25,
+    "p75_spread_cents": 8.0,
+    "median_top_size": 91.68,
+    "median_best_bid_size": 21.0,
+    "median_best_ask_size": 79.99,
+    "median_depth_1c": 0,
+    "median_depth_2c": 0,
+    "median_depth_5c": 400.0,
+    "median_depth_2c_usd": 0,
+    "median_levels_per_side": 12.5
+   },
+   {
+    "lo": 0.85,
+    "hi": 0.95,
+    "n": 11,
+    "median_spread_cents": 5.0,
+    "p25_spread_cents": 4.0,
+    "p75_spread_cents": 8.0,
+    "median_top_size": 31.59,
+    "median_best_bid_size": 12.0,
+    "median_best_ask_size": 10.29,
+    "median_depth_1c": 0,
+    "median_depth_2c": 0,
+    "median_depth_5c": 1417.72,
+    "median_depth_2c_usd": 0,
+    "median_levels_per_side": 11.5
+   },
+   {
+    "lo": 0.95,
+    "hi": 1.0,
+    "n": 0,
+    "median_spread_cents": null,
+    "p25_spread_cents": null,
+    "p75_spread_cents": null,
+    "median_top_size": null,
+    "median_best_bid_size": null,
+    "median_best_ask_size": null,
+    "median_depth_1c": null,
+    "median_depth_2c": null,
+    "median_depth_5c": null,
+    "median_depth_2c_usd": null,
+    "median_levels_per_side": null
+   }
+  ],
+  "buckets_traded_24h": [
+   {
+    "lo": 0.0,
+    "hi": 0.05,
+    "n": 34,
+    "median_spread_cents": 1.0,
+    "p25_spread_cents": 0.4,
+    "p75_spread_cents": 2.0,
+    "median_top_size": 714.5,
+    "median_best_bid_size": 174.935,
+    "median_best_ask_size": 453.5,
+    "median_depth_1c": 2346.205,
+    "median_depth_2c": 3662.5,
+    "median_depth_5c": 6183.03,
+    "median_depth_2c_usd": 48.74,
+    "median_levels_per_side": 19.5
+   },
+   {
+    "lo": 0.05,
+    "hi": 0.15,
+    "n": 26,
+    "median_spread_cents": 4.0,
+    "p25_spread_cents": 3.0,
+    "p75_spread_cents": 4.75,
+    "median_top_size": 270.0,
+    "median_best_bid_size": 18.33,
+    "median_best_ask_size": 503.355,
+    "median_depth_1c": 0.0,
+    "median_depth_2c": 359.605,
+    "median_depth_5c": 2309.875,
+    "median_depth_2c_usd": 24.755,
+    "median_levels_per_side": 19.5
+   },
+   {
+    "lo": 0.15,
+    "hi": 0.35,
+    "n": 35,
+    "median_spread_cents": 4.0,
+    "p25_spread_cents": 3.0,
+    "p75_spread_cents": 6.0,
+    "median_top_size": 128.4,
+    "median_best_bid_size": 13.0,
+    "median_best_ask_size": 59.43,
+    "median_depth_1c": 0,
+    "median_depth_2c": 15.0,
+    "median_depth_5c": 871.43,
+    "median_depth_2c_usd": 2.35,
+    "median_levels_per_side": 18.5
+   },
+   {
+    "lo": 0.35,
+    "hi": 0.65,
+    "n": 18,
+    "median_spread_cents": 3.0,
+    "p25_spread_cents": 2.0,
+    "p75_spread_cents": 4.75,
+    "median_top_size": 79.222,
+    "median_best_bid_size": 35.355,
+    "median_best_ask_size": 65.06,
+    "median_depth_1c": 0.0,
+    "median_depth_2c": 267.405,
+    "median_depth_5c": 1473.675,
+    "median_depth_2c_usd": 160.615,
+    "median_levels_per_side": 18.75
+   },
+   {
+    "lo": 0.65,
+    "hi": 0.85,
+    "n": 17,
+    "median_spread_cents": 5.0,
+    "p25_spread_cents": 2.0,
+    "p75_spread_cents": 8.0,
+    "median_top_size": 58.1,
+    "median_best_bid_size": 17.0,
+    "median_best_ask_size": 20.0,
+    "median_depth_1c": 0,
+    "median_depth_2c": 0,
+    "median_depth_5c": 348.0,
+    "median_depth_2c_usd": 0,
+    "median_levels_per_side": 13.0
+   },
+   {
+    "lo": 0.85,
+    "hi": 0.95,
+    "n": 8,
+    "median_spread_cents": 5.0,
+    "p25_spread_cents": 3.5,
+    "p75_spread_cents": 6.5,
+    "median_top_size": 66.045,
+    "median_best_bid_size": 26.25,
+    "median_best_ask_size": 7.275,
+    "median_depth_1c": 0.0,
+    "median_depth_2c": 0.0,
+    "median_depth_5c": 1600.915,
+    "median_depth_2c_usd": 0.0,
+    "median_levels_per_side": 11.5
+   },
+   {
+    "lo": 0.95,
+    "hi": 1.0,
+    "n": 0,
+    "median_spread_cents": null,
+    "p25_spread_cents": null,
+    "p75_spread_cents": null,
+    "median_top_size": null,
+    "median_best_bid_size": null,
+    "median_best_ask_size": null,
+    "median_depth_1c": null,
+    "median_depth_2c": null,
+    "median_depth_5c": null,
+    "median_depth_2c_usd": null,
+    "median_levels_per_side": null
+   }
+  ],
+  "buckets_by_venue": {
+   "kalshi": [
+    {
+     "lo": 0.0,
+     "hi": 0.05,
+     "n": 24,
+     "median_spread_cents": 2.0,
+     "p25_spread_cents": 1.0,
+     "p75_spread_cents": 3.0,
+     "median_top_size": 596.25,
+     "median_best_bid_size": 198.46,
+     "median_best_ask_size": 375.0,
+     "median_depth_1c": 555.5,
+     "median_depth_2c": 1295.0,
+     "median_depth_5c": 2191.0,
+     "median_depth_2c_usd": 25.385,
+     "median_levels_per_side": 20.0
+    },
+    {
+     "lo": 0.05,
+     "hi": 0.15,
+     "n": 26,
+     "median_spread_cents": 4.0,
+     "p25_spread_cents": 3.0,
+     "p75_spread_cents": 6.0,
+     "median_top_size": 246.23,
+     "median_best_bid_size": 17.5,
+     "median_best_ask_size": 368.06,
+     "median_depth_1c": 0.0,
+     "median_depth_2c": 36.475,
+     "median_depth_5c": 1450.395,
+     "median_depth_2c_usd": 3.32,
+     "median_levels_per_side": 19.5
+    },
+    {
+     "lo": 0.15,
+     "hi": 0.35,
+     "n": 37,
+     "median_spread_cents": 5.0,
+     "p25_spread_cents": 3.0,
+     "p75_spread_cents": 6.0,
+     "median_top_size": 102.53,
+     "median_best_bid_size": 13.0,
+     "median_best_ask_size": 50.82,
+     "median_depth_1c": 0,
+     "median_depth_2c": 0,
+     "median_depth_5c": 416.23,
+     "median_depth_2c_usd": 0,
+     "median_levels_per_side": 17.0
+    },
+    {
+     "lo": 0.35,
+     "hi": 0.65,
+     "n": 26,
+     "median_spread_cents": 7.0,
+     "p25_spread_cents": 2.25,
+     "p75_spread_cents": 10.0,
+     "median_top_size": 200.0,
+     "median_best_bid_size": 200.0,
+     "median_best_ask_size": 200.0,
+     "median_depth_1c": 0.0,
+     "median_depth_2c": 0.0,
+     "median_depth_5c": 400.0,
+     "median_depth_2c_usd": 0.0,
+     "median_levels_per_side": 13.5
+    },
+    {
+     "lo": 0.65,
+     "hi": 0.85,
+     "n": 18,
+     "median_spread_cents": 6.0,
+     "p25_spread_cents": 4.0,
+     "p75_spread_cents": 8.0,
+     "median_top_size": 96.09,
+     "median_best_bid_size": 20.0,
+     "median_best_ask_size": 33.51,
+     "median_depth_1c": 0.0,
+     "median_depth_2c": 0.0,
+     "median_depth_5c": 400.0,
+     "median_depth_2c_usd": 0.0,
+     "median_levels_per_side": 12.75
+    },
+    {
+     "lo": 0.85,
+     "hi": 0.95,
+     "n": 8,
+     "median_spread_cents": 4.5,
+     "p25_spread_cents": 3.5,
+     "p75_spread_cents": 5.25,
+     "median_top_size": 66.045,
+     "median_best_bid_size": 17.16,
+     "median_best_ask_size": 7.275,
+     "median_depth_1c": 0.0,
+     "median_depth_2c": 8.5,
+     "median_depth_5c": 2156.555,
+     "median_depth_2c_usd": 7.325,
+     "median_levels_per_side": 11.75
+    },
+    {
+     "lo": 0.95,
+     "hi": 1.0,
+     "n": 0,
+     "median_spread_cents": null,
+     "p25_spread_cents": null,
+     "p75_spread_cents": null,
+     "median_top_size": null,
+     "median_best_bid_size": null,
+     "median_best_ask_size": null,
+     "median_depth_1c": null,
+     "median_depth_2c": null,
+     "median_depth_5c": null,
+     "median_depth_2c_usd": null,
+     "median_levels_per_side": null
+    }
+   ],
+   "polymarket": [
+    {
+     "lo": 0.0,
+     "hi": 0.05,
+     "n": 52,
+     "median_spread_cents": 0.8,
+     "p25_spread_cents": 0.275,
+     "p75_spread_cents": 2.475,
+     "median_top_size": 180.545,
+     "median_best_bid_size": 150.0,
+     "median_best_ask_size": 92.455,
+     "median_depth_1c": 1594.32,
+     "median_depth_2c": 2468.0,
+     "median_depth_5c": 3217.0,
+     "median_depth_2c_usd": 11.46,
+     "median_levels_per_side": 15.25
+    },
+    {
+     "lo": 0.05,
+     "hi": 0.15,
+     "n": 10,
+     "median_spread_cents": 5.5,
+     "p25_spread_cents": 2.025,
+     "p75_spread_cents": 9.8,
+     "median_top_size": 151.75,
+     "median_best_bid_size": 45.09,
+     "median_best_ask_size": 165.5,
+     "median_depth_1c": 0.0,
+     "median_depth_2c": 390.995,
+     "median_depth_5c": 1540.605,
+     "median_depth_2c_usd": 23.335,
+     "median_levels_per_side": 11.25
+    },
+    {
+     "lo": 0.15,
+     "hi": 0.35,
+     "n": 18,
+     "median_spread_cents": 19.5,
+     "p25_spread_cents": 11.75,
+     "p75_spread_cents": 44.9,
+     "median_top_size": 262.0,
+     "median_best_bid_size": 337.49,
+     "median_best_ask_size": 59.715,
+     "median_depth_1c": 0.0,
+     "median_depth_2c": 0.0,
+     "median_depth_5c": 0.0,
+     "median_depth_2c_usd": 0.0,
+     "median_levels_per_side": 9.25
+    },
+    {
+     "lo": 0.35,
+     "hi": 0.65,
+     "n": 7,
+     "median_spread_cents": 13.0,
+     "p25_spread_cents": 4.0,
+     "p75_spread_cents": 40.0,
+     "median_top_size": 529.24,
+     "median_best_bid_size": 100.0,
+     "median_best_ask_size": 1048.48,
+     "median_depth_1c": 0,
+     "median_depth_2c": 0,
+     "median_depth_5c": 0,
+     "median_depth_2c_usd": 0,
+     "median_levels_per_side": 9.5
+    },
+    {
+     "lo": 0.65,
+     "hi": 0.85,
+     "n": 5,
+     "median_spread_cents": 2.5,
+     "p25_spread_cents": 2.0,
+     "p75_spread_cents": 8.0,
+     "median_top_size": 89.1,
+     "median_best_bid_size": 50.0,
+     "median_best_ask_size": 99.2,
+     "median_depth_1c": 0,
+     "median_depth_2c": 1258.0,
+     "median_depth_5c": 2156.18,
+     "median_depth_2c_usd": 877.01,
+     "median_levels_per_side": 11.5
+    },
+    {
+     "lo": 0.85,
+     "hi": 0.95,
+     "n": 3,
+     "median_spread_cents": 17.0,
+     "p25_spread_cents": 12.5,
+     "p75_spread_cents": 17.35,
+     "median_top_size": 18.05,
+     "median_best_bid_size": 10.0,
+     "median_best_ask_size": 26.1,
+     "median_depth_1c": 0,
+     "median_depth_2c": 0,
+     "median_depth_5c": 0,
+     "median_depth_2c_usd": 0,
+     "median_levels_per_side": 8.0
+    },
+    {
+     "lo": 0.95,
+     "hi": 1.0,
+     "n": 0,
+     "median_spread_cents": null,
+     "p25_spread_cents": null,
+     "p75_spread_cents": null,
+     "median_top_size": null,
+     "median_best_bid_size": null,
+     "median_best_ask_size": null,
+     "median_depth_1c": null,
+     "median_depth_2c": null,
+     "median_depth_5c": null,
+     "median_depth_2c_usd": null,
+     "median_levels_per_side": null
+    }
+   ]
+  },
+  "buckets_traded_24h_by_venue": {
+   "kalshi": [
+    {
+     "lo": 0.0,
+     "hi": 0.05,
+     "n": 14,
+     "median_spread_cents": 1.0,
+     "p25_spread_cents": 1.0,
+     "p75_spread_cents": 2.0,
+     "median_top_size": 718.0,
+     "median_best_bid_size": 619.96,
+     "median_best_ask_size": 453.5,
+     "median_depth_1c": 1371.34,
+     "median_depth_2c": 2386.17,
+     "median_depth_5c": 3911.09,
+     "median_depth_2c_usd": 44.795,
+     "median_levels_per_side": 22.5
+    },
+    {
+     "lo": 0.05,
+     "hi": 0.15,
+     "n": 22,
+     "median_spread_cents": 4.0,
+     "p25_spread_cents": 3.0,
+     "p75_spread_cents": 5.75,
+     "median_top_size": 260.928,
+     "median_best_bid_size": 17.5,
+     "median_best_ask_size": 477.815,
+     "median_depth_1c": 0.0,
+     "median_depth_2c": 126.0,
+     "median_depth_5c": 1965.5,
+     "median_depth_2c_usd": 10.16,
+     "median_levels_per_side": 20.5
+    },
+    {
+     "lo": 0.15,
+     "hi": 0.35,
+     "n": 28,
+     "median_spread_cents": 4.0,
+     "p25_spread_cents": 3.0,
+     "p75_spread_cents": 5.25,
+     "median_top_size": 102.48,
+     "median_best_bid_size": 6.45,
+     "median_best_ask_size": 86.625,
+     "median_depth_1c": 0.0,
+     "median_depth_2c": 11.54,
+     "median_depth_5c": 850.925,
+     "median_depth_2c_usd": 1.81,
+     "median_levels_per_side": 18.5
+    },
+    {
+     "lo": 0.35,
+     "hi": 0.65,
+     "n": 14,
+     "median_spread_cents": 2.5,
+     "p25_spread_cents": 2.0,
+     "p75_spread_cents": 4.0,
+     "median_top_size": 54.178,
+     "median_best_bid_size": 35.355,
+     "median_best_ask_size": 41.5,
+     "median_depth_1c": 12.19,
+     "median_depth_2c": 267.405,
+     "median_depth_5c": 986.095,
+     "median_depth_2c_usd": 160.615,
+     "median_levels_per_side": 19.25
+    },
+    {
+     "lo": 0.65,
+     "hi": 0.85,
+     "n": 13,
+     "median_spread_cents": 5.0,
+     "p25_spread_cents": 4.0,
+     "p75_spread_cents": 7.0,
+     "median_top_size": 38.51,
+     "median_best_bid_size": 14.0,
+     "median_best_ask_size": 15.0,
+     "median_depth_1c": 0,
+     "median_depth_2c": 0,
+     "median_depth_5c": 348.0,
+     "median_depth_2c_usd": 0,
+     "median_levels_per_side": 14.0
+    },
+    {
+     "lo": 0.85,
+     "hi": 0.95,
+     "n": 7,
+     "median_spread_cents": 5.0,
+     "p25_spread_cents": 3.0,
+     "p75_spread_cents": 5.5,
+     "median_top_size": 31.59,
+     "median_best_bid_size": 22.32,
+     "median_best_ask_size": 5.0,
+     "median_depth_1c": 0,
+     "median_depth_2c": 0,
+     "median_depth_5c": 1784.11,
+     "median_depth_2c_usd": 0,
+     "median_levels_per_side": 11.5
+    },
+    {
+     "lo": 0.95,
+     "hi": 1.0,
+     "n": 0,
+     "median_spread_cents": null,
+     "p25_spread_cents": null,
+     "p75_spread_cents": null,
+     "median_top_size": null,
+     "median_best_bid_size": null,
+     "median_best_ask_size": null,
+     "median_depth_1c": null,
+     "median_depth_2c": null,
+     "median_depth_5c": null,
+     "median_depth_2c_usd": null,
+     "median_levels_per_side": null
+    }
+   ],
+   "polymarket": [
+    {
+     "lo": 0.0,
+     "hi": 0.05,
+     "n": 20,
+     "median_spread_cents": 0.45,
+     "p25_spread_cents": 0.25,
+     "p75_spread_cents": 1.65,
+     "median_top_size": 687.527,
+     "median_best_bid_size": 153.49,
+     "median_best_ask_size": 683.165,
+     "median_depth_1c": 2678.92,
+     "median_depth_2c": 4038.545,
+     "median_depth_5c": 6693.905,
+     "median_depth_2c_usd": 48.74,
+     "median_levels_per_side": 13.75
+    },
+    {
+     "lo": 0.05,
+     "hi": 0.15,
+     "n": 4,
+     "median_spread_cents": 2.0,
+     "p25_spread_cents": 1.875,
+     "p75_spread_cents": 2.25,
+     "median_top_size": 446.947,
+     "median_best_bid_size": 20.83,
+     "median_best_ask_size": 882.615,
+     "median_depth_1c": 488.995,
+     "median_depth_2c": 1182.505,
+     "median_depth_5c": 14420.6,
+     "median_depth_2c_usd": 85.985,
+     "median_levels_per_side": 10.25
+    },
+    {
+     "lo": 0.15,
+     "hi": 0.35,
+     "n": 7,
+     "median_spread_cents": 3.0,
+     "p25_spread_cents": 1.5,
+     "p75_spread_cents": 12.5,
+     "median_top_size": 231.79,
+     "median_best_bid_size": 319.98,
+     "median_best_ask_size": 59.43,
+     "median_depth_1c": 0,
+     "median_depth_2c": 379.98,
+     "median_depth_5c": 1220.76,
+     "median_depth_2c_usd": 58.8,
+     "median_levels_per_side": 14.0
+    },
+    {
+     "lo": 0.35,
+     "hi": 0.65,
+     "n": 4,
+     "median_spread_cents": 4.0,
+     "p25_spread_cents": 2.75,
+     "p75_spread_cents": 7.0,
+     "median_top_size": 871.043,
+     "median_best_bid_size": 83.5,
+     "median_best_ask_size": 1664.585,
+     "median_depth_1c": 0.0,
+     "median_depth_2c": 714.585,
+     "median_depth_5c": 8261.57,
+     "median_depth_2c_usd": 369.335,
+     "median_levels_per_side": 11.5
+    },
+    {
+     "lo": 0.65,
+     "hi": 0.85,
+     "n": 4,
+     "median_spread_cents": 5.0,
+     "p25_spread_cents": 1.75,
+     "p75_spread_cents": 12.5,
+     "median_top_size": 73.6,
+     "median_best_bid_size": 33.5,
+     "median_best_ask_size": 89.595,
+     "median_depth_1c": 89.1,
+     "median_depth_2c": 726.09,
+     "median_depth_5c": 1298.59,
+     "median_depth_2c_usd": 488.17,
+     "median_levels_per_side": 11.0
+    },
+    {
+     "lo": 0.85,
+     "hi": 0.95,
+     "n": 1,
+     "median_spread_cents": 8.0,
+     "p25_spread_cents": null,
+     "p75_spread_cents": null,
+     "median_top_size": 555.705,
+     "median_best_bid_size": 100.0,
+     "median_best_ask_size": 1011.41,
+     "median_depth_1c": 0,
+     "median_depth_2c": 0,
+     "median_depth_5c": 1417.72,
+     "median_depth_2c_usd": 0,
+     "median_levels_per_side": 11.5
+    },
+    {
+     "lo": 0.95,
+     "hi": 1.0,
+     "n": 0,
+     "median_spread_cents": null,
+     "p25_spread_cents": null,
+     "p75_spread_cents": null,
+     "median_top_size": null,
+     "median_best_bid_size": null,
+     "median_best_ask_size": null,
+     "median_depth_1c": null,
+     "median_depth_2c": null,
+     "median_depth_5c": null,
+     "median_depth_2c_usd": null,
+     "median_levels_per_side": null
+    }
+   ]
+  },
+  "las_vegas_winner_market": {
+   "kalshi": {
+    "outcomes": 22,
+    "sum_best_bids": 0.97,
+    "sum_best_asks": 1.2,
+    "volume_24h_contracts": 303698
+   },
+   "polymarket": {
+    "outcomes": 23,
+    "sum_best_bids": 1.01,
+    "sum_best_asks": 1.13,
+    "volume_24h_usd": 84402
+   }
+  },
+  "caveats": [
+   "single snapshot, pre-race; no time series or trade data",
+   "Kalshi books span 5 s, Polymarket books 13 min (sequential requests)",
+   "two venues with different ticks, fees and users; prefer per-venue buckets",
+   "small cells: several buckets have n < 10; no quoted book had mid > 0.95",
+   "books on the same race are correlated, not independent samples",
+   "displayed liquidity only; 161 Polymarket placeholder books (spread >= 50c) excluded from 'quoted'",
+   "no drivers' or constructors' champion winner market was open on either venue"
+  ]
+ }
+}

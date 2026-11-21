@@ -23,6 +23,11 @@ Outputs (next to this file)
   book_snapshot_summary.csv     one row per market
   book_snapshot_buckets.json    medians bucketed by mid price
 
+Book classes used in the summary
+  two_sided  at least one bid and one ask
+  quoted     two_sided with spread < 50c (drops placeholder 1c/99c "stub" quotes)
+  traded     quoted and 24h volume > 0
+
 Dependencies: stdlib + requests.
 """
 import argparse
@@ -54,6 +59,7 @@ F1_RE = re.compile(r"\bF1\b|Formula ?(1|One)", re.I)
 BUCKETS = [(0.0, 0.05), (0.05, 0.15), (0.15, 0.35), (0.35, 0.65),
            (0.65, 0.85), (0.85, 0.95), (0.95, 1.0001)]
 WINDOWS_C = (1, 2, 5)
+STUB_SPREAD_C = 50.0   # two-sided books this wide are placeholders (e.g. 0.01 bid / 0.99 ask)
 
 
 def utcnow():
@@ -293,7 +299,7 @@ def bucket_table(rows):
 
 COLS = ["venue", "market_id", "event_id", "group", "title", "outcome", "fetched_utc",
         "book_state", "tick_size", "best_bid", "best_bid_size", "best_ask", "best_ask_size",
-        "mid", "spread_cents", "n_bid_levels", "n_ask_levels",
+        "mid", "spread_cents", "quoted", "n_bid_levels", "n_ask_levels",
         "depth_1c_contracts", "depth_1c_usd", "depth_2c_contracts", "depth_2c_usd",
         "depth_5c_contracts", "depth_5c_usd", "total_bid_contracts", "total_ask_contracts",
         "volume_24h", "volume_24h_unit", "open_interest_contracts", "last_price",
@@ -302,12 +308,15 @@ COLS = ["venue", "market_id", "event_id", "group", "title", "outcome", "fetched_
 
 def summarise(raw):
     rows = kalshi_rows(raw) + polymarket_rows(raw)
+    for r in rows:
+        r["quoted"] = int(r["book_state"] == "two_sided" and r["spread_cents"] < STUB_SPREAD_C)
     with open(HERE / "book_snapshot_summary.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=COLS, extrasaction="ignore")
         w.writeheader()
         w.writerows(rows)
     two = [r for r in rows if r["book_state"] == "two_sided"]
-    traded = [r for r in two if (r["volume_24h"] or 0) > 0]
+    quoted = [r for r in rows if r["quoted"]]
+    traded = [r for r in quoted if (r["volume_24h"] or 0) > 0]
     times = sorted(r["fetched_utc"] for r in rows)
     res = {"raw_dir": str(raw.relative_to(HERE)), "first_book_utc": times[0] if times else None,
            "last_book_utc": times[-1] if times else None, "venues": {},
@@ -317,19 +326,37 @@ def summarise(raw):
                "top_size": "(best_bid_size + best_ask_size) / 2, contracts ($1 max payout each)",
                "depth_Nc": "contracts resting at bid >= mid - N cents plus ask <= mid + N cents",
                "usd": "sum(price * size) over the same levels, YES-price terms",
-               "buckets": "two-sided books only; lo <= mid < hi"},
-           "buckets_all": bucket_table(two), "buckets_traded_24h": bucket_table(traded),
-           "buckets_by_venue": {}, "buckets_traded_24h_by_venue": {}}
+               "two_sided": "at least one bid and one ask",
+               "quoted": f"two_sided and spread < {STUB_SPREAD_C:g} cents",
+               "traded_24h": "quoted and reported 24h volume > 0",
+               "buckets": "lo <= mid < hi"},
+           "buckets_quoted": bucket_table(quoted), "buckets_quoted_by_venue": {},
+           "buckets_traded_24h": bucket_table(traded), "buckets_traded_24h_by_venue": {},
+           "buckets_two_sided_incl_stubs": bucket_table(two)}
     for v in sorted({r["venue"] for r in rows}):
         vr = [r for r in rows if r["venue"] == v]
         states = {}
         for r in vr:
             states[r["book_state"]] = states.get(r["book_state"], 0) + 1
-        res["venues"][v] = {"n_markets": len(vr), "book_states": states,
-                            "n_two_sided": states.get("two_sided", 0),
-                            "n_two_sided_traded_24h": len([r for r in traded if r["venue"] == v])}
-        res["buckets_by_venue"][v] = bucket_table([r for r in two if r["venue"] == v])
-        res["buckets_traded_24h_by_venue"][v] = bucket_table([r for r in traded if r["venue"] == v])
+        longshot = [r for r in vr if r["book_state"] == "ask_only" and r["best_ask"] <= 0.05]
+        vq = [r for r in quoted if r["venue"] == v]
+        vt = [r for r in traded if r["venue"] == v]
+        res["venues"][v] = {
+            "n_markets": len(vr), "book_states": states,
+            "n_two_sided": states.get("two_sided", 0),
+            "n_stub_two_sided": states.get("two_sided", 0) - len(vq),
+            "n_quoted": len(vq), "n_traded_24h": len(vt),
+            "median_spread_cents_quoted": med([r["spread_cents"] for r in vq]),
+            "median_spread_cents_traded_24h": med([r["spread_cents"] for r in vt]),
+            "n_no_bid_ask_le_5c": len(longshot),
+            "no_bid_median_best_ask": med([r["best_ask"] for r in longshot]),
+            "no_bid_median_ask_size": med([r["best_ask_size"] for r in longshot]),
+            "volume_24h_total": round(sum(r["volume_24h"] or 0 for r in vr), 2),
+            "volume_24h_unit": vr[0]["volume_24h_unit"],
+            "tick_sizes": {str(t): sum(1 for r in vr if r["tick_size"] == t)
+                           for t in sorted({r["tick_size"] for r in vr if r["tick_size"]})}}
+        res["buckets_quoted_by_venue"][v] = bucket_table(vq)
+        res["buckets_traded_24h_by_venue"][v] = bucket_table(vt)
     with open(HERE / "book_snapshot_buckets.json", "w", encoding="utf-8") as f:
         json.dump(res, f, indent=1)
     return res
