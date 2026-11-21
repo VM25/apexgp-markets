@@ -1,0 +1,18 @@
+rootdir: /Users/vatsal/Documents/ApexGP
+collecting ... collected 13 items
+
+pipeline/tests/test_asof.py::test_truncating_the_future_never_changes_a_frame_archive PASSED [  7%]
+pipeline/tests/test_asof.py::test_truncating_the_future_never_changes_a_frame_2025 PASSED [ 15%]
+pipeline/tests/test_asof.py::test_settlement_labels_are_not_inputs PASSED [ 23%]
+pipeline/tests/test_asof.py::test_frame_invariants PASSED                [ 30%]
+pipeline/tests/test_asof.py::test_entrants_are_in_grid_order_not_finishing_order PASSED [ 38%]
+pipeline/tests/test_asof.py::test_stopped_rule_needs_two_missed_laps[2] PASSED [ 46%]
+pipeline/tests/test_data.py::test_season_index_is_complete PASSED        [ 53%]
+pipeline/tests/test_data.py::test_observation_files_carry_no_labels_and_settlement_files_do PASSED [ 61%]
+pipeline/tests/test_data.py::test_points_follow_the_rule_and_standings_reconcile PASSED [ 69%]
+pipeline/tests/test_data.py::test_cross_source_quality_gates PASSED      [ 76%]
+pipeline/tests/test_data.py::test_shipped_model_beats_the_baseline_out_of_sample PASSED [ 84%]
+pipeline/tests/test_ratings.py::test_changing_a_result_only_affects_later_rounds PASSED [ 92%]
+pipeline/tests/test_ratings.py::test_ratings_are_bounded PASSED          [100%]
+
+============================== 13 passed in 1.23s ==============================

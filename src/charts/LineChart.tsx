@@ -40,6 +40,8 @@ interface Props {
   /** Vertical separators with labels (used for round boundaries in the NAV chart). */
   dividers?: { x: number; label: string }[];
   baseline?: number;
+  /** Width reserved for y-axis labels. */
+  yAxisWidth?: number;
 }
 
 const STATUS_FILL: Partial<Record<TrackStatus, string>> = {
@@ -50,11 +52,11 @@ const STATUS_FILL: Partial<Record<TrackStatus, string>> = {
 
 export function LineChart({
   series, xMax, height = 220, yDomain = [0, 1], yFormat = (v) => `${Math.round(v * 100)}%`, xFormat = (i) => String(i), xTitle,
-  band, markers = [], status, cursor, title, yTicks, dividers, baseline,
+  band, markers = [], status, cursor, title, yTicks, dividers, baseline, yAxisWidth = 44,
 }: Props) {
   const [ref, width] = useWidth<HTMLDivElement>(480);
   const [hover, setHover] = useState<number | null>(null);
-  const m = { l: 44, r: 12, t: 10, b: xTitle ? 34 : 24 };
+  const m = { l: yAxisWidth, r: 12, t: 10, b: xTitle ? 34 : 24 };
   const w = Math.max(60, width - m.l - m.r);
   const h = height - m.t - m.b;
   const [y0, y1] = yDomain;

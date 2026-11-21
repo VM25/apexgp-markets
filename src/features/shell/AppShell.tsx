@@ -64,7 +64,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <header className="sticky top-0 z-50 bg-paper/95 backdrop-blur-[6px] border-b-2 border-ink">
         {/* Desktop: brand, navigation, account */}
         <div className="hidden lg:flex items-center gap-6 h-[52px] px-6 3xl:px-10 border-b border-rule">
-          <Link href="/" aria-label="ApexGP Markets — overview"><Wordmark /></Link>
+          <Link href="/"><Wordmark /><span className="sr-only"> — overview</span></Link>
           <nav aria-label="Primary" className="flex items-stretch h-full ml-2">
             {NAV.map((n) => (
               <Link
@@ -80,7 +80,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </nav>
           <div className="ml-auto flex items-center gap-5">
             {s && (
-              <Link href="/portfolio/" className="flex items-baseline gap-4 group" aria-label="Open portfolio">
+              <Link href="/portfolio/" className="flex items-baseline gap-4 group">
                 <span className="flex items-baseline gap-1.5">
                   <span className="eyebrow">NAV</span>
                   <span className="num text-[15px] font-medium group-hover:underline underline-offset-4">{usd(nav)}</span>
@@ -167,16 +167,21 @@ function ClockStrip() {
   const next = s.nextRound();
   return (
     <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 h-[50px] lg:h-[44px] px-3 sm:px-6 3xl:px-10">
-      <Link href="/" className="lg:hidden shrink-0" aria-label="Overview"><Wordmark compact /></Link>
-      <Link href="/race/" className="flex items-baseline gap-2 min-w-0 shrink" aria-label={`Round ${round}, ${race.name}. Open the race view.`}>
+      <Link href="/" className="lg:hidden shrink-0 flex">
+        <span className="sm:hidden flex"><Wordmark iconOnly /></span>
+        <span className="hidden sm:flex"><Wordmark compact /></span>
+      </Link>
+      <Link href="/race/" data-testid="clock" className="flex items-baseline gap-1.5 sm:gap-2 min-w-0 shrink">
+        <span className="sr-only">Market clock: </span>
         <span className="num text-[12px] font-semibold bg-ink text-paper px-1.5 py-0.5 shrink-0">R{String(round).padStart(2, "0")}</span>
-        <span className="font-semibold text-[13.5px] truncate hidden sm:inline">{race.name.replace("Grand Prix", "GP")}</span>
+        <span className="sr-only md:hidden"> {race.name} </span>
+        <span className="font-semibold text-[13.5px] truncate hidden md:inline">{race.name.replace("Grand Prix", "GP")}</span>
         <span className="num text-[13px] text-ink-2 shrink-0 whitespace-nowrap">
           {phase === "pre" ? "Grid" : `L${Math.min(frame, N)}`}
           <span className="text-ink-3">/{N}</span>
         </span>
       </Link>
-      <span className="shrink-0"><StatusFlag status={status} phase={phase === "live" ? undefined : phase} compact /></span>
+      <span className="shrink-0"><StatusFlag status={status} phase={phase === "live" ? undefined : phase === "pre" ? undefined : phase} compact /></span>
       <div className="hidden md:block flex-1 min-w-[120px] max-w-[720px]">
         <LapRuler frames={race.frames} frame={frame} marks={marks} height={30} label={false} />
       </div>
@@ -202,10 +207,10 @@ function ClockStrip() {
               <svg width="16" height="14" viewBox="0 0 16 14" aria-hidden="true"><path d="M2 1l8 6-8 6z" fill="currentColor" /><rect x="11.5" y="1" width="2.5" height="12" fill="currentColor" /></svg>
             </button>
             <label className="sr-only" htmlFor="speed">Playback speed</label>
-            <select id="speed" className="btn btn-sm !px-2 num appearance-none text-center bg-transparent hidden xs:block" value={app.speed} onChange={(e) => app.setSpeed(Number(e.target.value))}>
+            <select id="speed" className="btn btn-sm !px-2 num appearance-none text-center bg-transparent hidden sm:block" value={app.speed} onChange={(e) => app.setSpeed(Number(e.target.value))}>
               {SPEEDS.map((sp, i) => <option key={sp.label} value={i}>{sp.label}</option>)}
             </select>
-            <button className="btn btn-sm hidden sm:inline-flex" onClick={() => void app.runToFlag()} disabled={!canAdvance || !!app.busy} title="Run the clock to the chequered flag">To flag</button>
+            <button className="btn btn-sm hidden md:inline-flex" onClick={() => void app.runToFlag()} disabled={!canAdvance || !!app.busy} title="Run the clock to the chequered flag">To flag</button>
           </>
         )}
       </div>
@@ -291,7 +296,7 @@ function SettlementDialog() {
             {v.records.length === 0 ? (
               <p className="text-[14px] text-ink-2 border border-dashed border-rule p-3">You had no open positions in this race. Nothing to settle.</p>
             ) : (
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Table, scrolls sideways on small screens">
                 <table className="tsheet min-w-[460px]">
                   <thead><tr><th>Contract</th><th>Held</th><th>Resolved</th><th className="r">Paid in</th><th className="r">Paid out</th><th className="r">Profit / loss</th></tr></thead>
                   <tbody>

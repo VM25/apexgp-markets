@@ -27,13 +27,13 @@ export function Ladder({ quote, side, onPick }: { quote: Quote; side: "YES" | "N
         type="button"
         onClick={() => onPick?.(own(l.price))}
         className="group relative grid grid-cols-[52px_1fr_auto] items-center w-full h-[30px] text-left hover:bg-paper-2 focus-visible:bg-paper-2"
-        aria-label={`${kind === "offer" ? "Offered" : "Bid"}: ${qty(l.size)} ${side} contracts at ${own(l.price)} cents. Use as limit price.`}
       >
         <span className={`num text-[13.5px] pl-1 ${k === 0 ? "font-semibold" : "text-ink-2"}`}>{own(l.price)}¢</span>
-        <span className="relative h-[14px]">
+        <span className="relative h-[14px]" aria-hidden="true">
           <span className={`absolute inset-y-0 left-0 ${kind === "offer" ? "bg-ink/80" : "border border-ink bg-transparent"}`} style={{ width: `${Math.max(2, (l.size / max) * 100)}%` }} />
         </span>
         <span className="num text-[12.5px] text-ink-2 pl-2 pr-1 tabular-nums">{qty(l.size)}</span>
+        <span className="sr-only"> {side} contracts {kind === "offer" ? "offered" : "bid for"} by the dealer. Use this price as your limit.</span>
       </button>
     </li>
   );

@@ -108,9 +108,9 @@ export function CoefficientCurves({ model }: { model: ModelFile }) {
   return (
     <div>
       <div className="flex flex-wrap items-end gap-3 mb-2">
-        <div>
+        <div className="min-w-0 max-w-full">
           <label htmlFor="coef-feature" className="eyebrow block mb-1">Feature</label>
-          <select id="coef-feature" className="field !min-h-[40px] !text-[14px] !font-sans !w-auto pr-8" value={feature} onChange={(e) => setFeature(e.target.value)}>
+          <select id="coef-feature" className="field !min-h-[40px] !text-[14px] !font-sans sm:!w-auto max-w-full pr-8" value={feature} onChange={(e) => setFeature(e.target.value)}>
             {model.features.order.map((f) => <option key={f} value={f}>{f} — {FEATURE_TEXT[f] ?? f}</option>)}
           </select>
         </div>

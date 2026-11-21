@@ -16,13 +16,13 @@
   --color-sheet: #faf8f2;
   --color-ink: #14161a;
   --color-ink-2: #454952;
-  --color-ink-3: #666a72;
+  --color-ink-3: #5c6068;
   --color-rule: rgb(20 22 26 / 0.16);
   --color-rule-2: rgb(20 22 26 / 0.08);
   --color-model: #2447d5;
   --color-model-soft: rgb(36 71 213 / 0.1);
-  --color-you: #d8431f;
-  --color-you-soft: rgb(216 67 31 / 0.1);
+  --color-you: #c23412;
+  --color-you-soft: rgb(194 52 18 / 0.1);
   --color-gain: #14774a;
   --color-loss: #b8322a;
   --color-flag-green: #14774a;
@@ -51,152 +51,201 @@
   }
 }
 
-html {
-  background: var(--color-paper);
-  -webkit-text-size-adjust: 100%;
-  scroll-padding-top: calc(var(--shell-top) + 16px);
+/*
+ * Cascade layers: everything below sits in Tailwind's `base` or `components` layer so that
+ * utility classes (hidden, sm:block, !px-2 …) always win over component styles.
+ */
+@layer base {
+  html {
+    background: var(--color-paper);
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: calc(var(--shell-top) + 16px);
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.45;
+    font-feature-settings: "tnum" 1, "lnum" 1;
+  }
+
+  /*
+   * Grid items default to min-width: auto, so one wide child (a table, a formula block)
+   * stretches an implicit single-column grid — and with it the whole page on a phone.
+   * Every grid child may shrink; wide content scrolls inside its own container instead.
+   */
+  :where(.grid) > * { min-width: 0; }
+
+  /* A faint drafting grid, like the back of a timing sheet. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+      linear-gradient(to right, rgb(20 22 26 / 0.035) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(20 22 26 / 0.035) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  ::selection { background: var(--color-ink); color: var(--color-paper); }
+
+  :focus-visible {
+    outline: 2px solid var(--color-model);
+    outline-offset: 2px;
+    border-radius: 1px;
+  }
+
+  button, [role="button"], a, summary, input, select { touch-action: manipulation; }
+  button { cursor: pointer; }
+  button:disabled { cursor: not-allowed; }
 }
 
-body {
-  margin: 0;
-  min-height: 100dvh;
-  background: var(--color-paper);
-  color: var(--color-ink);
-  font-family: var(--font-sans);
-  font-size: 15px;
-  line-height: 1.45;
-  font-feature-settings: "tnum" 1, "lnum" 1;
-  overflow-x: hidden;
+@layer components {
+  /* ---------- type ---------- */
+  .display {
+    font-family: var(--font-sans);
+    font-stretch: 125%;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 0.98;
+    text-transform: uppercase;
+  }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+  }
+  .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+  .prose-sheet { font-family: var(--font-serif); font-size: 17.5px; line-height: 1.62; color: var(--color-ink); }
+  .prose-sheet p { margin: 0 0 1em; max-width: 68ch; }
+  .prose-sheet strong { font-weight: 650; }
+  .prose-sheet code, .code {
+    font-family: var(--font-mono); font-size: 0.82em; background: var(--color-paper-2);
+    padding: 0.08em 0.32em; border: 1px solid var(--color-rule-2);
+  }
+  .formula {
+    font-family: var(--font-mono); font-size: 13.5px; line-height: 1.7; background: var(--color-sheet);
+    border: 1px solid var(--color-rule); border-left: 3px solid var(--color-ink); padding: 12px 14px;
+    overflow-x: auto; white-space: pre; max-width: 100%;
+  }
+
+  /* ---------- surfaces ---------- */
+  .sheet { background: var(--color-sheet); border: 1px solid var(--color-rule); }
+  .rule-t { border-top: 1px solid var(--color-rule); }
+  .rule-b { border-bottom: 1px solid var(--color-rule); }
+  .rule-heavy { border-top: 2px solid var(--color-ink); }
+
+  /* Section heading with an index number and a ruled line. */
+  .section-head { display: flex; align-items: baseline; gap: 12px; border-top: 2px solid var(--color-ink); padding-top: 8px; }
+  .section-head .idx { font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--color-ink-3); }
+
+  /* ---------- tables: timing-sheet rows ---------- */
+  .tsheet { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .tsheet th {
+    font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase;
+    color: var(--color-ink-3); text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--color-ink); white-space: nowrap;
+  }
+  .tsheet td { padding: 8px 8px; border-bottom: 1px solid var(--color-rule-2); vertical-align: middle; }
+  /* A cell that takes the leftover width and lets its content truncate instead of widening the table. */
+  .tsheet .fill { width: 100%; max-width: 0; }
+  @media (max-width: 479px) {
+    .tsheet th, .tsheet td { padding-left: 5px; padding-right: 5px; }
+    .tsheet th:first-child, .tsheet td:first-child { padding-left: 0; }
+    .tsheet th:last-child, .tsheet td:last-child { padding-right: 0; }
+  }
+  .tsheet .r { text-align: right; }
+  .tsheet tbody tr.hoverable:hover { background: var(--color-paper-2); }
+
+  /* ---------- controls ---------- */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 16px;
+    font-family: var(--font-sans); font-size: 14px; font-weight: 650; letter-spacing: 0.01em;
+    border: 1.5px solid var(--color-ink); background: transparent; color: var(--color-ink);
+    transition: background-color 120ms ease, color 120ms ease, transform 80ms ease, box-shadow 120ms ease;
+    user-select: none; white-space: nowrap;
+  }
+  .btn:hover:not(:disabled) { background: var(--color-ink); color: var(--color-paper); }
+  .btn:active:not(:disabled) { transform: translateY(1px); }
+  .btn:disabled { opacity: 0.4; }
+  .btn-solid { background: var(--color-ink); color: var(--color-paper); }
+  .btn-solid:hover:not(:disabled) { background: #000; box-shadow: 3px 3px 0 var(--color-you); }
+  .btn-you { background: var(--color-you); border-color: var(--color-you); color: #fff; }
+  .btn-you:hover:not(:disabled) { background: #a32a0c; border-color: #a32a0c; color: #fff; box-shadow: 3px 3px 0 var(--color-ink); }
+  .btn-sm { min-height: 36px; padding: 0 12px; font-size: 13px; }
+  .btn-quiet { border-color: var(--color-rule); }
+  .btn-ghost { border-color: transparent; }
+
+  .field {
+    width: 100%; min-height: 44px; padding: 0 12px; font-family: var(--font-mono); font-size: 16px; color: var(--color-ink);
+    background: var(--color-sheet); border: 1.5px solid var(--color-ink); border-radius: 0; appearance: none;
+  }
+  .field::placeholder { color: var(--color-ink-3); }
+
+  .seg { display: inline-flex; border: 1.5px solid var(--color-ink); }
+  .seg > button {
+    min-height: 40px; padding: 0 14px; font-size: 13px; font-weight: 650; background: transparent; color: var(--color-ink);
+    border: 0; border-right: 1px solid var(--color-rule);
+  }
+  .seg > button:last-child { border-right: 0; }
+  .seg > button[aria-pressed="true"], .seg > button[aria-selected="true"] { background: var(--color-ink); color: var(--color-paper); }
+
+  /* YES is solid, NO is hollow. */
+  .side-yes, .side-no {
+    display: inline-flex; align-items: center; justify-content: center; min-width: 34px; height: 20px; padding: 0 6px;
+    font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: 0.06em; border: 1.5px solid var(--color-ink);
+  }
+  .side-yes { background: var(--color-ink); color: var(--color-paper); }
+  .side-no { background: transparent; color: var(--color-ink); }
+
+  .tag {
+    display: inline-flex; align-items: center; gap: 5px; height: 20px; padding: 0 6px; font-family: var(--font-mono); font-size: 11px;
+    font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; border: 1px solid var(--color-rule); color: var(--color-ink-2);
+    white-space: nowrap;
+  }
+
+  .gain { color: var(--color-gain); }
+  .loss { color: var(--color-loss); }
+
+  /* hatch for hypothetical / scenario marks */
+  .hatch { background-image: repeating-linear-gradient(135deg, rgb(20 22 26 / 0.16) 0 1px, transparent 1px 6px); }
+
+  /* thin scrollbars inside panels */
+  .scroll-thin { scrollbar-width: thin; scrollbar-color: var(--color-paper-3) transparent; }
+
+  .sr-only-focusable:not(:focus):not(:focus-within) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  input[type="range"].scrub { -webkit-appearance: none; appearance: none; width: 100%; height: 44px; background: transparent; }
+  input[type="range"].scrub::-webkit-slider-runnable-track { height: 4px; background: var(--color-ink); }
+  input[type="range"].scrub::-moz-range-track { height: 4px; background: var(--color-ink); }
+  input[type="range"].scrub::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 28px; margin-top: -12px; background: var(--color-you); border: 2px solid var(--color-ink); }
+  input[type="range"].scrub::-moz-range-thumb { width: 14px; height: 24px; background: var(--color-you); border: 2px solid var(--color-ink); border-radius: 0; }
+
+  /* ---------- dialog: centred sheet on desktop, bottom sheet on phones ---------- */
+  dialog.app-dialog {
+    padding: 0; border: 2px solid var(--color-ink); background: var(--color-sheet); color: var(--color-ink);
+    width: min(520px, calc(100vw - 32px)); max-width: none; max-height: min(86dvh, 860px); margin: auto;
+    box-shadow: 8px 8px 0 rgb(20 22 26 / 0.18); overflow: hidden;
+  }
+  dialog.app-dialog.wide { width: min(760px, calc(100vw - 32px)); }
+  dialog.app-dialog[open] { animation: fade 140ms ease-out; display: flex; flex-direction: column; }
+  dialog.app-dialog::backdrop { background: rgb(20 22 26 / 0.45); }
+  @media (max-width: 639px) {
+    dialog.app-dialog, dialog.app-dialog.wide {
+      width: 100vw; max-height: 92dvh; margin: auto 0 0 0; border-width: 2px 0 0 0; box-shadow: none;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    dialog.app-dialog[open] { animation: sheet-up 220ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+  }
 }
-
-/* A faint drafting grid, like the back of a timing sheet. */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background-image:
-    linear-gradient(to right, rgb(20 22 26 / 0.035) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(20 22 26 / 0.035) 1px, transparent 1px);
-  background-size: 32px 32px;
-}
-
-::selection { background: var(--color-ink); color: var(--color-paper); }
-
-:focus-visible {
-  outline: 2px solid var(--color-model);
-  outline-offset: 2px;
-  border-radius: 1px;
-}
-
-button, [role="button"], a, summary, input, select { touch-action: manipulation; }
-button { cursor: pointer; }
-button:disabled { cursor: not-allowed; }
-
-/* ---------- type ---------- */
-.display {
-  font-family: var(--font-sans);
-  font-stretch: 125%;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 0.98;
-  text-transform: uppercase;
-}
-.eyebrow {
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  font-weight: 500;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--color-ink-3);
-}
-.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
-.prose-sheet { font-family: var(--font-serif); font-size: 17.5px; line-height: 1.62; color: var(--color-ink); }
-.prose-sheet p { margin: 0 0 1em; max-width: 68ch; }
-.prose-sheet strong { font-weight: 650; }
-.prose-sheet code, .code {
-  font-family: var(--font-mono); font-size: 0.82em; background: var(--color-paper-2);
-  padding: 0.08em 0.32em; border: 1px solid var(--color-rule-2);
-}
-.formula {
-  font-family: var(--font-mono); font-size: 13.5px; line-height: 1.7; background: var(--color-sheet);
-  border: 1px solid var(--color-rule); border-left: 3px solid var(--color-ink); padding: 12px 14px;
-  overflow-x: auto; white-space: pre; max-width: 100%;
-}
-
-/* ---------- surfaces ---------- */
-.sheet { background: var(--color-sheet); border: 1px solid var(--color-rule); }
-.rule-t { border-top: 1px solid var(--color-rule); }
-.rule-b { border-bottom: 1px solid var(--color-rule); }
-.rule-heavy { border-top: 2px solid var(--color-ink); }
-
-/* Section heading with an index number and a ruled line. */
-.section-head { display: flex; align-items: baseline; gap: 12px; border-top: 2px solid var(--color-ink); padding-top: 8px; }
-.section-head .idx { font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--color-ink-3); }
-
-/* ---------- tables: timing-sheet rows ---------- */
-.tsheet { width: 100%; border-collapse: collapse; font-size: 14px; }
-.tsheet th {
-  font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase;
-  color: var(--color-ink-3); text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--color-ink); white-space: nowrap;
-}
-.tsheet td { padding: 8px 8px; border-bottom: 1px solid var(--color-rule-2); vertical-align: middle; }
-.tsheet .r { text-align: right; }
-.tsheet tbody tr.hoverable:hover { background: var(--color-paper-2); }
-
-/* ---------- controls ---------- */
-.btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 16px;
-  font-family: var(--font-sans); font-size: 14px; font-weight: 650; letter-spacing: 0.01em;
-  border: 1.5px solid var(--color-ink); background: transparent; color: var(--color-ink);
-  transition: background-color 120ms ease, color 120ms ease, transform 80ms ease, box-shadow 120ms ease;
-  user-select: none; white-space: nowrap;
-}
-.btn:hover:not(:disabled) { background: var(--color-ink); color: var(--color-paper); }
-.btn:active:not(:disabled) { transform: translateY(1px); }
-.btn:disabled { opacity: 0.4; }
-.btn-solid { background: var(--color-ink); color: var(--color-paper); }
-.btn-solid:hover:not(:disabled) { background: #000; box-shadow: 3px 3px 0 var(--color-you); }
-.btn-you { background: var(--color-you); border-color: var(--color-you); color: #fff; }
-.btn-you:hover:not(:disabled) { background: #b93515; border-color: #b93515; color: #fff; box-shadow: 3px 3px 0 var(--color-ink); }
-.btn-sm { min-height: 36px; padding: 0 12px; font-size: 13px; }
-.btn-quiet { border-color: var(--color-rule); }
-.btn-ghost { border-color: transparent; }
-
-.field {
-  width: 100%; min-height: 44px; padding: 0 12px; font-family: var(--font-mono); font-size: 16px; color: var(--color-ink);
-  background: var(--color-sheet); border: 1.5px solid var(--color-ink); border-radius: 0; appearance: none;
-}
-.field::placeholder { color: var(--color-ink-3); }
-
-.seg { display: inline-flex; border: 1.5px solid var(--color-ink); }
-.seg > button {
-  min-height: 40px; padding: 0 14px; font-size: 13px; font-weight: 650; background: transparent; color: var(--color-ink);
-  border: 0; border-right: 1px solid var(--color-rule);
-}
-.seg > button:last-child { border-right: 0; }
-.seg > button[aria-pressed="true"], .seg > button[aria-selected="true"] { background: var(--color-ink); color: var(--color-paper); }
-
-/* YES is solid, NO is hollow. */
-.side-yes, .side-no {
-  display: inline-flex; align-items: center; justify-content: center; min-width: 34px; height: 20px; padding: 0 6px;
-  font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: 0.06em; border: 1.5px solid var(--color-ink);
-}
-.side-yes { background: var(--color-ink); color: var(--color-paper); }
-.side-no { background: transparent; color: var(--color-ink); }
-
-.tag {
-  display: inline-flex; align-items: center; gap: 5px; height: 20px; padding: 0 6px; font-family: var(--font-mono); font-size: 11px;
-  font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; border: 1px solid var(--color-rule); color: var(--color-ink-2);
-  white-space: nowrap;
-}
-
-.gain { color: var(--color-gain); }
-.loss { color: var(--color-loss); }
-
-/* hatch for hypothetical / scenario marks */
-.hatch { background-image: repeating-linear-gradient(135deg, rgb(20 22 26 / 0.16) 0 1px, transparent 1px 6px); }
 
 /* ---------- motion ---------- */
 @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
@@ -210,32 +259,4 @@ button:disabled { cursor: not-allowed; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
-}
-
-/* thin scrollbars inside panels */
-.scroll-thin { scrollbar-width: thin; scrollbar-color: var(--color-paper-3) transparent; }
-
-.sr-only-focusable:not(:focus):not(:focus-within) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-
-input[type="range"].scrub { -webkit-appearance: none; appearance: none; width: 100%; height: 44px; background: transparent; }
-input[type="range"].scrub::-webkit-slider-runnable-track { height: 4px; background: var(--color-ink); }
-input[type="range"].scrub::-moz-range-track { height: 4px; background: var(--color-ink); }
-input[type="range"].scrub::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 28px; margin-top: -12px; background: var(--color-you); border: 2px solid var(--color-ink); }
-input[type="range"].scrub::-moz-range-thumb { width: 14px; height: 24px; background: var(--color-you); border: 2px solid var(--color-ink); border-radius: 0; }
-
-/* ---------- dialog: centred sheet on desktop, bottom sheet on phones ---------- */
-dialog.app-dialog {
-  padding: 0; border: 2px solid var(--color-ink); background: var(--color-sheet); color: var(--color-ink);
-  width: min(520px, calc(100vw - 32px)); max-width: none; max-height: min(86dvh, 860px); margin: auto;
-  box-shadow: 8px 8px 0 rgb(20 22 26 / 0.18); overflow: hidden;
-}
-dialog.app-dialog.wide { width: min(760px, calc(100vw - 32px)); }
-dialog.app-dialog[open] { animation: fade 140ms ease-out; display: flex; flex-direction: column; }
-dialog.app-dialog::backdrop { background: rgb(20 22 26 / 0.45); }
-@media (max-width: 639px) {
-  dialog.app-dialog, dialog.app-dialog.wide {
-    width: 100vw; max-height: 92dvh; margin: auto 0 0 0; border-width: 2px 0 0 0; box-shadow: none;
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-  dialog.app-dialog[open] { animation: sheet-up 220ms cubic-bezier(0.2, 0.8, 0.2, 1); }
 }

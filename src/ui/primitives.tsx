@@ -4,19 +4,24 @@ import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import type { TrackStatus, TyreCode } from "@/engine/types";
 import { teamColor } from "./format";
 
-export function Wordmark({ compact = false }: { compact?: boolean }) {
+export function Wordmark({ compact = false, iconOnly = false }: { compact?: boolean; iconOnly?: boolean }) {
   return (
-    <span className="inline-flex items-center gap-2 select-none" aria-label="ApexGP Markets">
+    <span className="inline-flex items-center gap-2 select-none">
       {/* The mark: a racing line clipping an apex. */}
       <svg width={compact ? 22 : 26} height={compact ? 22 : 26} viewBox="0 0 26 26" aria-hidden="true">
         <rect x="0.75" y="0.75" width="24.5" height="24.5" fill="var(--color-ink)" />
         <path d="M4 22 C 4 10, 10 4, 22 4" fill="none" stroke="var(--color-paper)" strokeWidth="2.2" strokeLinecap="square" />
         <circle cx="9.6" cy="9.6" r="2.6" fill="var(--color-you)" />
       </svg>
-      <span className="display text-[17px] leading-none tracking-[-0.03em]">
-        Apex<span className="text-you">GP</span>
-      </span>
-      {!compact && <span className="eyebrow hidden sm:inline !text-[10.5px] border-l border-rule pl-2 ml-0.5">Markets</span>}
+      {iconOnly ? (
+        <span className="sr-only">ApexGP Markets</span>
+      ) : (
+        <span className="display text-[17px] leading-none tracking-[-0.03em]">
+          Apex<span className="text-you">GP</span>
+        </span>
+      )}
+      {!compact && !iconOnly && <span className="eyebrow hidden sm:inline !text-[10.5px] border-l border-rule pl-2 ml-0.5">Markets</span>}
+      {compact && !iconOnly && <span className="sr-only"> Markets</span>}
     </span>
   );
 }
@@ -34,13 +39,15 @@ const STATUS_META: Record<TrackStatus, { label: string; color: string; text: str
 };
 
 export function StatusFlag({ status, phase, compact = false }: { status: TrackStatus; phase?: "pre" | "live" | "flag" | "settled"; compact?: boolean }) {
+  const dark = { background: "var(--color-ink)", color: "var(--color-paper)", borderColor: "var(--color-ink)" };
   if (phase === "pre") return <span className="tag" style={{ background: "var(--color-sheet)" }}>Grid</span>;
-  if (phase === "flag") return <span className="tag" style={{ background: "var(--color-ink)", color: "var(--color-paper)", borderColor: "var(--color-ink)" }}>Chequered flag</span>;
-  if (phase === "settled") return <span className="tag" style={{ background: "var(--color-ink)", color: "var(--color-paper)", borderColor: "var(--color-ink)" }}>Settled</span>;
+  if (phase === "flag") return <span className="tag" style={dark}>{compact ? "Flag" : "Chequered flag"}</span>;
+  if (phase === "settled") return <span className="tag" style={dark}>Settled</span>;
   const m = STATUS_META[status];
+  const short: Record<TrackStatus, string> = { GREEN: "Green", YELLOW: "Yellow", VSC: "VSC", SC: "SC", RED: "Red" };
   return (
     <span className="tag" style={{ background: m.color, color: m.text, borderColor: "transparent" }}>
-      {compact && status === "VSC" ? "VSC" : compact && status === "SC" ? "SC" : m.label}
+      {compact ? short[status] : m.label}
     </span>
   );
 }
@@ -60,7 +67,7 @@ export function Tyre({ code, age }: { code: TyreCode | null; age: number | null 
   const t = TYRE[code];
   return (
     <span className="inline-flex items-center gap-1" title={`${t.name}${age !== null ? `, ${age} laps old` : ""}`}>
-      <span className="inline-flex items-center justify-center w-[18px] h-[18px] rounded-full num text-[10px] font-semibold" style={{ border: `2.5px solid ${t.color}`, boxShadow: "0 0 0 1px var(--color-ink)", background: "var(--color-ink)", color: "#fff" }} aria-hidden="true">
+      <span className="inline-flex items-center justify-center w-[20px] h-[20px] rounded-full num text-[11px] leading-none font-semibold" style={{ border: `2.5px solid ${t.color}`, boxShadow: "0 0 0 1px var(--color-ink)", background: "var(--color-ink)", color: "#fff" }} aria-hidden="true">
         {code}
       </span>
       <span className="sr-only">{t.name} tyre</span>

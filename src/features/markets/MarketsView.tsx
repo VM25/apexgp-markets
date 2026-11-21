@@ -121,11 +121,12 @@ export function MarketsView() {
                   const out = c.scope === "race" && c.index >= 0 && race.frames.stopped[Math.min(frame, lens.totalFrames - 1)][c.index] === 1;
                   return (
                     <tr key={c.id} className={`hoverable cursor-pointer ${active ? "!bg-paper-2 outline outline-[1.5px] -outline-offset-1 outline-ink" : ""}`} onClick={() => choose(c)}>
-                      <td className="!py-0">
-                        <button className="flex items-center gap-2.5 min-w-0 w-full text-left h-11" aria-label={`${c.title}. Model ${pct(fair)}. Open contract.`} aria-current={active ? "true" : undefined}>
+                      <td className="!py-0 fill">
+                        <button className="flex items-center gap-2.5 min-w-0 w-full text-left h-11" aria-current={active ? "true" : undefined}>
                           <span className="w-[4px] h-6 shrink-0" style={{ background: teamColor(colorOf(c)) }} />
-                          <span className="num font-semibold text-[13px] w-[34px] shrink-0">{c.kind === "H2H" ? race.drivers[c.index].code : c.code}</span>
-                          <span className={`truncate text-[14px] ${out ? "line-through text-ink-3" : ""}`}>{nameOf(c)}</span>
+                          <span className="num font-semibold text-[13px] w-[34px] shrink-0" aria-hidden="true">{c.kind === "H2H" ? race.drivers[c.index].code : c.code}</span>
+                          <span className={`truncate text-[14px] ${out ? "line-through text-ink-3" : ""}`} aria-hidden="true">{nameOf(c)}</span>
+                          <span className="sr-only">{c.title}. Model {pct(fair)}.{out ? " Car has stopped." : ""}</span>
                         </button>
                       </td>
                       <td className="r num">

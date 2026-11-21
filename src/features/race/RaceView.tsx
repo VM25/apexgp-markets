@@ -4,6 +4,7 @@ import { useState } from "react";
 import { LapRuler } from "@/charts/LapRuler";
 import type { RaceLens } from "@/engine/session/lens";
 import { useApp } from "@/state/hooks";
+import { SPEEDS } from "@/state/store";
 import { dateShort, tone, usd } from "@/ui/format";
 import { Dialog, SectionHead, StatusFlag } from "@/ui/primitives";
 import { GapMap } from "./GapMap";
@@ -79,6 +80,16 @@ export function RaceView() {
           <button className="btn btn-sm btn-quiet ml-auto" onClick={() => setPicker(true)}>Review another race</button>
         </div>
         <div className="md:hidden"><LapRuler frames={race.frames} frame={frame} marks={marks} /></div>
+        {(phase === "pre" || phase === "live") && (
+          <div className="md:hidden flex items-center gap-2">
+            <div className="seg flex-1" role="group" aria-label="Playback speed">
+              {SPEEDS.map((sp, i) => (
+                <button key={sp.label} className="flex-1 !px-1 num" aria-pressed={app.speed === i} onClick={() => app.setSpeed(i)}>{sp.label}</button>
+              ))}
+            </div>
+            <button className="btn btn-sm !min-h-[43px]" onClick={() => void app.runToFlag()} disabled={!s.canAdvance() || !!app.busy}>To flag</button>
+          </div>
+        )}
       </header>
 
       {phase === "pre" && (
@@ -140,12 +151,12 @@ export function RaceView() {
           <section aria-label="Gap map"><SectionHead idx="03" title="Gap map" />{map}</section>
           <div className="2xl:hidden grid xl:grid-cols-2 gap-6">
             <section><SectionHead idx="04" title="Your positions" /><RacePositions /></section>
-            <section><SectionHead idx="05" title="Events" /><div className="max-h-[420px] overflow-y-auto scroll-thin pr-1">{feed}</div></section>
+            <section><SectionHead idx="05" title="Events" /><div className="max-h-[420px] overflow-y-auto scroll-thin pr-1" tabIndex={0} role="region" aria-label="Race events">{feed}</div></section>
           </div>
         </div>
         <div className="hidden 2xl:grid gap-6 sticky top-[calc(var(--shell-top)+20px)]">
           <section><SectionHead idx="04" title="Your positions" /><RacePositions /></section>
-          <section><SectionHead idx="05" title="Events" /><div className="max-h-[52dvh] overflow-y-auto scroll-thin pr-1">{feed}</div></section>
+          <section><SectionHead idx="05" title="Events" /><div className="max-h-[52dvh] overflow-y-auto scroll-thin pr-1" tabIndex={0} role="region" aria-label="Race events">{feed}</div></section>
         </div>
       </div>
 
@@ -243,7 +254,7 @@ function ReviewBoard() {
         <div className="grid gap-6 min-w-0">
           <section><SectionHead idx="02" title="Contenders" /><ContenderChart lens={lens} frame={frame} /></section>
           <section><SectionHead idx="03" title="Gap map" /><GapMap lens={lens} frame={frame} highlight={new Set()} /></section>
-          <section><SectionHead idx="04" title="Events" /><div className="max-h-[360px] overflow-y-auto scroll-thin pr-1"><EventFeed lens={lens} frame={frame} /></div></section>
+          <section><SectionHead idx="04" title="Events" /><div className="max-h-[360px] overflow-y-auto scroll-thin pr-1" tabIndex={0} role="region" aria-label="Race events"><EventFeed lens={lens} frame={frame} /></div></section>
         </div>
       </div>
       <section>
@@ -254,7 +265,7 @@ function ReviewBoard() {
             <button className="btn" onClick={() => void app.revealReviewResult()}>Show the official result</button>
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Table, scrolls sideways on small screens">
             <table className="tsheet min-w-[520px]">
               <thead><tr><th>Pos</th><th>Driver</th><th>Status</th><th className="r">Grid</th><th className="r">Laps</th><th className="r">Time / gap</th><th className="r">Points</th></tr></thead>
               <tbody>

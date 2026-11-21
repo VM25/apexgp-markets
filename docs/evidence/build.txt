@@ -1,0 +1,28 @@
+$ npm run build
+> apexgp@0.1.0 build
+> next build
+▲ Next.js 16.4.6 (Turbopack)
+✓ Running next.config.ts took 642ms
+  Creating an optimized production build ...
+✓ Compiled successfully in 1225ms
+  Running TypeScript ...
+  Finished TypeScript in 1731ms ...
+  Collecting page data using 9 workers ...
+  Generating static pages using 9 workers (0/8) ...
+  Generating static pages using 9 workers (2/8) 
+  Generating static pages using 9 workers (4/8) 
+  Generating static pages using 9 workers (6/8) 
+✓ Generating static pages using 9 workers (8/8) in 243ms
+  Finalizing page optimization ...
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /icon.svg
+├ ○ /markets
+├ ○ /portfolio
+├ ○ /race
+└ ○ /research
+○  (Static)  prerendered as static content
+exit: 0
+
+3.7M	out

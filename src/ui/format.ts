@@ -53,5 +53,5 @@ export function dateShort(iso: string): string {
 export const tone = (x: number) => (x > 0.5 ? "gain" : x < -0.5 ? "loss" : "");
 
 export function teamColor(color: string | null | undefined): string {
-  return color && /^#[0-9a-f]{6}$/i.test(color) ? color : "#666a72";
+  return color && /^#[0-9a-f]{6}$/i.test(color) ? color : "#5c6068";
 }

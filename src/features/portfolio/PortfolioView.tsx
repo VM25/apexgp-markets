@@ -84,6 +84,7 @@ export function PortfolioView() {
             xFormat={(i) => { const p = st.navHistory[i]; return p ? `R${p.round}·L${p.frame}` : ""; }}
             dividers={dividers.length > 1 ? dividers : undefined}
             baseline={start / 100}
+            yAxisWidth={62}
             height={210}
           />
         )}
@@ -96,7 +97,7 @@ export function PortfolioView() {
             Open the <Link href="/markets/" className="underline underline-offset-2 font-medium">markets</Link> and buy YES or NO on any contract. Each position shows here with its cost, current value and the most it can lose.
           </Empty>
         ) : (
-          <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+          <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0" tabIndex={0} role="region" aria-label="Table, scrolls sideways on small screens">
             <table className="tsheet min-w-[720px]">
               <thead><tr><th>Contract</th><th>Side</th><th className="r">Contracts</th><th className="r">Avg cost</th><th className="r">Mark</th><th className="r">Value</th><th className="r">Unrealised</th><th className="r">Max loss</th><th className="r">Max gain</th><th className="w-[70px]"><span className="sr-only">Close</span></th></tr></thead>
               <tbody>
@@ -129,7 +130,7 @@ export function PortfolioView() {
         {st.orders.length > 0 && (
           <div className="mt-5">
             <p className="eyebrow mb-1.5">Resting orders · {usd(s.reserved())} reserved</p>
-            <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+            <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0" tabIndex={0} role="region" aria-label="Table, scrolls sideways on small screens">
               <table className="tsheet min-w-[520px]">
                 <thead><tr><th>Contract</th><th>Order</th><th className="r">Limit</th><th className="r">Remaining</th><th className="r">Placed</th><th className="w-[80px]"><span className="sr-only">Cancel</span></th></tr></thead>
                 <tbody>
@@ -240,7 +241,7 @@ export function PortfolioView() {
           <button role="tab" aria-selected={tab === "audit"} onClick={() => setTab("audit")}>Audit log</button>
         </div>
         {tab === "fills" && (st.fills.length === 0 ? <Empty title="No fills yet" /> : (
-          <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+          <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0" tabIndex={0} role="region" aria-label="Table, scrolls sideways on small screens">
             <table className="tsheet min-w-[760px]">
               <thead><tr><th>When</th><th>Contract</th><th>Order</th><th className="r">Contracts</th><th className="r">Price</th><th className="r"><span className="text-model">Model</span> then</th><th className="r">Fee</th><th>Type</th><th className="r">Realised</th></tr></thead>
               <tbody>
@@ -262,7 +263,7 @@ export function PortfolioView() {
           </div>
         ))}
         {tab === "settlements" && (st.settlements.length === 0 ? <Empty title="Nothing has settled yet">Race contracts settle on the official classification after the chequered flag.</Empty> : (
-          <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+          <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0" tabIndex={0} role="region" aria-label="Table, scrolls sideways on small screens">
             <table className="tsheet min-w-[640px]">
               <thead><tr><th>Round</th><th>Contract</th><th>Held</th><th>Resolved</th><th className="r">Cost</th><th className="r">Paid out</th><th className="r">Profit / loss</th></tr></thead>
               <tbody>
@@ -282,7 +283,7 @@ export function PortfolioView() {
           </div>
         ))}
         {tab === "audit" && (
-          <ol className="grid max-h-[460px] overflow-y-auto scroll-thin border border-rule bg-sheet">
+          <ol className="grid max-h-[460px] overflow-y-auto scroll-thin border border-rule bg-sheet" tabIndex={0} aria-label="Audit log">
             {[...st.audit].reverse().slice(0, 300).map((a) => (
               <li key={a.seq} className="grid grid-cols-[64px_70px_1fr] gap-2 px-3 py-1.5 border-b border-rule-2 text-[13px] items-baseline">
                 <span className="num text-ink-3 text-[12px]">R{a.round}·L{a.frame}</span>

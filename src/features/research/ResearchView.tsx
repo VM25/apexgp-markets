@@ -92,7 +92,7 @@ export function ResearchView() {
           <P>
             The previous version of this project shipped files in a folder called “official” that were produced by a script: invented grids, a safety car every third round, the same driver retiring on lap 31, and points smeared evenly across the season. They have been removed. The current data is built by a reproducible pipeline (<span className="code">pipeline/</span>) from sources chosen field by field.
           </P>
-          <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+          <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0" tabIndex={0} role="region" aria-label="Table, scrolls sideways on small screens">
             <table className="tsheet min-w-[760px]">
               <thead><tr><th>Source</th><th>Used for</th><th>Coverage / grain</th><th>Licence</th><th>Decision</th></tr></thead>
               <tbody>
@@ -120,7 +120,7 @@ export function ResearchView() {
           <P>
             Every contract is a binary claim. One YES contract pays $1.00 if the stated event is true in the official classification and nothing otherwise; one NO contract pays $1.00 in exactly the opposite case. A YES and a NO on the same event are together worth $1.00 for certain, which is why the app nets them instead of letting an account hold both.
           </P>
-          <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+          <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0" tabIndex={0} role="region" aria-label="Table, scrolls sideways on small screens">
             <table className="tsheet min-w-[640px]">
               <thead><tr><th>Market</th><th>Pays $1.00 if…</th><th>Structure</th></tr></thead>
               <tbody>
@@ -147,7 +147,7 @@ export function ResearchView() {
             A “frame” is a snapshot of the race. Frame <i>n</i> contains every line crossing strictly before the instant the first car completes lap <i>n</i>+1: every car on the lead lap has finished lap <i>n</i>, and lapped cars are shown where they actually were at that instant rather than at their own, later, lap <i>n</i>. Training frames (from the archive) and replay frames (from 2025) are produced by the same function, so the model is served exactly the definitions it was fitted on. A car that has not crossed the line during the leader’s last two laps is treated as stopped — the same rule in training and replay, using nothing from the future.
           </P>
           <h3 className="font-bold text-[17px]">Structure</h3>
-          <pre className="formula">{`strength of car i at stage g:   u_i(g) = Σ_f  β_f,g(s) · x_i,f           s = share of race distance completed
+          <pre className="formula" tabIndex={0} role="region" aria-label="Formula">{`strength of car i at stage g:   u_i(g) = Σ_f  β_f,g(s) · x_i,f           s = share of race distance completed
 finishing order (given who is classified): stage-wise logit
    P(car i takes the next place) = exp(u_i(g)) / Σ_remaining exp(u_j(g))     g = winner | 2nd–3rd | 4th onward
 not classified:                 h_i = logistic( w · z_i )
@@ -218,7 +218,7 @@ one simulated race:             draw "not classified" for each running car (prob
           <P>
             ApexGP does not run a central limit order book. Calling it one would be false: there are no other traders. There is one automated dealer per contract, and you are its only counterparty. The dealer quotes a ladder of bids and offers around a reservation price, and your orders execute against that ladder.
           </P>
-          <pre className="formula">{`σ²          = ½ · EWMA(Δp²)  +  ½ · p(1−p) / laps_left
+          <pre className="formula" tabIndex={0} role="region" aria-label="Formula">{`σ²          = ½ · EWMA(Δp²)  +  ½ · p(1−p) / laps_left
 half-spread = ${SPREAD.floor} + ${SPREAD.curvature}·√(p(1−p)) + ${SPREAD.informed} · σ · info(status)            (capped at ${SPREAD.cap})
 reservation = p − ${INVENTORY.skew} · (inventory / top size) · half-spread             (at most ±${INVENTORY.maxSkewHalfSpreads} half-spreads)
 best ask    = ⌈reservation + half-spread⌉ to the cent,   best bid = ⌊reservation − half-spread⌋
@@ -242,7 +242,7 @@ depth shown:   green 100% · yellow ${STATUS_DEPTH.YELLOW * 100}% · VSC ${STATU
         </Sec>
 
         <Sec id="accounting" n="07" title="Accounting and risk">
-          <pre className="formula">{`position         q  = signed YES quantity      (q < 0 is a NO holding of |q| contracts)
+          <pre className="formula" tabIndex={0} role="region" aria-label="Formula">{`position         q  = signed YES quantity      (q < 0 is a NO holding of |q| contracts)
 cash on a fill   −Δq · price − fee            cash at settlement   q · $1 · payoff
 free cash        cash − $1·Σ max(0, −q) − cash reserved for resting buys
 net asset value  cash + Σ q · mark             =  start + realised + unrealised − fees`}</pre>
@@ -276,7 +276,7 @@ net asset value  cash + Σ q · mark             =  start + realised + unrealise
         </Sec>
 
         <Sec id="history" n="09" title="What changed from the June 2026 version">
-          <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+          <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0" tabIndex={0} role="region" aria-label="Table, scrolls sideways on small screens">
             <table className="tsheet min-w-[680px]">
               <thead><tr><th>Area</th><th>Before</th><th>Now</th></tr></thead>
               <tbody>
@@ -320,7 +320,7 @@ function QualityTable({ quality }: { quality: Record<string, Any> }) {
       </dl>
       <details className="sheet">
         <summary className="px-4 h-11 flex items-center font-semibold text-[14px] cursor-pointer select-none">Show all {rows.length} rounds</summary>
-        <div className="overflow-x-auto px-4 pb-4">
+        <div className="overflow-x-auto px-4 pb-4" tabIndex={0} role="region" aria-label="Table, scrolls sideways on small screens">
           <table className="tsheet min-w-[720px] !text-[13px]">
             <thead><tr><th>Round</th><th className="r">Driver-laps</th><th className="r">Positions agree</th><th className="r">Winner time Δ</th><th className="r">Lap times ≤5 ms</th><th className="r">Clock residual</th><th className="r">Pit match</th><th className="r">Result diffs</th><th className="r">Lap-count notes</th></tr></thead>
             <tbody>
@@ -349,7 +349,7 @@ function QualityTable({ quality }: { quality: Record<string, Any> }) {
 function ScoreTable({ title, pooled }: { title: string; pooled: Record<string, Any> }) {
   const models = ["stagewise", "plain_rol", "position_table", "uniform"];
   return (
-    <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+    <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0" tabIndex={0} role="region" aria-label="Table, scrolls sideways on small screens">
       <table className="tsheet min-w-[720px]">
         <caption className="text-left eyebrow pb-1.5">{title} · Brier score (lower is better) / log loss / calibration error</caption>
         <thead><tr><th>Market</th><th className="r">Driver-laps</th><th className="r">Base rate</th>{models.map((m) => <th key={m} className="r">{MODEL_LABEL[m].replace(" (shipped)", "")}</th>)}</tr></thead>
@@ -378,7 +378,7 @@ function ScoreTable({ title, pooled }: { title: string; pooled: Record<string, A
 
 function ReplayTable({ scores }: { scores: Record<string, Any> }) {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Table, scrolls sideways on small screens">
       <table className="tsheet min-w-[420px]">
         <thead><tr><th>Market</th><th className="r">Shipped model</th><th className="r">Position table</th><th className="r">Uniform</th><th className="r">vs table</th></tr></thead>
         <tbody>
@@ -405,7 +405,7 @@ function ReplayTable({ scores }: { scores: Record<string, Any> }) {
 function ProgressTable({ byProgress, event }: { byProgress: Record<string, Any>; event: string }) {
   const rows = Object.entries(byProgress[event] as Record<string, Any>);
   return (
-    <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+    <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0" tabIndex={0} role="region" aria-label="Table, scrolls sideways on small screens">
       <table className="tsheet min-w-[560px]">
         <caption className="text-left eyebrow pb-1.5">{EVENT_LABEL[event]} · choose the market with the selector above</caption>
         <thead><tr><th>Race phase</th><th className="r">Driver-laps</th><th className="r">Stage-wise</th><th className="r">Plain</th><th className="r">Position table</th><th className="r">Uniform</th></tr></thead>
@@ -430,7 +430,7 @@ function TitleTable({ title }: { title: Any }) {
   const dr = title.drivers;
   const phases = Object.entries(dr.by_season_progress as Record<string, Any>);
   return (
-    <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+    <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0" tabIndex={0} role="region" aria-label="Table, scrolls sideways on small screens">
       <table className="tsheet min-w-[560px]">
         <caption className="text-left eyebrow pb-1.5">Drivers’ title · Brier score of pre-race estimates, seasons {dr.seasons[0]}–{dr.seasons[dr.seasons.length - 1]} (walk-forward)</caption>
         <thead><tr><th>Part of season</th><th className="r">Driver-rounds</th><th className="r">Season simulation</th><th className="r">Leader takes all</th><th className="r">Points share (old)</th></tr></thead>
@@ -464,7 +464,7 @@ function VenueTable({ data }: { data: Any }) {
       <p className="text-[14.5px] text-ink-2">
         A single snapshot of public order books for Formula 1 markets on Kalshi and Polymarket, taken {new Date(snap.firstBookUtc).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short", timeZone: "UTC" })} UTC ({snap.context.split(":")[0]}): {snap.nMarkets} markets listed, {snap.nQuoted} with a two-sided quote, {snap.nTraded24h} traded in the previous 24 hours.
       </p>
-      <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+      <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0" tabIndex={0} role="region" aria-label="Table, scrolls sideways on small screens">
         <table className="tsheet min-w-[560px]">
           <thead><tr><th>Price level</th><th className="r">Markets</th><th className="r">Median spread</th><th className="r">Middle half</th><th className="r">Median size at best</th></tr></thead>
           <tbody>

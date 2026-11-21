@@ -64,7 +64,7 @@ export function TimingTower({ lens, frame, session, onTrade }: { lens: RaceLens;
           return (
             <tr key={d.id} className={out ? "text-ink-3" : ""}>
               <td className="num font-semibold">{out ? "—" : n === 0 ? race.startRank[i] : f.pos[n][i]}</td>
-              <td>
+              <td className="fill">
                 <span className="flex items-center gap-2 min-w-0">
                   <span className="w-[4px] h-5 shrink-0" style={{ background: teamColor(d.color), opacity: out ? 0.35 : 1 }} />
                   <span className="num font-semibold text-[13px]">{d.code}</span>

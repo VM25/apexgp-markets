@@ -1,0 +1,14 @@
+$ npm run lint
+> apexgp@0.1.0 lint
+> eslint src tests
+
+exit: 0
+
+$ npm run typecheck
+> apexgp@0.1.0 typecheck
+> tsc --noEmit
+
+exit: 0
+
+$ npm audit
+found 0 vulnerabilities

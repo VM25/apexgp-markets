@@ -79,18 +79,23 @@ export function OverviewView() {
             <div>
               <p className="eyebrow mb-1">Race winner · on the board now</p>
               <table className="tsheet">
-                <thead><tr><th>Driver</th><th className="r"><span className="text-model">Model</span></th><th className="r">Bid</th><th className="r">Ask</th><th className="w-[64px]"><span className="sr-only">Trade</span></th></tr></thead>
+                <thead><tr><th>Driver</th><th className="r"><span className="text-model">Model</span></th><th className="r hidden xs:table-cell">Bid</th><th className="r">Ask</th><th className="w-[64px] max-xs:w-[34px]"><span className="sr-only">Trade</span></th></tr></thead>
                 <tbody>
                   {board.map(({ c, p }) => {
                     const q = s.quoteFor(c.id);
                     const d = race.drivers[c.index];
                     return (
                       <tr key={c.id}>
-                        <td><span className="flex items-center gap-2"><span className="w-[4px] h-5" style={{ background: teamColor(d.color) }} /><span className="num font-semibold text-[13px]">{d.code}</span><span className="truncate hidden xs:inline text-[13.5px]">{d.name.split(" ").slice(-1)[0]}</span></span></td>
+                        <td className="fill"><span className="flex items-center gap-2 min-w-0"><span className="w-[4px] h-5 shrink-0" style={{ background: teamColor(d.color) }} /><span className="num font-semibold text-[13px]">{d.code}</span><span className="truncate hidden xs:inline text-[13.5px]">{d.name.split(" ").slice(-1)[0]}</span></span></td>
                         <td className="r num text-model font-medium">{pct(p)}</td>
-                        <td className="r num text-ink-2">{q.state === "open" ? cents(q.bestBid) : "—"}</td>
+                        <td className="r num text-ink-2 hidden xs:table-cell">{q.state === "open" ? cents(q.bestBid) : "—"}</td>
                         <td className="r num font-medium">{q.state === "open" ? cents(q.bestAsk) : "—"}</td>
-                        <td className="r !py-1"><button className="btn btn-sm btn-quiet !min-h-[34px] !px-2.5" onClick={() => app.openTicket(c.id, "YES", "BUY")} disabled={!s.isTradable(c)}>Trade</button></td>
+                        <td className="r !py-1">
+                          <button className="btn btn-sm btn-quiet !min-h-[34px] !px-2.5 max-xs:!px-0 max-xs:w-[34px]" onClick={() => app.openTicket(c.id, "YES", "BUY")} disabled={!s.isTradable(c)} aria-label={`Trade ${d.name}`}>
+                            <span className="max-xs:hidden">Trade</span>
+                            <span className="xs:hidden" aria-hidden="true">+</span>
+                          </button>
+                        </td>
                       </tr>
                     );
                   })}
@@ -167,7 +172,7 @@ export function OverviewView() {
           <SectionHead idx="03" title="Drivers’ championship" id="stand" />
           <p className="text-[13px] text-ink-2 mb-2">Standings entering round {round} (recorded), with the model’s title estimate at the current lap.</p>
           <table className="tsheet">
-            <thead><tr><th className="w-8">P</th><th>Driver</th><th className="r">Points</th><th className="r">Wins</th><th className="r"><span className="text-model">Title</span></th><th className="w-[64px]"><span className="sr-only">Trade</span></th></tr></thead>
+            <thead><tr><th className="w-8">P</th><th>Driver</th><th className="r">Points</th><th className="r hidden xs:table-cell">Wins</th><th className="r"><span className="text-model">Title</span></th><th className="w-[64px] max-xs:w-[34px]"><span className="sr-only">Trade</span></th></tr></thead>
             <tbody>
               {drivers.map((d, i) => {
                 const row = wdc.get(d.id);
@@ -175,11 +180,16 @@ export function OverviewView() {
                 return (
                   <tr key={d.id}>
                     <td className="num font-semibold">{i + 1}</td>
-                    <td><span className="flex items-center gap-2"><span className="w-[4px] h-5" style={{ background: teamColor(color) }} /><span className="truncate font-medium">{d.name}</span></span></td>
+                    <td className="fill"><span className="flex items-center gap-2 min-w-0"><span className="w-[4px] h-5 shrink-0" style={{ background: teamColor(color) }} /><span className="truncate font-medium">{d.name}</span></span></td>
                     <td className="r num">{d.points}</td>
-                    <td className="r num text-ink-2">{d.wins}</td>
+                    <td className="r num text-ink-2 hidden xs:table-cell">{d.wins}</td>
                     <td className="r num text-model font-medium">{row ? pct(row.p) : "—"}</td>
-                    <td className="r !py-1">{row && <button className="btn btn-sm btn-quiet !min-h-[34px] !px-2.5" onClick={() => app.openTicket(row.c.id, "YES", "BUY")} disabled={!s.isTradable(row.c)}>Trade</button>}</td>
+                    <td className="r !py-1">{row && (
+                        <button className="btn btn-sm btn-quiet !min-h-[34px] !px-2.5 max-xs:!px-0 max-xs:w-[34px]" onClick={() => app.openTicket(row.c.id, "YES", "BUY")} disabled={!s.isTradable(row.c)} aria-label={`Trade ${row.c.title}`}>
+                          <span className="max-xs:hidden">Trade</span>
+                          <span className="xs:hidden" aria-hidden="true">+</span>
+                        </button>
+                      )}</td>
                   </tr>
                 );
               })}
@@ -190,18 +200,23 @@ export function OverviewView() {
           <SectionHead idx="04" title="Constructors’ championship" />
           <p className="text-[13px] text-ink-2 mb-2">Team points are the sum of both cars. Title contracts settle after the final round.</p>
           <table className="tsheet">
-            <thead><tr><th className="w-8">P</th><th>Constructor</th><th className="r">Points</th><th className="r">Wins</th><th className="r"><span className="text-model">Title</span></th><th className="w-[64px]"><span className="sr-only">Trade</span></th></tr></thead>
+            <thead><tr><th className="w-8">P</th><th>Constructor</th><th className="r">Points</th><th className="r hidden xs:table-cell">Wins</th><th className="r"><span className="text-model">Title</span></th><th className="w-[64px] max-xs:w-[34px]"><span className="sr-only">Trade</span></th></tr></thead>
             <tbody>
               {teams.map((t, i) => {
                 const row = wcc.get(t.id);
                 return (
                   <tr key={t.id}>
                     <td className="num font-semibold">{i + 1}</td>
-                    <td><span className="flex items-center gap-2"><span className="w-[4px] h-5" style={{ background: teamColor(t.color) }} /><span className="truncate font-medium">{t.name}</span></span></td>
+                    <td className="fill"><span className="flex items-center gap-2 min-w-0"><span className="w-[4px] h-5 shrink-0" style={{ background: teamColor(t.color) }} /><span className="truncate font-medium">{t.name}</span></span></td>
                     <td className="r num">{t.points}</td>
-                    <td className="r num text-ink-2">{t.wins}</td>
+                    <td className="r num text-ink-2 hidden xs:table-cell">{t.wins}</td>
                     <td className="r num text-model font-medium">{row ? pct(row.p) : "—"}</td>
-                    <td className="r !py-1">{row && <button className="btn btn-sm btn-quiet !min-h-[34px] !px-2.5" onClick={() => app.openTicket(row.c.id, "YES", "BUY")} disabled={!s.isTradable(row.c)}>Trade</button>}</td>
+                    <td className="r !py-1">{row && (
+                        <button className="btn btn-sm btn-quiet !min-h-[34px] !px-2.5 max-xs:!px-0 max-xs:w-[34px]" onClick={() => app.openTicket(row.c.id, "YES", "BUY")} disabled={!s.isTradable(row.c)} aria-label={`Trade ${row.c.title}`}>
+                          <span className="max-xs:hidden">Trade</span>
+                          <span className="xs:hidden" aria-hidden="true">+</span>
+                        </button>
+                      )}</td>
                   </tr>
                 );
               })}
